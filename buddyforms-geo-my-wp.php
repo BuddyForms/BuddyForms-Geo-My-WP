@@ -48,6 +48,16 @@ if ( ! class_exists( 'buddyforms_geo_my_wp' ) ) {
 		private function __construct() {
 			$this->constants();
 			$this->load_plugin_textdomain();
+			require_once 'classes/class-buddyforms-geo-my-wp-requirements.php';
+			new BuddyFormsGeoMyWpRequirements();
+			if ( BuddyFormsGeoMyWpRequirements::is_buddy_form_active() && BuddyFormsGeoMyWpRequirements::is_geo_my_wp_active() ) {
+				require_once 'classes/class-buddyforms-geo-my-wp-manager.php';
+				new BuddyFormsGeoMyWpManager();
+
+//				register_activation_hook( __FILE__, array( $this, 'activation' ) );
+//				register_deactivation_hook( __FILE__, array( $this, 'deactivation' ) );
+//				self::getFreemius()->add_action('after_uninstall', array($this, 'uninstall_cleanup') );
+			}
 
 		}
 
