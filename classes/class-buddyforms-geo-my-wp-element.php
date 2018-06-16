@@ -14,8 +14,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class BuddyFormsGeoMyWpElement {
 
+	private $load_script;
+
 	public function __construct() {
 		add_filter( 'buddyforms_create_edit_form_display_element', array( $this, 'buddyforms_woocommerce_create_new_form_builder' ), 10, 2 );
+		add_action( 'wp_footer', array( $this, 'add_scripts' ), 11 );
+//		add_action( 'wp_enqueue_scripts', array( $this, 'wp_enqueue_scripts' ), 11 );
+	}
+
+	public function wp_enqueue_scripts() {
+		if ( function_exists( 'gmw_enqueue_scripts' ) ) {
+			gmw_enqueue_scripts();
+		}
 	}
 
 	/**
@@ -35,8 +45,7 @@ class BuddyFormsGeoMyWpElement {
 			return $form;
 		}
 		if ( $customfield['type'] === 'geo_my_wp_address' && is_user_logged_in() ) {
-			$this->add_scripts( $post );
-			$this->add_styles();
+			$this->load_script = true;
 
 			if ( isset( $customfield['slug'] ) ) {
 				$slug = sanitize_title( $customfield['slug'] );
@@ -69,21 +78,26 @@ class BuddyFormsGeoMyWpElement {
 			$element_attr = array(
 				'id'        => str_replace( "-", "", $slug ),
 				'value'     => $customfield_val,
-				'class'     => 'settings-input gmw-lf-field address-field address gmw-lf-address-autocomplete',
+				'class'     => 'settings-input address-field address gmw-address-autocomplete',
 				'shortDesc' => $description,
 				'field_id'  => $field_id
 			);
-			$form->addElement( new Element_Textbox( $name, $slug, $element_attr ) );
+			ob_start();
+			require BF_GEO_FIELD_VIEW_PATH . 'field.php';
+			$get_contents = ob_get_contents();
+			ob_clean();
+			$form->addElement( new Element_HTML( $get_contents ) );
 		}
 
 		return $form;
 	}
 
-	public function add_scripts( $post ) {
-
-	}
-
-	public function add_styles() {
-
+	public function add_scripts() {
+		if ( $this->load_script ) {
+			// load main JavaScript and Google APIs
+			if ( ! wp_script_is( 'gmw', 'enqueued' ) ) {
+				wp_enqueue_script( 'gmw' );
+			}
+		}
 	}
 }
