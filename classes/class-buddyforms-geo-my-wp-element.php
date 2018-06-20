@@ -94,6 +94,10 @@ class BuddyFormsGeoMyWpElement {
 
 	public function add_scripts() {
 		if ( $this->load_script ) {
+			// enqueue style only once
+			if ( ! wp_style_is( $search_form['stylesheet_handle'], 'enqueued' ) ) {
+				wp_enqueue_style( $search_form['stylesheet_handle'], $search_form['stylesheet_uri'], array( 'gmw-frontend' ), GMW_VERSION );
+			}
 			// load main JavaScript and Google APIs
 			if ( ! wp_script_is( 'gmw', 'enqueued' ) ) {
 				wp_enqueue_script( 'gmw' );
