@@ -35,11 +35,10 @@ class BuddyFormsGeoMyWpElement {
 	 * @return mixed
 	 */
 	public function buddyforms_woocommerce_create_new_form_builder( $form, $form_args ) {
-		global $post;
 		$customfield = false;
 		$post_id     = 0;
 		$field_id    = '';
-		extract( $form_args, EXTR_IF_EXISTS );
+		extract( $form_args );
 
 		if ( ! isset( $customfield['type'] ) ) {
 			return $form;
@@ -82,11 +81,8 @@ class BuddyFormsGeoMyWpElement {
 				'shortDesc' => $description,
 				'field_id'  => $field_id
 			);
-			ob_start();
-			require BF_GEO_FIELD_VIEW_PATH . 'field.php';
-			$get_contents = ob_get_contents();
-			ob_clean();
-			$form->addElement( new Element_HTML( $get_contents ) );
+
+			$form->addElement( new Element_Textbox( $name, $slug, $element_attr ) );
 		}
 
 		return $form;
@@ -94,10 +90,9 @@ class BuddyFormsGeoMyWpElement {
 
 	public function add_scripts() {
 		if ( $this->load_script ) {
-			// enqueue style only once
-			if ( ! wp_style_is( $search_form['stylesheet_handle'], 'enqueued' ) ) {
-				wp_enqueue_style( $search_form['stylesheet_handle'], $search_form['stylesheet_uri'], array( 'gmw-frontend' ), GMW_VERSION );
-			}
+			// include GMW main stylesheet
+			wp_enqueue_style( 'gmw-frontend', GMW_URL . '/assets/css/gmw.frontend.min.css', array(), GMW_VERSION );
+
 			// load main JavaScript and Google APIs
 			if ( ! wp_script_is( 'gmw', 'enqueued' ) ) {
 				wp_enqueue_script( 'gmw' );
