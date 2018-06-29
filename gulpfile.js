@@ -96,7 +96,7 @@ gulp.task('prepare-localization', function() {
                 {name: '_nx_noop', plural: 2, context: 3}
             ]
         }))
-        .pipe(gulp.dest(languagesFolder + 'wc4bp.pot'));
+        .pipe(gulp.dest(languagesFolder + 'buddyforms-geo-my-wp.pot'));
 });
 
 //Extract localization strings and translate it with google
@@ -105,7 +105,7 @@ gulp.task('translate', ['prepare-localization'], function() {
     //Create the es po file
     languages.forEach((lang) => {
         task.push(
-            gulp.src(languagesFolder + 'buddyforms_geo_my_wp.pot')
+            gulp.src(languagesFolder + 'buddyforms-geo-my-wp.pot')
                 .pipe(pofill({
                     items: function(item) {
                         return new Promise((resolve) => {
@@ -126,7 +126,7 @@ gulp.task('translate', ['prepare-localization'], function() {
                         });
                     }
                 }))
-                .pipe(rename('wc4bp-' + lang.lang + '_' + lang.spec.toUpperCase() + '.po'))
+                .pipe(rename('buddyforms-geo-my-wp-' + lang.lang + '_' + lang.spec.toUpperCase() + '.po'))
                 .pipe(gulp.dest(languagesFolder))
         );
     });
