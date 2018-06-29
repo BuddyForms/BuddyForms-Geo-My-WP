@@ -1,7 +1,7 @@
 <?php
 /*
  * @package WordPress
- * @subpackage BuddyForms
+ * @subpackage BuddyForms, GEO My WP
  * @author ThemKraft Dev Team
  * @copyright 2018 Themekraft
  * @link http://buddyforms.com

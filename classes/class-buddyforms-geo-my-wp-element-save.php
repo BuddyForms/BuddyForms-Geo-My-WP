@@ -1,7 +1,7 @@
 <?php
 /*
  * @package WordPress
- * @subpackage BuddyForms
+ * @subpackage BuddyForms, GEO My WP
  * @author ThemKraft Dev Team
  * @copyright 2018 Themekraft
  * @link http://buddyforms.com
@@ -52,7 +52,7 @@ class BuddyFormsGeoMyWpElementSave {
 						'address' => $value // the address we pull from the custom field above
 					);
 
-					//run the udpate location function
+					//run the update location function
 					gmw_pt_update_location( $args );
 				}
 			} else {
