@@ -48,4 +48,11 @@ class BuddyFormsGeoMyWpManager {
 	static function get_version() {
 		return self::$version;
 	}
+
+	public static function assets_path( $name, $extension = 'js' ) {
+		$base_path         = ( $extension == 'js' ) ? BF_GEO_FIELD_JS_PATH : BF_GEO_FIELD_CSS_PATH;
+		$join_ext_and_name = ( ! defined( SCRIPT_DEBUG ) ) ? '.min.' : '.';
+
+		return $base_path . $name . $join_ext_and_name . $extension;
+	}
 }
