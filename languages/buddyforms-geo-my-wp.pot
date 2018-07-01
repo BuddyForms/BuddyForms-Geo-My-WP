@@ -1,0 +1,45 @@
+# Copyright (C) 2018 BuddyForms Geo My Wp
+# This file is distributed under the same license as the BuddyForms Geo My Wp package.
+msgid ""
+msgstr ""
+"Project-Id-Version: BuddyForms Geo My Wp\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language-Team: ThemeKraft Team <svenl@themekraft.com>\n"
+"Last-Translator: Sven Lehnert <svenl@themekraft.com>\n"
+"Report-Msgid-Bugs-To: https://github.com/BuddyForms/BuddyForms-Geo-My-WP/issues\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-KeywordsList: __;_e;esc_html__;esc_html_e;esc_attr_e;_x:1,2c;_esc_attr;_esc_attr_echo;_esc_html;_esc_html_echo;_ex:1,2c;_esc_attr_x:1,2c;_esc_html_x:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.js\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: classes/class-buddyforms-geo-my-wp-builder.php:42
+msgid "Address"
+msgstr ""
+
+#: classes/class-buddyforms-geo-my-wp-requirements.php:72
+msgid "<u>BuddyForms Geo My Wp</u> plugin requires the following plugin: %1$s."
+msgid_plural "<u>BuddyForms Geo My Wp</u> plugin requires the following plugins: %1$s."
+msgstr[0] ""
+msgstr[1] ""
+
+#: classes/class-buddyforms-geo-my-wp-requirements.php:78
+msgid "<u>BuddyForms Geo My Wp</u> plugin recommends the following plugin: %1$s."
+msgid_plural "<u>BuddyForms Geo My Wp</u> plugin recommends the following plugins: %1$s."
+msgstr[0] ""
+msgstr[1] ""
+
+#: classes/class-buddyforms-geo-my-wp-requirements.php:84
+msgid "The following is a required plugin for <u>BuddyForms Geo My Wp</u> and is currently inactive: %1$s."
+msgid_plural "The following is a required plugins for <u>BuddyForms Geo My Wp</u> and they are currently inactive: %1$s."
+msgstr[0] ""
+msgstr[1] ""
+
+#: classes/class-buddyforms-geo-my-wp-requirements.php:90
+msgid "The following plugin needs to be updated to its latest version to ensure maximum compatibility with this plugin: %1$s."
+msgid_plural "The following plugins need to be updated to their latest version to ensure maximum compatibility with this plugin: %1$s."
+msgstr[0] ""
+msgstr[1] ""

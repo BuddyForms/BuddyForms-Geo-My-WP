@@ -25,8 +25,7 @@ class BuddyFormsGeoMyWpBuilder {
 
 	public function load_js_for_builder( $hook ) {
 		if ( $this->load_script ) {
-			wp_enqueue_script( 'bf_woo_builder', BuddyFormsGeoMyWpManager::assets_path( 'buddyforms-geo-my-wp' ), array( "jquery" ), null, true );
-			wp_enqueue_style( 'bf_woo_builder', BuddyFormsGeoMyWpManager::assets_path( 'buddyforms-geo-my-wp', 'css' ) );
+
 		}
 	}
 
