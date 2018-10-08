@@ -21,6 +21,61 @@ class BuddyFormsGeoMyWpElement {
 		add_action( 'wp_enqueue_scripts', array( $this, 'wp_enqueue_scripts' ), 99 );
 		add_action( 'wp_ajax_get_new_bf_address_field', array( $this, 'ajax_get_field_row' ) );
 		add_action( 'wp_ajax_nopriv_get_new_bf_address_field', array( $this, 'ajax_get_field_row' ) );
+		add_action( 'wp_ajax_delete_bf_address_field', array( $this, 'ajax_delete_field_row' ) );
+		add_action( 'wp_ajax_nopriv_delete_bf_address_field', array( $this, 'ajax_delete_field_row' ) );
+	}
+
+	public function ajax_delete_field_row() {
+		try {
+			if ( ! ( is_array( $_POST ) && defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
+				return;
+			}
+			$is_valid = wp_verify_nonce( $_POST['_nonce'], 'buddyforms-geo-field' );
+			if (
+				! isset( $_POST['action'] ) || ! isset( $_POST['_nonce'] ) || ! $is_valid
+				|| ! isset( $_POST['post_id'] ) || ! isset( $_POST['field_number'] ) || ! isset( $_POST['field_name'] )
+			) {
+				die( 1 );
+			}
+
+			$post_id       = intval( $_POST['post_id'] );
+			$field_number  = intval( $_POST['field_number'] );
+			$name          = sanitize_text_field( $_POST['field_name'] );
+			$slug          = sanitize_title( $name ) . '_' . ( $field_number );
+			$remove_result = $this->delete_address_element( $post_id, $slug );
+
+			if ( $remove_result ) {
+				$field_number --;
+			}
+
+			$result           = array();
+			$result['result'] = $remove_result;
+			$result['count']  = $field_number;
+			$result['name']   = $slug;
+
+			wp_send_json( $result );
+		} catch ( Exception $ex ) {
+			BuddyFormsGeoMyWpLog::log( array(
+				'action'         => 'ajax_delete_field_row',
+				'object_type'    => BuddyFormsGeoMyWpManager::get_slug(),
+				'object_subtype' => 'BuddyFormsGeoMyWpElement',
+				'object_name'    => $ex->getMessage(),
+			) );
+		}
+		die();
+	}
+
+	public function delete_address_element( $post_id, $slug ) {
+		$result = false;
+		if ( ! empty( $post_id ) ) {
+			$del1   = delete_post_meta( $post_id, $slug );
+			$del2   = delete_post_meta( $post_id, $slug . '_lat' );
+			$del3   = delete_post_meta( $post_id, $slug . '_lng' );
+			$del4   = delete_post_meta( $post_id, $slug . '_data' );
+			$result = ( $del1 && $del2 && $del3 && $del4 );
+		}
+
+		return $result;
 	}
 
 	public function ajax_get_field_row() {
@@ -33,7 +88,6 @@ class BuddyFormsGeoMyWpElement {
 				die( 1 );
 			}
 
-			$count         = intval( $_POST['count'] );
 			$field_number  = intval( $_POST['field_number'] ) + 1;
 			$description   = sanitize_text_field( $_POST['description'] );
 			$default_value = sanitize_text_field( $_POST['default_value'] );
@@ -166,32 +220,38 @@ class BuddyFormsGeoMyWpElement {
 	 */
 	public function get_address_elements( $slug, $post_id = 0, $default_value = '', $field_id, $count, $name, $description ) {
 		if ( ! empty( $post_id ) ) {
-			$customfield_val      = get_post_meta( $post_id, $slug, true );
-			$customfield_val_lat  = get_post_meta( $post_id, $slug . '_lat', true );
-			$customfield_val_long = get_post_meta( $post_id, $slug . '_lng', true );
+			$custom_field_val      = get_post_meta( $post_id, $slug, true );
+			$custom_field_val_lat  = get_post_meta( $post_id, $slug . '_lat', true );
+			$custom_field_val_long = get_post_meta( $post_id, $slug . '_lng', true );
+			$custom_field_val_data = get_post_meta( $post_id, $slug . '_data', true );
 		} else {
-			$customfield_val      = '';
-			$customfield_val_lat  = '';
-			$customfield_val_long = '';
+			$custom_field_val      = '';
+			$custom_field_val_lat  = '';
+			$custom_field_val_long = '';
+			$custom_field_val_data = '';
 		}
 
-		if ( empty( $customfield_val ) && isset( $default_value ) ) {
-			$customfield_val = $default_value;
+		if ( empty( $custom_field_val ) && isset( $default_value ) ) {
+			$custom_field_val = $default_value;
 		}
 
-		if ( empty( $customfield_val_lat ) ) {
-			$customfield_val_lat = '';
+		if ( empty( $custom_field_val_lat ) ) {
+			$custom_field_val_lat = '';
 		}
 
-		if ( empty( $customfield_val_long ) ) {
-			$customfield_val_long = '';
+		if ( empty( $custom_field_val_long ) ) {
+			$custom_field_val_long = '';
+		}
+
+		if ( empty( $custom_field_val_data ) ) {
+			$custom_field_val_data = '';
 		}
 
 		$name = apply_filters( 'buddyforms_form_field_geo_my_wp_address_name', stripcslashes( $name ), $slug, $post_id );
 
 		$element_attr = array(
 			'id'                 => str_replace( "-", "", $slug ),
-			'value'              => $customfield_val,
+			'value'              => $custom_field_val,
 			'class'              => 'settings-input address-field address bf-address-autocomplete',
 			'shortDesc'          => $description,
 			'field_id'           => $field_id,
@@ -202,14 +262,16 @@ class BuddyFormsGeoMyWpElement {
 			'data-default-value' => $default_value,
 		);
 
-		$text_box   = new Element_Textbox( $name, $slug, $element_attr );
-		$hidden_lat = new Element_Hidden( $slug . '_lat', $customfield_val_lat );
-		$hidden_lng = new Element_Hidden( $slug . '_lng', $customfield_val_long );
+		$text_box    = new Element_Textbox( $name, $slug, $element_attr );
+		$hidden_lat  = new Element_Hidden( $slug . '_lat', $custom_field_val_lat );
+		$hidden_lng  = new Element_Hidden( $slug . '_lng', $custom_field_val_long );
+		$hidden_data = new Element_Hidden( $slug . '_data', $custom_field_val_data );
 
 		ob_start();
 		$text_box->render();
 		$hidden_lat->render();
 		$hidden_lng->render();
+		$hidden_data->render();
 		$html = ob_get_clean();
 
 		return $html;

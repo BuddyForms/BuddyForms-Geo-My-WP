@@ -17,7 +17,10 @@ class BuddyFormsGeoMyWpBuilder {
 	private $load_script;
 
 	public function __construct() {
-		add_filter( 'buddyforms_add_form_element_select_option', array( $this, 'buddyforms_formbuilder_elements_select' ), 10 );
+		add_filter( 'buddyforms_add_form_element_select_option', array(
+			$this,
+			'buddyforms_formbuilder_elements_select'
+		), 10 );
 //		add_filter( 'buddyforms_form_element_add_field', array( $this, 'buddyforms_woocommerce_create_new_form_builder_form_element' ), 1, 5 );
 
 		add_action( 'admin_footer', array( $this, 'load_js_for_builder' ) );
@@ -55,8 +58,6 @@ class BuddyFormsGeoMyWpBuilder {
 
 		$field_id = (string) $field_id;
 
-		$this->load_script = true;
-
 		if ( ! $buddyform ) {
 			$buddyform = get_post_meta( $post->ID, '_buddyforms_options', true );
 		}
@@ -74,6 +75,8 @@ class BuddyFormsGeoMyWpBuilder {
 					'value' => $required,
 					'id'    => "buddyforms_options[form_fields][" . $field_id . "][required]"
 				) );
+
+				$this->load_script = true;
 				break;
 		}
 

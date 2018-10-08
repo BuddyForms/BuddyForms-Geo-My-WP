@@ -97,6 +97,6 @@ class BuddyFormsGeoMyWpRequirements {
 		);
 
 		// Call the tgmpa function to register the required plugins
-		tgmpa( $plugins, $config );
+		bf_geo_wp_tgmpa( $plugins, $config );
 	}
 }

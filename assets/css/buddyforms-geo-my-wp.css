@@ -31,3 +31,11 @@
     padding-left: 5px;
     padding-right: 5px;
 }
+
+.container-for-geo-address-field .bf-address-autocomplete {
+    width: 94%;
+}
+
+.bf_field_group.bf-geo-address-fields {
+    height: 50px;
+}
