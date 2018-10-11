@@ -9,15 +9,34 @@ var bfGeoAddressFieldInstance = {
         jQuery('.geo-address-field-add').removeClass('geo-address-field-add-last').hide();
         jQuery('.geo-address-field-add:last').addClass('geo-address-field-add-last').css('display', 'inline');
     },
+    setFieldStatus: function (status, target) {
+        console.log(target);
+        var actionContainer = jQuery(target).find('p.gmw-lf-field.message');
+        if (actionContainer.length > 0) {
+            actionContainer.removeClass('error ok changed');
+            switch (status) {
+                case 'ok':
+                    actionContainer.addClass('ok');
+                    break;
+                case 'changed':
+                    actionContainer.addClass('changed');
+                    break;
+                default:
+                    actionContainer.addClass('error');
+            }
+        }
+    },
     loadAutcomplete: function (field_id) {
         var input_field = document.getElementById(field_id);
         // verify the field
         if (input_field != null) {
+            var fieldContainer = jQuery(input_field).closest('.container-for-geo-address-field').parent();
             var options = {
                 types: ['geocode'],
             };
             var autocomplete = new google.maps.places.Autocomplete(input_field, options);
             google.maps.event.addListener(autocomplete, 'place_changed', function () {
+                bfGeoAddressFieldInstance.setFieldStatus('changed', fieldContainer);
                 var place = autocomplete.getPlace();
                 if (place.geometry) {
                     var result = {};
@@ -34,6 +53,9 @@ var bfGeoAddressFieldInstance = {
                     formElement.find('[name="' + field_id + '_lat"]').val(place.geometry.location.lat().toFixed(6));
                     formElement.find('[name="' + field_id + '_lng"]').val(place.geometry.location.lng().toFixed(6));
                     formElement.find('[name="' + field_id + '_data"]').val(JSON.stringify(result));
+                    bfGeoAddressFieldInstance.setFieldStatus('ok', fieldContainer);
+                } else {
+                    bfGeoAddressFieldInstance.setFieldStatus('error', fieldContainer);
                 }
             });
             jQuery(input_field).attr('attached', 'true');
@@ -42,6 +64,7 @@ var bfGeoAddressFieldInstance = {
     addNewField: function () {
         var mainContainer = jQuery(this).closest('.bf-geo-address-fields').parent();
         var element = jQuery(this);
+        var fieldContainer = jQuery(this).closest('.container-for-geo-address-controls').parent();
         var data = {
             'action': 'get_new_bf_address_field',
             '_nonce': buddyforms_geo_field.nonce,
@@ -52,6 +75,7 @@ var bfGeoAddressFieldInstance = {
             'default_value': element.attr('data-default-value'),
             'description': element.attr('data-description'),
         };
+        bfGeoAddressFieldInstance.setFieldStatus('changed', fieldContainer);
         jQuery.ajax({
             type: 'POST',
             url: buddyforms_geo_field.admin_url,
@@ -62,9 +86,14 @@ var bfGeoAddressFieldInstance = {
                     jQuery('#geo_my_wp_address_count').val(newRow['count']);
                     bfGeoAddressFieldInstance.updateAddButtonClass();
                     bfGeoAddressFieldInstance.loadAutcomplete(newRow['name']);
+                    bfGeoAddressFieldInstance.setFieldStatus('ok', fieldContainer);
                 } else {
+                    bfGeoAddressFieldInstance.setFieldStatus('error', fieldContainer);
                     alert('Contact the admin, some error exist when try to add a new Address field');
                 }
+            },
+            error: function() {
+                bfGeoAddressFieldInstance.setFieldStatus('error', fieldContainer);
             }
         });
     },
@@ -80,6 +109,7 @@ var bfGeoAddressFieldInstance = {
                 'field_number': element.attr('field_number'),
                 'post_id': (post_id) ? post_id : 0,
             };
+            bfGeoAddressFieldInstance.setFieldStatus('changed', mainContainer);
             jQuery.ajax({
                 type: 'POST',
                 url: buddyforms_geo_field.admin_url,
@@ -88,6 +118,7 @@ var bfGeoAddressFieldInstance = {
                     if (newRow && newRow['result'] && newRow['count'] && newRow['name']) {
                         bfGeoAddressFieldInstance.removeFieldContainer(mainContainer, element.attr('field_number'));
                     } else {
+                        bfGeoAddressFieldInstance.setFieldStatus('error', mainContainer);
                         alert('Contact the admin, some error exist when try to add a new Address field');
                     }
                 }
@@ -95,12 +126,11 @@ var bfGeoAddressFieldInstance = {
         } else {
             bfGeoAddressFieldInstance.removeFieldContainer(mainContainer, element.attr('field_number'));
         }
+        bfGeoAddressFieldInstance.updateAddButtonClass();
     },
     removeFieldContainer: function (container, count) {
-        bfGeoAddressFieldInstance.updateAddButtonClass();
         var finalCount = parseInt(count);
         jQuery('#geo_my_wp_address_count').val(finalCount--);
-        bfGeoAddressFieldInstance.updateAddButtonClass();
         jQuery(container).remove();
     },
     init: function () {

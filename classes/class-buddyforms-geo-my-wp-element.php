@@ -196,9 +196,9 @@ class BuddyFormsGeoMyWpElement {
 		$field_group_string .= $this->get_address_elements( $slug, $post_id, $customfield['default'], $field_id, $i, $customfield['name'], $description );
 		$field_group_string .= '</div>';
 		$field_group_string .= '<div class="container-for-geo-address-controls">';
+		$field_group_string .= '<p class="gmw-lf-field  group_actions message-field message  gmw-lf-form-action error" id="gmw-lf-action-message"><i class="gmw-icon-spin"></i><i class="gmw-icon-cancel"></i><i class="gmw-icon-ok-light"></i></p>';
 		$field_group_string .= "<a class='${add_classes_for_link}' field_number='${i}' field_name='{$customfield['name']}' field_id='{$field_id}' data-default-value='{$customfield['default']}' data-description='{$description}'><span class='dashicons dashicons-plus'></span></a>";
 		$field_group_string .= "<a class='${delete_classes_for_link}' field_number='${i}' field_name='{$customfield['name']}' field_id='{$field_id}' data-default-value='{$customfield['default']}' data-description='{$description}'><span class='dashicons dashicons-minus'></span></a>";
-		$field_group_string .= '<span class="spinner"></span>';
 		$field_group_string .= '</div>';
 		$field_group_string .= '</div>';
 
