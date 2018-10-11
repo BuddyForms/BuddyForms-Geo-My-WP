@@ -26,7 +26,7 @@ var bfGeoAddressFieldInstance = {
             }
         }
     },
-    loadAutcomplete: function (field_id) {
+    loadAutocomplete: function (field_id) {
         var input_field = document.getElementById(field_id);
         // verify the field
         if (input_field != null) {
@@ -64,7 +64,7 @@ var bfGeoAddressFieldInstance = {
     addNewField: function () {
         var mainContainer = jQuery(this).closest('.bf-geo-address-fields').parent();
         var element = jQuery(this);
-        var fieldContainer = jQuery(this).closest('.container-for-geo-address-controls').parent();
+        var fieldContainer = jQuery(this).closest('.container-for-geo-address-field').parent();
         var data = {
             'action': 'get_new_bf_address_field',
             '_nonce': buddyforms_geo_field.nonce,
@@ -85,14 +85,14 @@ var bfGeoAddressFieldInstance = {
                     mainContainer.append(newRow['html']);
                     jQuery('#geo_my_wp_address_count').val(newRow['count']);
                     bfGeoAddressFieldInstance.updateAddButtonClass();
-                    bfGeoAddressFieldInstance.loadAutcomplete(newRow['name']);
+                    bfGeoAddressFieldInstance.loadAutocomplete(newRow['name']);
                     bfGeoAddressFieldInstance.setFieldStatus('ok', fieldContainer);
                 } else {
                     bfGeoAddressFieldInstance.setFieldStatus('error', fieldContainer);
                     alert('Contact the admin, some error exist when try to add a new Address field');
                 }
             },
-            error: function() {
+            error: function () {
                 bfGeoAddressFieldInstance.setFieldStatus('error', fieldContainer);
             }
         });
@@ -132,26 +132,30 @@ var bfGeoAddressFieldInstance = {
         var finalCount = parseInt(count);
         jQuery('#geo_my_wp_address_count').val(finalCount--);
         jQuery(container).remove();
+        bfGeoAddressFieldInstance.updateAddButtonClass();
     },
     init: function () {
         var fields = jQuery('.bf-address-autocomplete');
+        var form = jQuery('div.the_buddyforms_form form');
         if (fields.length > 0) {
             bfGeoAddressFieldInstance.fieldInit(fields);
+            form.on('click', '.geo-address-field-add', bfGeoAddressFieldInstance.addNewField);
+            form.on('click', '.geo-address-field-delete', bfGeoAddressFieldInstance.removeNewField);
         }
     },
     fieldInit: function (fields) {
         jQuery.each(fields, function (key, input) {
-            var formElement = jQuery(input.closest('form'));
             var isNotAttached = jQuery(input).attr('attached');
             setTimeout(function () {
                 jQuery(input).attr('autocomplete', 'nope');
             }, 1000);
             isNotAttached = (typeof(isNotAttached) === 'undefined');
             if (isNotAttached) {
-                bfGeoAddressFieldInstance.loadAutcomplete(input.id);
+                bfGeoAddressFieldInstance.loadAutocomplete(input.id);
+                var fieldContainer = jQuery(input).closest('.container-for-geo-address-field').parent();
+                var isReady = jQuery('input[name="' + input.id + '_data"]').val();
+                bfGeoAddressFieldInstance.setFieldStatus((isReady) ? 'ok' : 'error', fieldContainer);
                 bfGeoAddressFieldInstance.updateAddButtonClass();
-                jQuery(formElement).on('click', '.geo-address-field-add', bfGeoAddressFieldInstance.addNewField);
-                jQuery(formElement).on('click', '.geo-address-field-delete', bfGeoAddressFieldInstance.removeNewField);
             }
         });
 
