@@ -1,12 +1,14 @@
 {
-  "name": "BuddyForms Geo My Wp",
+  "name": "BuddyFormsGeoMyWp",
   "description": "This Plugin adds field to link with Geo My Wp.",
   "author": "ThemeKraft Team.",
   "license": "GPL-2.0+",
   "homepage": "http://www.themekraft.com",
   "version": "1.0.0",
   "main": "gulpfile.js",
-  "dependencies": {},
+  "dependencies": {
+    "gulp": "^3.9.1"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "prune": "rimraf .codeclimate.yml .git .github .gitignore .travis.yml gulpfile.js composer.json"
@@ -18,7 +20,6 @@
     "dotenv": "^6.0.0",
     "eslint-config-loopback": "^10.0.0",
     "google-translate": "^2.2.0",
-    "gulp": "^3.9.1",
     "gulp-clean": "^0.4.0",
     "gulp-concat": "^2.6.1",
     "gulp-deporder": "^1.1.0",
