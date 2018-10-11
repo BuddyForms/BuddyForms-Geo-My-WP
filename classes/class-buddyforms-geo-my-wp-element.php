@@ -20,9 +20,7 @@ class BuddyFormsGeoMyWpElement {
 		add_filter( 'buddyforms_create_edit_form_display_element', array( $this, 'buddyforms_woocommerce_create_new_form_builder' ), 10, 2 );
 		add_action( 'wp_enqueue_scripts', array( $this, 'wp_enqueue_scripts' ), 99 );
 		add_action( 'wp_ajax_get_new_bf_address_field', array( $this, 'ajax_get_field_row' ) );
-		add_action( 'wp_ajax_nopriv_get_new_bf_address_field', array( $this, 'ajax_get_field_row' ) );
 		add_action( 'wp_ajax_delete_bf_address_field', array( $this, 'ajax_delete_field_row' ) );
-		add_action( 'wp_ajax_nopriv_delete_bf_address_field', array( $this, 'ajax_delete_field_row' ) );
 	}
 
 	public function ajax_delete_field_row() {
@@ -34,15 +32,17 @@ class BuddyFormsGeoMyWpElement {
 			if (
 				! isset( $_POST['action'] ) || ! isset( $_POST['_nonce'] ) || ! $is_valid
 				|| ! isset( $_POST['post_id'] ) || ! isset( $_POST['field_number'] ) || ! isset( $_POST['field_name'] )
+				|| ! isset( $_POST['form_slug'] )
 			) {
 				die( 1 );
 			}
 
 			$post_id       = intval( $_POST['post_id'] );
 			$field_number  = intval( $_POST['field_number'] );
+			$form_slug     = sanitize_text_field( $_POST['form_slug'] );
 			$name          = sanitize_text_field( $_POST['field_name'] );
 			$slug          = sanitize_title( $name ) . '_' . ( $field_number );
-			$remove_result = $this->delete_address_element( $post_id, $slug );
+			$remove_result = $this->delete_address_element( $post_id, $slug, $form_slug );
 
 			if ( $remove_result ) {
 				$field_number --;
@@ -65,13 +65,29 @@ class BuddyFormsGeoMyWpElement {
 		die();
 	}
 
-	public function delete_address_element( $post_id, $slug ) {
+	public static function get_buddyforms_form_type( $form_slug ) {
+		global $buddyforms;
+		if ( ! empty( $form_slug ) && isset( $buddyforms[ $form_slug ]['form_type'] ) ) {
+			return $buddyforms[ $form_slug ]['form_type'];
+		} else {
+			return '';
+		}
+	}
+
+	public function delete_address_element( $related_id, $slug, $form_slug ) {
 		$result = false;
-		if ( ! empty( $post_id ) ) {
-			$del1   = delete_post_meta( $post_id, $slug );
-			$del2   = delete_post_meta( $post_id, $slug . '_lat' );
-			$del3   = delete_post_meta( $post_id, $slug . '_lng' );
-			$del4   = delete_post_meta( $post_id, $slug . '_data' );
+		if ( ! empty( $related_id ) ) {
+			if ( self::get_buddyforms_form_type( $form_slug ) !== 'registration' ) {
+				$del1 = delete_post_meta( $related_id, $slug );
+				$del2 = delete_post_meta( $related_id, $slug . '_lat' );
+				$del3 = delete_post_meta( $related_id, $slug . '_lng' );
+				$del4 = delete_post_meta( $related_id, $slug . '_data' );
+			} else {
+				$del1 = delete_user_meta( $related_id, $slug );
+				$del2 = delete_post_meta( $related_id, $slug . '_lat' );
+				$del3 = delete_post_meta( $related_id, $slug . '_lng' );
+				$del4 = delete_post_meta( $related_id, $slug . '_data' );
+			}
 			$result = ( $del1 && $del2 && $del3 && $del4 );
 		}
 
@@ -84,7 +100,7 @@ class BuddyFormsGeoMyWpElement {
 				return;
 			}
 			$is_valid = wp_verify_nonce( $_POST['_nonce'], 'buddyforms-geo-field' );
-			if ( ! isset( $_POST['action'] ) || ! isset( $_POST['_nonce'] ) || ! $is_valid ) {
+			if ( ! isset( $_POST['action'] ) || ! isset( $_POST['_nonce'] ) || ! $is_valid || ! isset( $_POST['form_slug'] ) ) {
 				die( 1 );
 			}
 
@@ -99,8 +115,9 @@ class BuddyFormsGeoMyWpElement {
 				'default' => $default_value,
 				'name'    => $name
 			);
+			$form_type       = sanitize_text_field( $_POST['form_slug'] );
 			$result          = array();
-			$result['html']  = $this->get_container_with_field( $field_number, $slug, 0, $customfield, $field_id, $description );
+			$result['html']  = $this->get_container_with_field( $field_number, $slug, 0, $customfield, $field_id, $description, $form_type );
 			$result['count'] = $field_number;
 			$result['name']  = $slug;
 
@@ -124,14 +141,16 @@ class BuddyFormsGeoMyWpElement {
 	 */
 	public function buddyforms_woocommerce_create_new_form_builder( $form, $form_args ) {
 		$customfield = false;
-		$post_id     = 0;
-		$field_id    = '';
+		$post_id      = 0;
+		$field_id     = '';
+		$form_slug    = '';
 		extract( $form_args );
 
 		if ( ! isset( $customfield['type'] ) ) {
 			return $form;
 		}
-		if ( $customfield['type'] === 'geo_my_wp_address' && is_user_logged_in() ) {
+		if ( $customfield['type'] === 'geo_my_wp_address' && ! empty( $form_slug ) ) {
+			$form_type         = self::get_buddyforms_form_type( $form_slug );
 			$this->load_script = true;
 
 			if ( isset( $customfield['slug'] ) ) {
@@ -147,9 +166,15 @@ class BuddyFormsGeoMyWpElement {
 				$description = stripcslashes( $customfield['description'] );
 			}
 
+			$user_id = get_current_user_id();
+
 			$description = apply_filters( 'buddyforms_form_field_description', $description, $post_id );
 
-			$field_count = get_post_meta( $post_id, $slug . '_count', true );
+			if ( $form_type !== 'registration' ) {
+				$field_count = get_post_meta( $post_id, $slug . '_count', true );
+			} else {
+				$field_count = get_user_meta( $user_id, $slug . '_count', true );
+			}
 			if ( empty( $field_count ) ) {
 				$field_count = 0;
 			}
@@ -164,12 +189,11 @@ class BuddyFormsGeoMyWpElement {
 					$customfield['default'] = '';
 				}
 
-				$field_group_string = $this->get_container_with_field( $i, $internal_slug, $post_id, $customfield, $field_id, $description );
+				$field_group_string = $this->get_container_with_field( $i, $internal_slug, ( $form_type !== 'registration' ) ? $post_id : $user_id, $customfield, $field_id, $description, $form_type );
 				$form->addElement( new Element_HTML( $field_group_string ) );
 			}
+			$form->addElement( new Element_Hidden( 'geo_my_wp_address_count', $field_count ) );
 		}
-
-		$form->addElement( new Element_Hidden( 'geo_my_wp_address_count', $field_count ) );
 
 		return $form;
 	}
@@ -179,26 +203,27 @@ class BuddyFormsGeoMyWpElement {
 	 *
 	 * @param $i
 	 * @param $slug
-	 * @param $post_id
-	 * @param $customfield
+	 * @param $related_id
+	 * @param $custom_field
 	 * @param $field_id
 	 * @param $description
+	 * @param $form_type
 	 *
 	 * @return string
 	 */
-	public function get_container_with_field( $i, $slug, $post_id, $customfield, $field_id, $description ) {
+	public function get_container_with_field( $i, $slug, $related_id, $custom_field, $field_id, $description, $form_type ) {
 		$add_classes_for_link    = 'geo-address-field-add';
 		$delete_classes_for_link = 'geo-address-field-delete';
 		$delete_classes_for_link .= ( $i === 0 ) ? ' geo-address-field-0' : '';
 
 		$field_group_string = '<div class="bf_field_group bf-geo-address-fields">';
 		$field_group_string .= '<div class="container-for-geo-address-field">';
-		$field_group_string .= $this->get_address_elements( $slug, $post_id, $customfield['default'], $field_id, $i, $customfield['name'], $description );
+		$field_group_string .= $this->get_address_elements( $slug, $related_id, $custom_field['default'], $field_id, $i, $custom_field['name'], $description, $form_type );
 		$field_group_string .= '</div>';
 		$field_group_string .= '<div class="container-for-geo-address-controls">';
 		$field_group_string .= '<p class="gmw-lf-field  group_actions message-field message  gmw-lf-form-action error" id="gmw-lf-action-message"><i class="gmw-icon-spin"></i><i class="gmw-icon-cancel"></i><i class="gmw-icon-ok-light"></i></p>';
-		$field_group_string .= "<a class='${add_classes_for_link}' field_number='${i}' field_name='{$customfield['name']}' field_id='{$field_id}' data-default-value='{$customfield['default']}' data-description='{$description}'><span class='dashicons dashicons-plus'></span></a>";
-		$field_group_string .= "<a class='${delete_classes_for_link}' field_number='${i}' field_name='{$customfield['name']}' field_id='{$field_id}' data-default-value='{$customfield['default']}' data-description='{$description}'><span class='dashicons dashicons-minus'></span></a>";
+		$field_group_string .= "<a class='${add_classes_for_link}' field_number='${i}' field_name='{$custom_field['name']}' field_id='{$field_id}' data-default-value='{$custom_field['default']}' data-description='{$description}'><span class='dashicons dashicons-plus'></span></a>";
+		$field_group_string .= "<a class='${delete_classes_for_link}' field_number='${i}' field_name='{$custom_field['name']}' field_id='{$field_id}' data-default-value='{$custom_field['default']}' data-description='{$description}'><span class='dashicons dashicons-minus'></span></a>";
 		$field_group_string .= '</div>';
 		$field_group_string .= '</div>';
 
@@ -209,21 +234,30 @@ class BuddyFormsGeoMyWpElement {
 	 * Get the Address field with the hidden field
 	 *
 	 * @param $slug
-	 * @param $post_id
-	 * @param $default_value
+	 * @param int $related_id
+	 * @param string $default_value
 	 * @param $field_id
 	 * @param $count
 	 * @param $name
 	 * @param $description
+	 * @param $form_type
 	 *
 	 * @return string
 	 */
-	public function get_address_elements( $slug, $post_id = 0, $default_value = '', $field_id, $count, $name, $description ) {
-		if ( ! empty( $post_id ) ) {
-			$custom_field_val      = get_post_meta( $post_id, $slug, true );
-			$custom_field_val_lat  = get_post_meta( $post_id, $slug . '_lat', true );
-			$custom_field_val_long = get_post_meta( $post_id, $slug . '_lng', true );
-			$custom_field_val_data = get_post_meta( $post_id, $slug . '_data', true );
+	public function get_address_elements( $slug, $related_id, $default_value, $field_id, $count, $name, $description, $form_type ) {
+		if ( ! empty( $related_id ) ) {
+			if ( $form_type !== 'registration' ) {
+				$custom_field_val      = get_post_meta( $related_id, $slug, true );
+				$custom_field_val_lat  = get_post_meta( $related_id, $slug . '_lat', true );
+				$custom_field_val_long = get_post_meta( $related_id, $slug . '_lng', true );
+				$custom_field_val_data = get_post_meta( $related_id, $slug . '_data', true );
+			} else {
+				$custom_field_val      = get_user_meta( $related_id, $slug, true );
+				$custom_field_val_lat  = get_user_meta( $related_id, $slug . '_lat', true );
+				$custom_field_val_long = get_user_meta( $related_id, $slug . '_lng', true );
+				$custom_field_val_data = get_user_meta( $related_id, $slug . '_data', true );
+			}
+
 		} else {
 			$custom_field_val      = '';
 			$custom_field_val_lat  = '';
@@ -247,7 +281,7 @@ class BuddyFormsGeoMyWpElement {
 			$custom_field_val_data = '';
 		}
 
-		$name = apply_filters( 'buddyforms_form_field_geo_my_wp_address_name', stripcslashes( $name ), $slug, $post_id );
+		$name = apply_filters( 'buddyforms_form_field_geo_my_wp_address_name', stripcslashes( $name ), $slug, $related_id );
 
 		$element_attr = array(
 			'id'                 => str_replace( "-", "", $slug ),

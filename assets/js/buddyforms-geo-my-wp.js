@@ -73,6 +73,7 @@ var bfGeoAddressFieldInstance = {
             'field_name': element.attr('field_name'),
             'field_number': element.attr('field_number'),
             'default_value': element.attr('data-default-value'),
+            'form_slug': jQuery('div.the_buddyforms_form  form input[type="hidden"][name="form_slug"]').val(),
             'description': element.attr('data-description'),
         };
         bfGeoAddressFieldInstance.setFieldStatus('changed', fieldContainer);
@@ -107,6 +108,7 @@ var bfGeoAddressFieldInstance = {
                 '_nonce': buddyforms_geo_field.nonce,
                 'field_name': element.attr('field_name'),
                 'field_number': element.attr('field_number'),
+                'form_slug': jQuery('div.the_buddyforms_form  form input[type="hidden"][name="form_slug"]').val(),
                 'post_id': (post_id) ? post_id : 0,
             };
             bfGeoAddressFieldInstance.setFieldStatus('changed', mainContainer);

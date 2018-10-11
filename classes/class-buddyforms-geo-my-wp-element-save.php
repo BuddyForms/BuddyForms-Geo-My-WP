@@ -29,11 +29,25 @@ class BuddyFormsGeoMyWpElementSave {
 				$slug = sanitize_title( $customfield['name'] );
 			}
 
+			if ( ! isset( $_POST['form_slug'] ) ) {
+				return;
+			}
+
+			$form_slug = sanitize_title( $_POST['form_slug'] );
+			$user_id   = get_current_user_id();
+			if ( empty( $user_id ) ) {
+				$user_id = 0;
+			}
+
 			$amount_of_fields = 1;
 			if ( ! empty( $_POST['geo_my_wp_address_count'] ) ) {
 				$amount_of_fields = intval( $_POST['geo_my_wp_address_count'] );
 			}
-			update_post_meta( $post_id, $slug . '_count', $amount_of_fields );
+			if ( BuddyFormsGeoMyWpElement::get_buddyforms_form_type( $form_slug ) !== 'registration' ) {
+				update_post_meta( $post_id, $slug . '_count', $amount_of_fields );
+			} else {
+				update_user_meta( $user_id, $slug . '_count', $amount_of_fields );
+			}
 			for ( $i = 0; $i <= $amount_of_fields; $i ++ ) {
 				$internal_slug = $slug . '_' . $i;
 				if ( ! empty( $_POST[ $internal_slug ] ) && ! empty( $_POST[ $internal_slug . '_lat' ] ) && ! empty( $_POST[ $internal_slug . '_lng' ] ) && ! empty( $_POST[ $internal_slug . '_data' ] ) ) {
@@ -43,16 +57,32 @@ class BuddyFormsGeoMyWpElementSave {
 					$data_value   = buddyforms_sanitize( $customfield['type'], $_POST[ $internal_slug . '_data' ] );
 
 					if ( ! empty( $string_value ) ) {
-						update_post_meta( $post_id, $internal_slug, $string_value );
+						if ( BuddyFormsGeoMyWpElement::get_buddyforms_form_type( $form_slug ) !== 'registration' ) {
+							update_post_meta( $post_id, $internal_slug, $string_value );
+						} else {
+							update_user_meta( $user_id, $internal_slug, $string_value );
+						}
 					}
 					if ( ! empty( $lat_value ) ) {
-						update_post_meta( $post_id, $internal_slug . '_lat', $lat_value );
+						if ( BuddyFormsGeoMyWpElement::get_buddyforms_form_type( $form_slug ) !== 'registration' ) {
+							update_post_meta( $post_id, $internal_slug . '_lat', $lat_value );
+						} else {
+							update_user_meta( $user_id, $internal_slug . '_lat', $lat_value );
+						}
 					}
 					if ( ! empty( $lng_value ) ) {
-						update_post_meta( $post_id, $internal_slug . '_lng', $lng_value );
+						if ( BuddyFormsGeoMyWpElement::get_buddyforms_form_type( $form_slug ) !== 'registration' ) {
+							update_post_meta( $post_id, $internal_slug . '_lng', $lng_value );
+						} else {
+							update_user_meta( $user_id, $internal_slug . '_lng', $lng_value );
+						}
 					}
 					if ( ! empty( $data_value ) ) {
-						update_post_meta( $post_id, $internal_slug . '_data', $data_value );
+						if ( BuddyFormsGeoMyWpElement::get_buddyforms_form_type( $form_slug ) !== 'registration' ) {
+							update_post_meta( $post_id, $internal_slug . '_data', $data_value );
+						} else {
+							update_user_meta( $user_id, $internal_slug . '_data', $data_value );
+						}
 						$data_value = (array) json_decode( $data_value );
 					}
 
@@ -64,12 +94,8 @@ class BuddyFormsGeoMyWpElementSave {
 							return;
 						}
 						global $form_slug, $buddyforms;
-						$type    = 'post';
-						$id      = $post_id;
-						$user_id = get_current_user_id();
-						if ( empty( $user_id ) ) {
-							$user_id = 0;
-						}
+						$type = 'post';
+						$id   = $post_id;
 						if ( isset( $buddyforms[ $form_slug ] ) && $buddyforms[ $form_slug ]['form_type'] === 'registration' ) {
 							$type = 'user';
 							$id   = $user_id;
@@ -124,7 +150,17 @@ class BuddyFormsGeoMyWpElementSave {
 					}
 				} else {
 					if ( ! is_admin() ) {
-						update_post_meta( $post_id, $slug, '' );
+						if ( BuddyFormsGeoMyWpElement::get_buddyforms_form_type( $form_slug ) !== 'registration' ) {
+							update_post_meta( $post_id, $slug, '' );
+							update_post_meta( $post_id, $slug . '_lat', '' );
+							update_post_meta( $post_id, $slug . '_lng', '' );
+							update_post_meta( $post_id, $slug . '_data', '' );
+						} else {
+							update_user_meta( $user_id, $slug, '' );
+							update_user_meta( $user_id, $slug . '_lat', '' );
+							update_user_meta( $user_id, $slug . '_lng', '' );
+							update_user_meta( $user_id, $slug . '_data', '' );
+						}
 					}
 				}
 			}
