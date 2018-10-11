@@ -17,10 +17,7 @@ class BuddyFormsGeoMyWpBuilder {
 	private $load_script;
 
 	public function __construct() {
-		add_filter( 'buddyforms_add_form_element_select_option', array(
-			$this,
-			'buddyforms_formbuilder_elements_select'
-		), 10 );
+		add_filter( 'buddyforms_add_form_element_select_option', array( $this, 'buddyforms_formbuilder_elements_select' ), 10 );
 //		add_filter( 'buddyforms_form_element_add_field', array( $this, 'buddyforms_woocommerce_create_new_form_builder_form_element' ), 1, 5 );
 
 		add_action( 'admin_footer', array( $this, 'load_js_for_builder' ) );
@@ -40,7 +37,7 @@ class BuddyFormsGeoMyWpBuilder {
 		}
 
 		$elements_select_options['geo_my_wp']['label']                       = 'Geo My Wp';
-		$elements_select_options['geo_my_wp']['class']                       = 'bf_show_if_f_type_post';
+		$elements_select_options['geo_my_wp']['class']                       = 'bf_show_if_f_type_all';
 		$elements_select_options['geo_my_wp']['fields']['geo_my_wp_address'] = array(
 			'label'  => __( 'Address', 'buddyforms_geo_my_wp_locale' ),
 			'unique' => 'unique'
