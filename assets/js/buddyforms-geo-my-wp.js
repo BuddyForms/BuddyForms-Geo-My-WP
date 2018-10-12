@@ -10,7 +10,6 @@ var bfGeoAddressFieldInstance = {
         jQuery('.geo-address-field-add:last').addClass('geo-address-field-add-last').css('display', 'inline');
     },
     setFieldStatus: function (status, target) {
-        console.log(target);
         var actionContainer = jQuery(target).find('p.gmw-lf-field.message');
         if (actionContainer.length > 0) {
             actionContainer.removeClass('error ok changed');
@@ -102,6 +101,7 @@ var bfGeoAddressFieldInstance = {
         var mainContainer = jQuery(this).closest('.container-for-geo-address-controls').parent();
         var element = jQuery(this);
         var post_id = jQuery('input[name="post_id"]').val();
+
         var data = {
             'action': 'delete_bf_address_field',
             '_nonce': buddyforms_geo_field.nonce,
@@ -135,8 +135,11 @@ var bfGeoAddressFieldInstance = {
     },
     init: function () {
         var fields = jQuery('.bf-address-autocomplete');
-        var form = jQuery('div.the_buddyforms_form form');
-        if (fields.length > 0) {
+        var form = jQuery('form[id^="buddyforms_"]');
+        if(form.length === 0) {
+            form = jQuery('form[id^="submissions_"]');
+        }
+        if (fields.length > 0 && form.length > 0) {
             bfGeoAddressFieldInstance.fieldInit(fields);
             form.on('click', '.geo-address-field-add', bfGeoAddressFieldInstance.addNewField);
             form.on('click', '.geo-address-field-delete', bfGeoAddressFieldInstance.removeNewField);

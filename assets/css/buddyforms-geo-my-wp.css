@@ -1,3 +1,4 @@
+.postbox-submissions .standard-form .bf-geo-address-fields .container-for-geo-address-field .spinner,
 .the_buddyforms_form form fieldset .col-xs-12 .container-for-geo-address-field .spinner {
     background: url('/wp-admin/images/wpspin_light.gif') no-repeat;
     background-size: 16px 16px;
@@ -10,6 +11,7 @@
     margin: 5px 5px 0;
 }
 
+.postbox-submissions .standard-form .bf-geo-address-fields .container-for-geo-address-field,
 .the_buddyforms_form form fieldset .col-xs-12 .container-for-geo-address-field {
     position: relative;
     display: inline;
@@ -19,28 +21,31 @@
     box-sizing: border-box;
 }
 
+.postbox-submissions .standard-form .bf-geo-address-fields .container-for-geo-address-controls,
 .the_buddyforms_form form fieldset .col-xs-12 .container-for-geo-address-controls {
     float: right;
     width: 15%;
     box-sizing: border-box;
     position: relative;
-    top: 1rem;
     display: inline-flex;
 }
 
+.postbox-submissions .standard-form .bf-geo-address-fields .container-for-geo-address-controls > a,
 .the_buddyforms_form form fieldset .col-xs-12 .container-for-geo-address-controls > a {
     padding-left: 5px;
     padding-right: 5px;
 }
 
+.postbox-submissions .standard-form .bf-geo-address-fields .container-for-geo-address-field input[type=text].bf-address-autocomplete,
 .container-for-geo-address-field .bf-address-autocomplete {
     width: 95%;
 }
 
-.bf_field_group.bf-geo-address-fields {
+.postbox-submissions .standard-form .bf_field_group.bf-geo-address-fields {
     height: 50px;
 }
 
+.buddyforms-metabox p.gmw-lf-field.message,
 .the_buddyforms_form p.gmw-lf-field.message {
     padding: 5px;
     color: #fff;
@@ -48,26 +53,30 @@
     display: inline-table;
     font-size: 0.7rem;
     border-radius: 3px;
-    margin-bottom: 0;
 }
 
+.buddyforms-metabox [class^=gmw-icon-],
 .the_buddyforms_form [class^=gmw-icon-] {
     margin-right: .3em;
 }
 
+.buddyforms-metabox p.gmw-lf-field.message.changed i.gmw-icon-spin, .buddyforms-metabox p.gmw-lf-field.message.error i.gmw-icon-cancel, .buddyforms-metabox p.gmw-lf-field.message.ok i.gmw-icon-ok-light,
 .the_buddyforms_form p.gmw-lf-field.message.changed i.gmw-icon-spin, .the_buddyforms_form p.gmw-lf-field.message.error i.gmw-icon-cancel, .the_buddyforms_form p.gmw-lf-field.message.ok i.gmw-icon-ok-light {
     display: inline-block;
 }
 
+.buddyforms-metabox p.gmw-lf-field.message i,
 .the_buddyforms_form p.gmw-lf-field.message i {
     display: none;
 }
 
+.buddyforms-metabox p.gmw-lf-field.message.error,
 .the_buddyforms_form p.gmw-lf-field.message.error {
     color: #a94442;
     background-color: #f2dede;
 }
 
+.buddyforms-metabox p.gmw-lf-field.message.ok,
 .the_buddyforms_form p.gmw-lf-field.message.ok {
     display: inline-table;
     color: #3c763d;
@@ -75,7 +84,8 @@
     border-color: #82b77b
 }
 
-.the_buddyforms_form  p.gmw-lf-field.message.changed {
+.buddyforms-metabox p.gmw-lf-field.message.changed,
+.the_buddyforms_form p.gmw-lf-field.message.changed {
     color: #31708f;
     background-color: #d9edf7;
     border-color: #bce8f1
