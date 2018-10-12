@@ -37,12 +37,18 @@ class BuddyFormsGeoMyWpElement {
 				die( 1 );
 			}
 
-			$post_id       = intval( $_POST['post_id'] );
+			$id       = intval( $_POST['post_id'] );
+            $form_slug     = sanitize_text_field( $_POST['form_slug'] );
+
+            if(self::get_buddyforms_form_type( $form_slug ) === 'registration'){
+               $id = get_current_user_id();
+            }
+
 			$field_number  = intval( $_POST['field_number'] );
-			$form_slug     = sanitize_text_field( $_POST['form_slug'] );
+
 			$name          = sanitize_text_field( $_POST['field_name'] );
 			$slug          = sanitize_title( $name ) . '_' . ( $field_number );
-			$remove_result = $this->delete_address_element( $post_id, $slug, $form_slug );
+			$remove_result = $this->delete_address_element( $id, $slug, $form_slug );
 
 			if ( $remove_result ) {
 				$field_number --;
@@ -84,9 +90,9 @@ class BuddyFormsGeoMyWpElement {
 				$del4 = delete_post_meta( $related_id, $slug . '_data' );
 			} else {
 				$del1 = delete_user_meta( $related_id, $slug );
-				$del2 = delete_post_meta( $related_id, $slug . '_lat' );
-				$del3 = delete_post_meta( $related_id, $slug . '_lng' );
-				$del4 = delete_post_meta( $related_id, $slug . '_data' );
+				$del2 = delete_user_meta( $related_id, $slug . '_lat' );
+				$del3 = delete_user_meta( $related_id, $slug . '_lng' );
+				$del4 = delete_user_meta( $related_id, $slug . '_data' );
 			}
 			$result = ( $del1 && $del2 && $del3 && $del4 );
 		}

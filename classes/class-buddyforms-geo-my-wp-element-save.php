@@ -43,11 +43,6 @@ class BuddyFormsGeoMyWpElementSave {
 			if ( ! empty( $_POST['geo_my_wp_address_count'] ) ) {
 				$amount_of_fields = intval( $_POST['geo_my_wp_address_count'] );
 			}
-			if ( BuddyFormsGeoMyWpElement::get_buddyforms_form_type( $form_slug ) !== 'registration' ) {
-				update_post_meta( $post_id, $slug . '_count', $amount_of_fields );
-			} else {
-				update_user_meta( $user_id, $slug . '_count', $amount_of_fields );
-			}
 			for ( $i = 0; $i <= $amount_of_fields; $i ++ ) {
 				$internal_slug = $slug . '_' . $i;
 				if ( ! empty( $_POST[ $internal_slug ] ) && ! empty( $_POST[ $internal_slug . '_lat' ] ) && ! empty( $_POST[ $internal_slug . '_lng' ] ) && ! empty( $_POST[ $internal_slug . '_data' ] ) ) {
@@ -83,10 +78,10 @@ class BuddyFormsGeoMyWpElementSave {
 						} else {
 							update_user_meta( $user_id, $internal_slug . '_data', $data_value );
 						}
-						$data_value = (array) json_decode( $data_value );
+						$data_value = (array) json_decode( stripslashes_deep( $data_value ), true );
 					}
 
-					if ( defined( 'GMW_PT_PATH' ) ) {
+					if ( defined( 'GMW_PT_PATH' ) && ! empty( $data_value ) ) {
 						//include the update location file file
 						include_once( GMW_PT_PATH . '/includes/gmw-pt-update-location.php' );
 						//make sure the file included and the function exists
@@ -149,22 +144,36 @@ class BuddyFormsGeoMyWpElementSave {
 						self::add_new_address( $location_data );
 					}
 				} else {
-					if ( ! is_admin() ) {
-						if ( BuddyFormsGeoMyWpElement::get_buddyforms_form_type( $form_slug ) !== 'registration' ) {
-							update_post_meta( $post_id, $slug, '' );
-							update_post_meta( $post_id, $slug . '_lat', '' );
-							update_post_meta( $post_id, $slug . '_lng', '' );
-							update_post_meta( $post_id, $slug . '_data', '' );
-						} else {
-							update_user_meta( $user_id, $slug, '' );
-							update_user_meta( $user_id, $slug . '_lat', '' );
-							update_user_meta( $user_id, $slug . '_lng', '' );
-							update_user_meta( $user_id, $slug . '_data', '' );
-						}
+					//Check if the value exist in db. If exist and it not come trough post then remove it
+					if ( BuddyFormsGeoMyWpElement::get_buddyforms_form_type( $form_slug ) !== 'registration' ) {
+						$meta = get_post_meta( $post_id, $internal_slug, true );
+					} else {
+						$meta = get_user_meta( $user_id, $internal_slug, true );
 					}
+
+					if ( $meta !== false ) {
+						if ( BuddyFormsGeoMyWpElement::get_buddyforms_form_type( $form_slug ) !== 'registration' ) {
+							$this->delete_meta($post_id, $internal_slug);
+						} else {
+							$this->delete_meta($user_id, $internal_slug, 'delete_user_meta');
+						}
+						$amount_of_fields--;
+					}
+				}
+				if ( BuddyFormsGeoMyWpElement::get_buddyforms_form_type( $form_slug ) !== 'registration' ) {
+					update_post_meta( $post_id, $slug . '_count', $amount_of_fields );
+				} else {
+					update_user_meta( $user_id, $slug . '_count', $amount_of_fields );
 				}
 			}
 		}
+	}
+
+	public function delete_meta( $id, $slug, $type = 'delete_post_meta' ) {
+		$type( $id, $slug );
+		$type( $id, $slug . '_lat' );
+		$type( $id, $slug . '_lng' );
+		$type( $id, $slug . '_data' );
 	}
 
 	/**

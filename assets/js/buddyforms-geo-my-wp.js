@@ -102,32 +102,29 @@ var bfGeoAddressFieldInstance = {
         var mainContainer = jQuery(this).closest('.container-for-geo-address-controls').parent();
         var element = jQuery(this);
         var post_id = jQuery('input[name="post_id"]').val();
-        if (post_id) {
-            var data = {
-                'action': 'delete_bf_address_field',
-                '_nonce': buddyforms_geo_field.nonce,
-                'field_name': element.attr('field_name'),
-                'field_number': element.attr('field_number'),
-                'form_slug': jQuery('div.the_buddyforms_form  form input[type="hidden"][name="form_slug"]').val(),
-                'post_id': (post_id) ? post_id : 0,
-            };
-            bfGeoAddressFieldInstance.setFieldStatus('changed', mainContainer);
-            jQuery.ajax({
-                type: 'POST',
-                url: buddyforms_geo_field.admin_url,
-                data: data,
-                success: function (newRow) {
-                    if (newRow && newRow['result'] && newRow['count'] && newRow['name']) {
-                        bfGeoAddressFieldInstance.removeFieldContainer(mainContainer, element.attr('field_number'));
-                    } else {
-                        bfGeoAddressFieldInstance.setFieldStatus('error', mainContainer);
-                        alert('Contact the admin, some error exist when try to add a new Address field');
-                    }
+        var data = {
+            'action': 'delete_bf_address_field',
+            '_nonce': buddyforms_geo_field.nonce,
+            'field_name': element.attr('field_name'),
+            'field_number': element.attr('field_number'),
+            'form_slug': jQuery('div.the_buddyforms_form  form input[type="hidden"][name="form_slug"]').val(),
+            'post_id': (post_id) ? post_id : 0,
+        };
+        bfGeoAddressFieldInstance.setFieldStatus('changed', mainContainer);
+        jQuery.ajax({
+            type: 'POST',
+            url: buddyforms_geo_field.admin_url,
+            data: data,
+            success: function (newRow) {
+                if (newRow && newRow['result'] && newRow['name']) {
+                    bfGeoAddressFieldInstance.removeFieldContainer(mainContainer, element.attr('field_number'));
+                } else {
+                    bfGeoAddressFieldInstance.setFieldStatus('error', mainContainer);
+                    alert('Contact the admin, some error exist when try to add a new Address field');
                 }
-            });
-        } else {
-            bfGeoAddressFieldInstance.removeFieldContainer(mainContainer, element.attr('field_number'));
-        }
+            }
+        });
+
         bfGeoAddressFieldInstance.updateAddButtonClass();
     },
     removeFieldContainer: function (container, count) {
