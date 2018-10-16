@@ -37,8 +37,6 @@ class BuddyFormsGeoMyWpManager {
 		new BuddyFormsGeoMyWpBuilder();
 		require_once 'class-buddyforms-geo-my-wp-element.php';
 		new BuddyFormsGeoMyWpElement();
-		require_once 'class-buddyforms-geo-my-wp-element-save.php';
-		new BuddyFormsGeoMyWpElementSave();
 		require_once 'class-buddyforms-geo-my-wp-submission.php';
 		new BuddyFormsGeoMyWpSubmission();
 	}

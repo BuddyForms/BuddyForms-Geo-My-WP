@@ -30,10 +30,9 @@
     display: inline-flex;
 }
 
-.postbox-submissions .standard-form .bf-geo-address-fields .container-for-geo-address-controls > a,
-.the_buddyforms_form form fieldset .col-xs-12 .container-for-geo-address-controls > a {
-    padding-left: 5px;
-    padding-right: 5px;
+.postbox-submissions .standard-form .bf-geo-address-fields .container-for-geo-address-controls > p > a,
+.the_buddyforms_form form fieldset .col-xs-12 .container-for-geo-address-controls > p > a {
+    cursor: pointer;
 }
 
 .postbox-submissions .standard-form .bf-geo-address-fields .container-for-geo-address-field input[type=text].bf-address-autocomplete,

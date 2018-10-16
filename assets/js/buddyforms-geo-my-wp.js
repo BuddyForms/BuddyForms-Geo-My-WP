@@ -111,20 +111,18 @@ var bfGeoAddressFieldInstance = {
     });
   },
   removeNewField: function() {
-    var mainContainer = jQuery(this).
-        closest('.container-for-geo-address-controls').
-        parent();
+    var mainContainer = jQuery(this).closest('.container-for-geo-address-controls').parent();
     var element = jQuery(this);
     var post_id = jQuery('input[name="post_id"]').val();
-
+    var previousDataString = mainContainer.find('input[name$="_data"]').val();
+    var previousData = (previousDataString) ? JSON.parse(previousDataString) : '';
     var data = {
       'action': 'delete_bf_address_field',
       '_nonce': buddyforms_geo_field.nonce,
       'field_name': element.attr('field_name'),
       'field_number': element.attr('field_number'),
-      'form_slug': jQuery(
-          'div.the_buddyforms_form  form input[type="hidden"][name="form_slug"]').
-          val(),
+      'location_id': (previousData && previousData.location_id) ? previousData.location_id : 0,
+      'form_slug': jQuery('div.the_buddyforms_form  form input[type="hidden"][name="form_slug"]').val(),
       'post_id': (post_id) ? post_id : 0,
     };
     bfGeoAddressFieldInstance.setFieldStatus('changed', mainContainer);
@@ -134,12 +132,10 @@ var bfGeoAddressFieldInstance = {
       data: data,
       success: function(newRow) {
         if (newRow && newRow['result'] && newRow['name']) {
-          bfGeoAddressFieldInstance.removeFieldContainer(mainContainer,
-              element.attr('field_number'));
+          bfGeoAddressFieldInstance.removeFieldContainer(mainContainer, element.attr('field_number'));
         } else {
           bfGeoAddressFieldInstance.setFieldStatus('error', mainContainer);
-          alert(
-              'Contact the admin, some error exist when try to add a new Address field');
+          alert('Contact the admin, some error exist when try to add a new Address field');
         }
       },
     });
@@ -160,10 +156,8 @@ var bfGeoAddressFieldInstance = {
     }
     if (fields.length > 0 && form.length > 0) {
       bfGeoAddressFieldInstance.fieldInit(fields);
-      form.on('click', '.geo-address-field-add',
-          bfGeoAddressFieldInstance.addNewField);
-      form.on('click', '.geo-address-field-delete',
-          bfGeoAddressFieldInstance.removeNewField);
+      form.on('click', '.geo-address-field-add', bfGeoAddressFieldInstance.addNewField);
+      form.on('click', '.geo-address-field-delete', bfGeoAddressFieldInstance.removeNewField);
     }
   },
   fieldInit: function(fields) {
@@ -175,12 +169,9 @@ var bfGeoAddressFieldInstance = {
       isNotAttached = (typeof(isNotAttached) === 'undefined');
       if (isNotAttached) {
         bfGeoAddressFieldInstance.loadAutocomplete(input.id);
-        var fieldContainer = jQuery(input).
-            closest('.container-for-geo-address-field').
-            parent();
+        var fieldContainer = jQuery(input).closest('.container-for-geo-address-field').parent();
         var isReady = jQuery('input[name="' + input.id + '_data"]').val();
-        bfGeoAddressFieldInstance.setFieldStatus((isReady) ? 'ok' : 'error',
-            fieldContainer);
+        bfGeoAddressFieldInstance.setFieldStatus((isReady) ? 'ok' : 'error', fieldContainer);
         bfGeoAddressFieldInstance.updateAddButtonClass();
       }
     });
