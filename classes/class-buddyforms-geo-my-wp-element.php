@@ -66,10 +66,10 @@ class BuddyFormsGeoMyWpElement {
 			}
 
 			if ( ! empty( $field_data ) ) {
-				$field_data = json_decode( $field_data, true );
+				$field_data = json_decode( stripslashes_deep( $field_data ), true );
 				if ( is_array( $field_data ) && count( $field_data ) > 0 ) {
 					$new_field_data = array();
-					$field_data = array_unique( $field_data, SORT_REGULAR );
+					$field_data     = array_unique( $field_data, SORT_REGULAR );
 					foreach ( $field_data as $field_datum ) {
 						if ( ! empty( $field_datum['field'] ) ) {
 							$internal_slug = $field_datum['field'];

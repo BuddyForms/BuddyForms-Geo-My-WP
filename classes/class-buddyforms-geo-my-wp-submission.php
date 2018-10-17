@@ -36,23 +36,21 @@ class BuddyFormsGeoMyWpSubmission {
 			}
 			$form_type = BuddyFormsGeoMyWpElement::get_buddyforms_form_type( $form_slug );
 			if ( 'registration' !== $form_type ) {
-				$field_count = get_post_meta( $item->ID, $field_slug . '_count', true );
+				$field_data = get_post_meta( $item->ID, 'bf_' . $field_slug . '_count', true );
 			} else {
-				$field_count = get_user_meta( $item->post_author, $field_slug . '_count', true );
-			}
-			if ( empty( $field_count ) ) {
-				$field_count = 0;
-			}
-			$addresses = array();
-			for ( $i = 0; $i <= $field_count; $i ++ ) {
-				if ( 'registration' !== $form_type ) {
-					$addresses[] = get_post_meta( $item->ID, $field_slug . '_' . $i, true );
-				} else {
-					$addresses[] = get_user_meta( $item->post_author, $field_slug . '_' . $i, true );
-				}
+				$field_data = get_user_meta( $item->post_author, 'bf_' . $field_slug . '_count', true );
 			}
 
-			$bf_value = implode( '<br/>', $addresses );
+			if ( ! empty( $field_data ) ) {
+				$addresses = array();
+				foreach ( $field_data as $field_datum ) {
+					if ( ! empty( $field_datum->field ) && ! empty( $field_datum->data ) ) {
+						$addresses[] = $field_datum->data['formatted_address'];
+					}
+				}
+
+				$bf_value = implode( '<br/>', $addresses );
+			}
 		}
 
 		return $bf_value;
