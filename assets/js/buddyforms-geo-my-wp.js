@@ -179,6 +179,7 @@ var fieldContainerExamples, bfGeoAddressFieldInstance = {
         }
       } else {
         deleteButton.hide();
+        addButton.show();
       }
     });
   },
