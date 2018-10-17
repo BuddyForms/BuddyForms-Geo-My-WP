@@ -28,7 +28,6 @@ class BuddyFormsGeoMyWpManager {
 				'object_subtype' => 'loading_dependency',
 				'object_name'    => $ex->getMessage(),
 			) );
-
 		}
 	}
 

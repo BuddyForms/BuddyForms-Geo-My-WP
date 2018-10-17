@@ -44,19 +44,28 @@
     height: 50px;
 }
 
+.the_buddyforms_form p.bfgmw-action {
+    padding: 15px 5px;
+}
+
 .buddyforms-metabox p.gmw-lf-field.message,
+#buddypress .the_buddyforms_form p.gmw-lf-field.message,
 .the_buddyforms_form p.gmw-lf-field.message {
-    padding: 5px;
-    color: #fff;
+    color: #000;
     clear: both;
     display: inline-table;
     font-size: 0.7rem;
     border-radius: 3px;
+    padding: 15px 5px;
 }
 
 .buddyforms-metabox [class^=gmw-icon-],
 .the_buddyforms_form [class^=gmw-icon-] {
     margin-right: .3em;
+}
+
+.bf-geo-address-example {
+    display: none;
 }
 
 .buddyforms-metabox p.gmw-lf-field.message.changed i.gmw-icon-spin, .buddyforms-metabox p.gmw-lf-field.message.error i.gmw-icon-cancel, .buddyforms-metabox p.gmw-lf-field.message.ok i.gmw-icon-ok-light,
@@ -70,6 +79,7 @@
 }
 
 .buddyforms-metabox p.gmw-lf-field.message.error,
+#buddypress .the_buddyforms_form p.gmw-lf-field.message.error,
 .the_buddyforms_form p.gmw-lf-field.message.error {
     color: #a94442;
     background-color: #f2dede;
