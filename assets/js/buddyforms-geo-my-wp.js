@@ -112,26 +112,27 @@ var fieldContainerExamples, bfGeoAddressFieldInstance = {
   },
   removeField: function(targetSlug) {
     var target = jQuery('#' + targetSlug);
-    if(target.val()) {
-      var targetContainer = target.parent().parent();
-      var container = targetContainer.parent();
+    var targetContainer = target.parent().parent();
+    var container = targetContainer.parent();
+    targetContainer.hide().removeClass('bf-address-autocomplete-active');
+    var activeFieldContainer = jQuery(container).find('.bf-address-autocomplete-active');
+    var hiddenDataOfDeleteField = jQuery('input[type="hidden"][name="' + targetSlug + '_data"]');
+    var setDataForDelete = hiddenDataOfDeleteField.val();
+    if (setDataForDelete) {
+      setDataForDelete = JSON.parse(setDataForDelete);
+      setDataForDelete.delete = setDataForDelete.location_id;
+      hiddenDataOfDeleteField.val(JSON.stringify(setDataForDelete));
+    }
+    if (target.val() && activeFieldContainer.length === 0) {
       var exampleContainer = jQuery(container).find('.bf-geo-address-example');
       var fieldExampleInput = jQuery(container).find('.container-for-geo-address-field input[type="text"].bf-address-autocomplete-example');
       var fieldSlug = fieldExampleInput.attr('name');
-      targetContainer.hide().removeClass('bf-address-autocomplete-active');
-      var hiddenDataOfDeleteField = jQuery('input[type="hidden"][name="' + targetSlug + '_data"]');
-      var setDataForDelete = hiddenDataOfDeleteField.val();
-      if (setDataForDelete) {
-        setDataForDelete = JSON.parse(setDataForDelete);
-        setDataForDelete.delete = setDataForDelete.location_id;
-        hiddenDataOfDeleteField.val(JSON.stringify(setDataForDelete));
-      }
       //Add an empty field
       var newFieldSlug = fieldSlug + '_' + bfGeoAddressFieldInstance.generateFieldId();
       bfGeoAddressFieldInstance.addField(jQuery(exampleContainer).clone(), jQuery(container), newFieldSlug);
-      //Update action links
-      bfGeoAddressFieldInstance.updateAddButtonClass();
     }
+    //Update action links
+    bfGeoAddressFieldInstance.updateAddButtonClass();
   },
   actionAddField: function() {
     var element = jQuery(this);
