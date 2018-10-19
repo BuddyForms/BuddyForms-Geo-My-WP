@@ -3,7 +3,7 @@
  * Plugin Name: BuddyForms Geo My Wp
  * Plugin URI: http://buddyforms.com/
  * Description: This Plugin adds field to link with Geo My Wp
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: ThemeKraft Dev Team
  * Author URI: https://themkraft.com/#team
  * License: GPLv2 or later
@@ -41,7 +41,7 @@ if ( ! class_exists( 'buddyforms_geo_my_wp' ) ) {
 		/**
 		 * Instance of this class
 		 *
-		 * @var $instance bf_woo_elem
+		 * @var $instance buddyforms_geo_my_wp
 		 */
 		protected static $instance = null;
 
@@ -65,7 +65,7 @@ if ( ! class_exists( 'buddyforms_geo_my_wp' ) ) {
 		/**
 		 * Return an instance of this class.
 		 *
-		 * @return object A single instance of this class.
+		 * @return buddyforms_geo_my_wp A single instance of this class.
 		 */
 		public static function get_instance() {
 			// If the single instance hasn't been set, set it now.
