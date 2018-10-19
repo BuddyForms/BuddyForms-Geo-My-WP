@@ -5,9 +5,8 @@
 .postbox-submissions .standard-form .bf-geo-address-fields .container-for-geo-address-controls>p>a>span.dashicons,.the_buddyforms_form form fieldset .col-xs-12 .container-for-geo-address-controls>p>a>span.dashicons{width:10px;height:10px;font-size:16px}
 .postbox-submissions .standard-form .bf-geo-address-fields .container-for-geo-address-field input[type=text].bf-address-autocomplete,.container-for-geo-address-field .bf-address-autocomplete{width:95%}
 .postbox-submissions .standard-form .bf_field_group.bf-geo-address-fields{height:50px}
-.the_buddyforms_form p.bfgmw-action a{display:none}
+.the_buddyforms_form p.bfgmw-action a.geo-address-field-add{display:none}
 .the_buddyforms_form p.bfgmw-action{padding:15px 5px}
-.bf-geo-address-fields .container-for-geo-address-controls .bfgmw-action .geo-address-field-delete:nth-child(2){display:none}
 .buddyforms-metabox p.gmw-lf-field.message,#buddypress .the_buddyforms_form p.gmw-lf-field.message,.the_buddyforms_form p.gmw-lf-field.message{color:#000;clear:both;display:inline-table;font-size:.7rem;border-radius:3px;padding:15px 5px}
 .buddyforms-metabox [class^=gmw-icon-],.the_buddyforms_form [class^=gmw-icon-]{margin-right:.3em}
 .bf-geo-address-example{display:none}
