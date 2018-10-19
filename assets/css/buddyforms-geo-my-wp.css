@@ -44,16 +44,12 @@
     height: 50px;
 }
 
-.the_buddyforms_form p.bfgmw-action a {
+.the_buddyforms_form p.bfgmw-action a.geo-address-field-add {
     display: none;
 }
 
 .the_buddyforms_form p.bfgmw-action {
     padding: 15px 5px;
-}
-
-.bf-geo-address-fields .container-for-geo-address-controls .bfgmw-action .geo-address-field-delete:nth-child(2) {
-    display: none;
 }
 
 .buddyforms-metabox p.gmw-lf-field.message,

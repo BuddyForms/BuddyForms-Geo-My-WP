@@ -65,14 +65,12 @@ var fieldContainerExamples, bfGeoAddressFieldInstance = {
       var deleteButton = jQuery(visibleContainer).find('.geo-address-field-delete');
       var addButton = jQuery(visibleContainer).find('.geo-address-field-add');
       if (containers.length > 1) {
-        deleteButton.css('display', 'inline');
         if ((key + 1) !== containers.length) {
           addButton.hide();
         } else {
           addButton.css('display', 'inline');
         }
       } else {
-        deleteButton.hide();
         addButton.css('display', 'inline');
       }
     });
@@ -113,16 +111,27 @@ var fieldContainerExamples, bfGeoAddressFieldInstance = {
     bfGeoAddressFieldInstance.loadAutoComplete(targetSlug);
   },
   removeField: function(targetSlug) {
-    jQuery('#' + targetSlug).parent().parent().hide().removeClass('bf-address-autocomplete-active');
-    var hiddenDataOfDeleteField = jQuery('input[type="hidden"][name="' + targetSlug + '_data"]');
-    var setDataForDelete = hiddenDataOfDeleteField.val();
-    if (setDataForDelete) {
-      setDataForDelete = JSON.parse(setDataForDelete);
-      setDataForDelete.delete = setDataForDelete.location_id;
-      hiddenDataOfDeleteField.val(JSON.stringify(setDataForDelete));
+    var target = jQuery('#' + targetSlug);
+    if(target.val()) {
+      var targetContainer = target.parent().parent();
+      var container = targetContainer.parent();
+      var exampleContainer = jQuery(container).find('.bf-geo-address-example');
+      var fieldExampleInput = jQuery(container).find('.container-for-geo-address-field input[type="text"].bf-address-autocomplete-example');
+      var fieldSlug = fieldExampleInput.attr('name');
+      targetContainer.hide().removeClass('bf-address-autocomplete-active');
+      var hiddenDataOfDeleteField = jQuery('input[type="hidden"][name="' + targetSlug + '_data"]');
+      var setDataForDelete = hiddenDataOfDeleteField.val();
+      if (setDataForDelete) {
+        setDataForDelete = JSON.parse(setDataForDelete);
+        setDataForDelete.delete = setDataForDelete.location_id;
+        hiddenDataOfDeleteField.val(JSON.stringify(setDataForDelete));
+      }
+      //Add an empty field
+      var newFieldSlug = fieldSlug + '_' + bfGeoAddressFieldInstance.generateFieldId();
+      bfGeoAddressFieldInstance.addField(jQuery(exampleContainer).clone(), jQuery(container), newFieldSlug);
+      //Update action links
+      bfGeoAddressFieldInstance.updateAddButtonClass();
     }
-    //Update action links
-    bfGeoAddressFieldInstance.updateAddButtonClass();
   },
   actionAddField: function() {
     var element = jQuery(this);
