@@ -159,7 +159,7 @@ var fieldContainerExamples, bfGeoAddressFieldInstance = {
             var data = jQuery(currentHiddenField).val();
             var fieldTarget = jQuery(currentHiddenField).attr('field_target');
             if (data && fieldTarget) {
-              allResults.push({field: fieldTarget, data: data});
+              allResults.push({field: fieldTarget, data: JSON.parse(data)});
             }
           });
           if (allResults.length > 0) {

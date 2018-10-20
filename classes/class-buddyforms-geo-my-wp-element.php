@@ -60,13 +60,13 @@ class BuddyFormsGeoMyWpElement {
 				$id   = $user_id;
 			}
 
-			$field_data = 0;
+			$field_data_string = 0;
 			if ( ! empty( $_POST[ 'bf_' . $slug . '_count' ] ) ) {
-				$field_data = $_POST[ 'bf_' . $slug . '_count' ];
+				$field_data_string = $_POST[ 'bf_' . $slug . '_count' ];
 			}
 
-			if ( ! empty( $field_data ) ) {
-				$field_data = json_decode( stripslashes_deep( $field_data ), true );
+			if ( ! empty( $field_data_string ) ) {
+				$field_data        = json_decode( stripslashes_deep($field_data_string), true );
 				if ( is_array( $field_data ) && count( $field_data ) > 0 ) {
 					$new_field_data = array();
 					$field_data     = array_unique( $field_data, SORT_REGULAR );
