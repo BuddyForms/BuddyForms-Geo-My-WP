@@ -1,5 +1,5 @@
 .postbox-submissions .standard-form .bf-geo-address-fields .container-for-geo-address-field,
-.the_buddyforms_form form fieldset .col-xs-12 .container-for-geo-address-field {
+.the_buddyforms_form fieldset .col-xs-12 .container-for-geo-address-field {
     position: relative;
     display: inline;
     min-height: 1px;
@@ -9,7 +9,7 @@
 }
 
 .postbox-submissions .standard-form .bf-geo-address-fields .container-for-geo-address-controls,
-.the_buddyforms_form form fieldset .col-xs-12 .container-for-geo-address-controls {
+.the_buddyforms_form fieldset .col-xs-12 .container-for-geo-address-controls {
     float: right;
     width: 90px;
     box-sizing: border-box;
@@ -19,17 +19,17 @@
 }
 
 .postbox-submissions .standard-form .bf-geo-address-fields .container-for-geo-address-controls > p > a,
-.the_buddyforms_form form fieldset .col-xs-12 .container-for-geo-address-controls > p > a {
+.the_buddyforms_form fieldset .col-xs-12 .container-for-geo-address-controls > p > a {
     cursor: pointer;
 }
 
 .postbox-submissions .standard-form .bf-geo-address-fields .container-for-geo-address-controls [class*=" gmw-icon-"]:before, .postbox-submissions .standard-form .bf-geo-address-fields .container-for-geo-address-controls [class^=gmw-icon-]:before,
-.the_buddyforms_form form fieldset .col-xs-12 .container-for-geo-address-controls [class*=" gmw-icon-"]:before, .the_buddyforms_form form fieldset .col-xs-12 .container-for-geo-address-controls [class^=gmw-icon-]:before {
+.the_buddyforms_form fieldset .col-xs-12 .container-for-geo-address-controls [class*=" gmw-icon-"]:before, .the_buddyforms_form fieldset .col-xs-12 .container-for-geo-address-controls [class^=gmw-icon-]:before {
     width: 0.5rem;
 }
 
 .postbox-submissions .standard-form .bf-geo-address-fields .container-for-geo-address-controls > p > a > span.dashicons,
-.the_buddyforms_form form fieldset .col-xs-12 .container-for-geo-address-controls > p > a > span.dashicons {
+.the_buddyforms_form fieldset .col-xs-12 .container-for-geo-address-controls > p > a > span.dashicons {
     width: 10px;
     height: 10px;
     font-size: 16px;

@@ -59,12 +59,11 @@ var fieldContainerExamples, bfGeoAddressFieldInstance = {
       jQuery(input_field).attr('attached', 'true');
     }
   },
-  updateAddButtonClass: function() {
-    var containers = jQuery('.bf-geo-address-fields.bf-address-autocomplete-active .container-for-geo-address-controls');
+  updateAddButtonClass: function(conatiner) {
+    var containers = jQuery(conatiner).find('.bf-geo-address-fields.bf-address-autocomplete-active .container-for-geo-address-controls');
     jQuery.each(containers, function(key, visibleContainer) {
-      var deleteButton = jQuery(visibleContainer).find('.geo-address-field-delete');
       var addButton = jQuery(visibleContainer).find('.geo-address-field-add');
-      if (containers.length > 1) {
+      if (containers.length >= 1) {
         if ((key + 1) !== containers.length) {
           addButton.hide();
         } else {
@@ -106,23 +105,23 @@ var fieldContainerExamples, bfGeoAddressFieldInstance = {
     //Append to higher container
     target.append(source);
     //Update action links
-    bfGeoAddressFieldInstance.updateAddButtonClass();
+    bfGeoAddressFieldInstance.updateAddButtonClass(target);
     //Attach the geocode auto-complete
     bfGeoAddressFieldInstance.loadAutoComplete(targetSlug);
   },
-  removeField: function(targetSlug) {
-    var target = jQuery('#' + targetSlug);
-    var targetContainer = target.parent().parent();
+  removeField: function(targetSlug, element) {
+    var targetContainer = jQuery(element).closest('.container-for-geo-address-controls').parent();
     var container = targetContainer.parent();
     targetContainer.hide().removeClass('bf-address-autocomplete-active');
     var activeFieldContainer = jQuery(container).find('.bf-address-autocomplete-active');
-    var hiddenDataOfDeleteField = jQuery('input[type="hidden"][name="' + targetSlug + '_data"]');
+    var hiddenDataOfDeleteField = jQuery(container).find('input[type="hidden"][name="' + targetSlug + '_data"]');
     var setDataForDelete = hiddenDataOfDeleteField.val();
     if (setDataForDelete) {
       setDataForDelete = JSON.parse(setDataForDelete);
       setDataForDelete.delete = setDataForDelete.location_id;
       hiddenDataOfDeleteField.val(JSON.stringify(setDataForDelete));
     }
+    var target = jQuery(container).find('#' + targetSlug);
     if (target.val() && activeFieldContainer.length === 0) {
       var exampleContainer = jQuery(container).find('.bf-geo-address-example');
       var fieldExampleInput = jQuery(container).find('.container-for-geo-address-field input[type="text"].bf-address-autocomplete-example');
@@ -132,7 +131,7 @@ var fieldContainerExamples, bfGeoAddressFieldInstance = {
       bfGeoAddressFieldInstance.addField(jQuery(exampleContainer).clone(), jQuery(container), newFieldSlug);
     }
     //Update action links
-    bfGeoAddressFieldInstance.updateAddButtonClass();
+    bfGeoAddressFieldInstance.updateAddButtonClass(container);
   },
   actionAddField: function() {
     var element = jQuery(this);
@@ -145,7 +144,7 @@ var fieldContainerExamples, bfGeoAddressFieldInstance = {
   actionRemoveField: function() {
     var element = jQuery(this);
     var fieldTarget = element.attr('field_target');
-    bfGeoAddressFieldInstance.removeField(fieldTarget);
+    bfGeoAddressFieldInstance.removeField(fieldTarget, element);
   },
   submitForm: function() {
     var dataFields = jQuery('input[type="hidden"][name^="bf_"][name$="_count"]');
@@ -170,10 +169,7 @@ var fieldContainerExamples, bfGeoAddressFieldInstance = {
     }
   },
   init: function() {
-    var form = jQuery('form[id^="buddyforms_"]');
-    if (form.length === 0) {
-      form = jQuery('form[id^="submissions_"]');
-    }
+    var form = jQuery('form');
     fieldContainerExamples = jQuery('.bf-geo-address-example');
     if (fieldContainerExamples.length > 0 && form.length > 0) {
       jQuery.each(fieldContainerExamples, function(key, container) {

@@ -3,7 +3,7 @@
  * Plugin Name: BuddyForms Geo My Wp
  * Plugin URI: http://buddyforms.com/
  * Description: This Plugin adds field to link with Geo My Wp
- * Version: 1.0.1
+ * Version: 1.0.0
  * Author: ThemeKraft Dev Team
  * Author URI: https://themkraft.com/#team
  * License: GPLv2 or later
