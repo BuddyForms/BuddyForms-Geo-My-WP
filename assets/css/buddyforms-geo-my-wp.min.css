@@ -4,7 +4,7 @@
 .postbox-submissions .standard-form .bf-geo-address-fields .container-for-geo-address-controls [class*=" gmw-icon-"]:before,.postbox-submissions .standard-form .bf-geo-address-fields .container-for-geo-address-controls [class^=gmw-icon-]:before,.the_buddyforms_form fieldset .col-xs-12 .container-for-geo-address-controls [class*=" gmw-icon-"]:before,.the_buddyforms_form fieldset .col-xs-12 .container-for-geo-address-controls [class^=gmw-icon-]:before{width:.5rem}
 .postbox-submissions .standard-form .bf-geo-address-fields .container-for-geo-address-controls>p>a>span.dashicons,.the_buddyforms_form fieldset .col-xs-12 .container-for-geo-address-controls>p>a>span.dashicons{width:10px;height:10px;font-size:16px}
 .postbox-submissions .standard-form .bf-geo-address-fields .container-for-geo-address-field input[type=text].bf-address-autocomplete,.container-for-geo-address-field .bf-address-autocomplete{width:95%}
-.postbox-submissions .standard-form .bf_field_group.bf-geo-address-fields{height:50px}
+.postbox-submissions .standard-form .bf_field_group .bf-geo-address-fields{height:50px}
 .the_buddyforms_form p.bfgmw-action a.geo-address-field-add{display:none}
 .the_buddyforms_form p.bfgmw-action{padding:15px 5px}
 .buddyforms-metabox p.gmw-lf-field.message,#buddypress .the_buddyforms_form p.gmw-lf-field.message,.the_buddyforms_form p.gmw-lf-field.message{color:#000;clear:both;display:inline-table;font-size:.7rem;border-radius:3px;padding:15px 5px}
@@ -15,3 +15,4 @@
 .buddyforms-metabox p.gmw-lf-field.message.error,#buddypress .the_buddyforms_form p.gmw-lf-field.message.error,.the_buddyforms_form p.gmw-lf-field.message.error{color:#a94442;background-color:#f2dede}
 .buddyforms-metabox p.gmw-lf-field.message.ok,.the_buddyforms_form p.gmw-lf-field.message.ok{display:inline-table;color:#3c763d;background-color:#dff0d8;border-color:#82b77b}
 .buddyforms-metabox p.gmw-lf-field.message.changed,.the_buddyforms_form p.gmw-lf-field.message.changed{color:#31708f;background-color:#d9edf7;border-color:#bce8f1}
+.bf_field_group .bf-geo-address-fields{overflow:auto;clear:both}
