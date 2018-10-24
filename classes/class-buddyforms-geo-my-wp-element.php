@@ -66,7 +66,7 @@ class BuddyFormsGeoMyWpElement {
 			}
 
 			if ( ! empty( $field_data_string ) ) {
-				$field_data        = json_decode( stripslashes_deep($field_data_string), true );
+				$field_data = json_decode( stripslashes_deep( $field_data_string ), true );
 				if ( is_array( $field_data ) && count( $field_data ) > 0 ) {
 					$new_field_data = array();
 					$field_data     = array_unique( $field_data, SORT_REGULAR );
@@ -455,7 +455,9 @@ class BuddyFormsGeoMyWpElement {
 			$description = apply_filters( 'buddyforms_form_field_description', $description, $post_id );
 
 			//Build the base field to hide in the front to generate the others fields.
-			$field_group_string = $this->get_container_with_field( 0, $slug, 0, $customfield, $field_id, $description );
+			$field_group_string = '<div class="bf_field_group"><label for="' . esc_attr( $slug ) . '">' . esc_attr( $customfield['name'] ) . '</label>';
+			$field_group_string .= $this->get_container_with_field( 0, $slug, 0, $customfield, $field_id, $description );
+			$field_group_string .= '</div>';
 			$form->addElement( new Element_HTML( $field_group_string ) );
 
 			if ( $form_type !== 'registration' ) {
@@ -485,7 +487,7 @@ class BuddyFormsGeoMyWpElement {
 	 * @return string
 	 */
 	public function get_container_with_field( $i, $slug, $related_id, $custom_field, $field_id, $description ) {
-		$field_group_string = '<div class="bf_field_group bf-geo-address-fields bf-geo-address-example">';
+		$field_group_string = '<div class="bf-geo-address-fields bf-geo-address-example">';
 		$field_group_string .= '<div class="container-for-geo-address-field">';
 		$field_group_string .= $this->get_address_elements( $slug, $related_id, $custom_field['default'], $field_id, $custom_field['name'], $description );
 		$field_group_string .= '</div>';

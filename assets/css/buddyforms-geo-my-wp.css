@@ -40,7 +40,7 @@
     width: 95%;
 }
 
-.postbox-submissions .standard-form .bf_field_group.bf-geo-address-fields {
+.postbox-submissions .standard-form .bf_field_group .bf-geo-address-fields {
     height: 50px;
 }
 
@@ -102,4 +102,9 @@
     color: #31708f;
     background-color: #d9edf7;
     border-color: #bce8f1
+}
+
+.bf_field_group .bf-geo-address-fields {
+    overflow: auto;
+    clear: both;
 }
