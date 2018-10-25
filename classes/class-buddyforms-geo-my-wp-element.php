@@ -446,6 +446,10 @@ class BuddyFormsGeoMyWpElement {
 				$customfield['name'] = '';
 			}
 
+			if ( ! isset( $customfield['custom_class'] ) ) {
+				$customfield['custom_class'] = '';
+			}
+
 			if ( ! isset( $customfield['default'] ) ) {
 				$customfield['default'] = '';
 			}
@@ -454,8 +458,25 @@ class BuddyFormsGeoMyWpElement {
 
 			$description = apply_filters( 'buddyforms_form_field_description', $description, $post_id );
 
+			global $buddyforms;
+
+			$labels_layout = isset( $buddyforms[ $form_slug ]['layout']['labels_layout'] ) ? $buddyforms[ $form_slug ]['layout']['labels_layout'] : 'inline';
+
+			if ( isset( $customfield['required'] ) && $labels_layout == 'inline' ) {
+				$customfield['name'] = '* ' . $customfield['name'];
+			}
+
+			$label_string = '';
+			if ( $labels_layout != 'inline' ) {
+				$label_string .= '<label for="_' . esc_attr( $slug ) . '">';
+				if ( isset( $customfield['required'] ) ) {
+					$label_string .= '<span class="required">* </span>';
+				}
+				$label_string .= esc_attr( $customfield['name'] ) . '</label>';
+			}
+
 			//Build the base field to hide in the front to generate the others fields.
-			$field_group_string = '<div class="bf_field_group"><label for="' . esc_attr( $slug ) . '">' . esc_attr( $customfield['name'] ) . '</label>';
+			$field_group_string = '<div class="bf_field_group">' . $label_string;
 			$field_group_string .= $this->get_container_with_field( 0, $slug, 0, $customfield, $field_id, $description );
 			$field_group_string .= '</div>';
 			$form->addElement( new Element_HTML( $field_group_string ) );
@@ -489,7 +510,7 @@ class BuddyFormsGeoMyWpElement {
 	public function get_container_with_field( $i, $slug, $related_id, $custom_field, $field_id, $description ) {
 		$field_group_string = '<div class="bf-geo-address-fields bf-geo-address-example">';
 		$field_group_string .= '<div class="container-for-geo-address-field">';
-		$field_group_string .= $this->get_address_elements( $slug, $related_id, $custom_field['default'], $field_id, $custom_field['name'], $description );
+		$field_group_string .= $this->get_address_elements( $slug, $related_id, $custom_field['default'], $field_id, $custom_field['name'], $description, $custom_field['custom_class'] );
 		$field_group_string .= '</div>';
 		$field_group_string .= '<div class="container-for-geo-address-controls">';
 		$field_group_string .= '<p class="gmw-lf-field group_actions message-field message gmw-lf-form-action error" id="gmw-lf-action-message"><i class="gmw-icon-spin"></i><i class="gmw-icon-cancel"></i><i class="gmw-icon-ok-light"></i></p>';
@@ -510,16 +531,17 @@ class BuddyFormsGeoMyWpElement {
 	 * @param $field_id
 	 * @param $name
 	 * @param $description
+	 * @param $classes
 	 *
 	 * @return string
 	 */
-	public function get_address_elements( $slug, $related_id, $default_value, $field_id, $name, $description ) {
+	public function get_address_elements( $slug, $related_id, $default_value, $field_id, $name, $description, $classes ) {
 		$name = apply_filters( 'buddyforms_form_field_geo_my_wp_address_name', stripcslashes( $name ), $slug, $related_id );
 
 		$element_attr = array(
 			'id'                 => str_replace( "-", "", $slug ),
 			'value'              => '',
-			'class'              => 'settings-input address-field address bf-address-autocomplete bf-address-autocomplete-example',
+			'class'              => $classes . ' settings-input address-field address bf-address-autocomplete bf-address-autocomplete-example',
 			'shortDesc'          => $description,
 			'field_id'           => $field_id,
 			'field_name'         => $name,
