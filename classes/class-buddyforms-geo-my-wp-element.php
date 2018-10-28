@@ -562,40 +562,42 @@ class BuddyFormsGeoMyWpElement {
 	}
 
 	public function wp_enqueue_scripts() {
-		//register google maps api if not already registered
-		if ( ! wp_script_is( 'google-maps', 'registered' ) ) {
-			//Build Google API url. elements can be modified via filters
-			$protocol    = is_ssl() ? 'https' : 'http';
-			$gmw_options = gmw_get_options_group();
-			$google_url  = apply_filters( 'gmw_google_maps_api_url', array(
-				'protocol' => $protocol,
-				'url_base' => '://maps.googleapis.com/maps/api/js?',
-				'url_data' => http_build_query( apply_filters( 'gmw_google_maps_api_args', array(
-					'libraries' => 'places',
-					'key'       => gmw_get_option( 'general_settings', 'google_api', '' ),
-					'region'    => gmw_get_option( 'general_settings', 'country_code', 'US' ),
-					'language'  => gmw_get_option( 'general_settings', 'language_code', 'EN' ),
-				) ), '', '&amp;' ),
-			), $gmw_options );
+		if($this->load_script) {
+			//register google maps api if not already registered
+			if ( ! wp_script_is( 'google-maps', 'registered' ) ) {
+				//Build Google API url. elements can be modified via filters
+				$protocol    = is_ssl() ? 'https' : 'http';
+				$gmw_options = gmw_get_options_group();
+				$google_url  = apply_filters( 'gmw_google_maps_api_url', array(
+					'protocol' => $protocol,
+					'url_base' => '://maps.googleapis.com/maps/api/js?',
+					'url_data' => http_build_query( apply_filters( 'gmw_google_maps_api_args', array(
+						'libraries' => 'places',
+						'key'       => gmw_get_option( 'general_settings', 'google_api', '' ),
+						'region'    => gmw_get_option( 'general_settings', 'country_code', 'US' ),
+						'language'  => gmw_get_option( 'general_settings', 'language_code', 'EN' ),
+					) ), '', '&amp;' ),
+				), $gmw_options );
 
-			wp_register_script( 'google-maps', implode( '', $google_url ), array( 'jquery' ), false, true );
+				wp_register_script( 'google-maps', implode( '', $google_url ), array( 'jquery' ), false, true );
+			}
+
+			$js_asset  = BuddyFormsGeoMyWpManager::assets_path( 'buddyforms-geo-my-wp' );
+			$css_asset = BuddyFormsGeoMyWpManager::assets_path( 'buddyforms-geo-my-wp', 'css' );
+			wp_register_script( 'buddyforms-geo-field', $js_asset, array( "jquery" ), BuddyFormsGeoMyWpManager::get_version(), true );
+			wp_register_style( 'buddyforms-geo-field', $css_asset, array(), BuddyFormsGeoMyWpManager::get_version() );
+
+			//enqueue google maps api if not already enqueued
+			if ( ! wp_script_is( 'google-maps' ) ) {
+				wp_enqueue_script( 'google-maps' );
+			}
+
+			wp_enqueue_script( 'buddyforms-geo-field' );
+			wp_localize_script( 'buddyforms-geo-field', 'buddyforms_geo_field', array(
+				'admin_url' => admin_url( 'admin-ajax.php' ),
+				'nonce'     => wp_create_nonce( 'buddyforms-geo-field' ),
+			) );
+			wp_enqueue_style( 'buddyforms-geo-field' );
 		}
-
-		$js_asset  = BuddyFormsGeoMyWpManager::assets_path( 'buddyforms-geo-my-wp' );
-		$css_asset = BuddyFormsGeoMyWpManager::assets_path( 'buddyforms-geo-my-wp', 'css' );
-		wp_register_script( 'buddyforms-geo-field', $js_asset, array( "jquery" ), BuddyFormsGeoMyWpManager::get_version(), true );
-		wp_register_style( 'buddyforms-geo-field', $css_asset, array(), BuddyFormsGeoMyWpManager::get_version() );
-
-		//enqueue google maps api if not already enqueued
-		if ( ! wp_script_is( 'google-maps' ) ) {
-			wp_enqueue_script( 'google-maps' );
-		}
-
-		wp_enqueue_script( 'buddyforms-geo-field' );
-		wp_localize_script( 'buddyforms-geo-field', 'buddyforms_geo_field', array(
-			'admin_url' => admin_url( 'admin-ajax.php' ),
-			'nonce'     => wp_create_nonce( 'buddyforms-geo-field' ),
-		) );
-		wp_enqueue_style( 'buddyforms-geo-field' );
 	}
 }
