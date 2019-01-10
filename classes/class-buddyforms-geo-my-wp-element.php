@@ -461,6 +461,7 @@ class BuddyFormsGeoMyWpElement {
 			global $buddyforms;
 
 			$labels_layout = isset( $buddyforms[ $form_slug ]['layout']['labels_layout'] ) ? $buddyforms[ $form_slug ]['layout']['labels_layout'] : 'inline';
+			$is_multiple   = ! empty( $buddyforms[ $form_slug ]['form_fields'][ $field_id ]['is_multiple'][0] ) && $buddyforms[ $form_slug ]['form_fields'][ $field_id ]['is_multiple'][0] === 'true';
 
 			if ( isset( $customfield['required'] ) && $labels_layout == 'inline' ) {
 				$customfield['name'] = '* ' . $customfield['name'];
@@ -562,6 +563,26 @@ class BuddyFormsGeoMyWpElement {
 	}
 
 	public function wp_enqueue_scripts() {
+		global $buddyforms, $form_slug, $post;
+
+		$form_slug = '';
+		global $wp_query;
+		if ( ! empty( $wp_query->query_vars['bf_form_slug'] ) ) {
+			$form_slug = sanitize_title( $wp_query->query_vars['bf_form_slug'] );
+		} else if ( ! empty( $post->post_name ) ) {
+			$form_slug = $post->post_name;
+		}
+
+		if ( empty( $buddyforms[ $form_slug ] ) ) {
+			return;
+		}
+
+		$exist = buddyforms_exist_field_type_in_form( $form_slug, 'geo_my_wp_address' );
+
+		if ( ! $exist ) {
+			return;
+		}
+
 		//register google maps api if not already registered
 		if ( ! wp_script_is( 'google-maps', 'registered' ) ) {
 			//Build Google API url. elements can be modified via filters
@@ -591,11 +612,28 @@ class BuddyFormsGeoMyWpElement {
 			wp_enqueue_script( 'google-maps' );
 		}
 
-		wp_enqueue_script( 'buddyforms-geo-field' );
-		wp_localize_script( 'buddyforms-geo-field', 'buddyforms_geo_field', array(
+		$args = array(
 			'admin_url' => admin_url( 'admin-ajax.php' ),
 			'nonce'     => wp_create_nonce( 'buddyforms-geo-field' ),
-		) );
+		);
+
+		$field_args = array();
+		if ( ! empty( $buddyforms[ $form_slug ]['form_fields'] ) ) {
+			foreach ( $buddyforms[ $form_slug ]['form_fields'] as $field_id => $field_data ) {
+				if ( $field_data['type'] === 'geo_my_wp_address' ) {
+					$field_args[ $field_id ] = array(
+						'is_multi' => ! empty( $field_data['is_multiple'][0] ) && $field_data['is_multiple'][0] === 'true'
+					);
+				}
+			}
+		}
+
+		if ( ! empty( $field_args ) ) {
+			$args['fields'] = $field_args;
+		}
+
+		wp_enqueue_script( 'buddyforms-geo-field' );
+		wp_localize_script( 'buddyforms-geo-field', 'buddyforms_geo_field', $args );
 		wp_enqueue_style( 'buddyforms-geo-field' );
 	}
 }
