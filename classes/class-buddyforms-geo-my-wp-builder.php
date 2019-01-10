@@ -14,19 +14,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class BuddyFormsGeoMyWpBuilder {
 
-	private $load_script;
-
 	public function __construct() {
 		add_filter( 'buddyforms_add_form_element_select_option', array( $this, 'buddyforms_formbuilder_elements_select' ), 10 );
-//		add_filter( 'buddyforms_form_element_add_field', array( $this, 'buddyforms_woocommerce_create_new_form_builder_form_element' ), 1, 5 );
-
-		add_action( 'admin_footer', array( $this, 'load_js_for_builder' ) );
+		add_filter( 'buddyforms_formbuilder_fields_options', array( $this, 'formbuilder_fields_options' ), 15, 4 );
 	}
 
-	public function load_js_for_builder( $hook ) {
-		if ( $this->load_script ) {
-
+	public function formbuilder_fields_options( $form_fields, $field_type, $field_id, $form_slug ) {
+		if ( $field_type === 'geo_my_wp_address' ) {
+			global $buddyform;
+			$form_fields['general']['is_multiple'] = new Element_Checkbox( '<b>' . __( 'Multiple', 'buddyforms' ) . '</b>', "buddyforms_options[form_fields][" . $field_id . "][is_multiple]",
+				array( 'true' => __( 'Enable as Multiple Field', 'buddyforms' ) ),
+				array( 'value' => !empty( $buddyform['form_fields'][ $field_id ]['is_multiple'] ))
+			);
 		}
+
+		return $form_fields;
 	}
 
 	public function buddyforms_formbuilder_elements_select( $elements_select_options ) {
@@ -44,39 +46,5 @@ class BuddyFormsGeoMyWpBuilder {
 		);
 
 		return $elements_select_options;
-	}
-
-	public function buddyforms_woocommerce_create_new_form_builder_form_element( $form_fields, $form_slug, $field_type, $field_id ) {
-		global $post, $buddyform;
-
-		if ( $post->post_type != 'buddyforms' ) {
-			return;
-		}
-
-		$field_id = (string) $field_id;
-
-		if ( ! $buddyform ) {
-			$buddyform = get_post_meta( $post->ID, '_buddyforms_options', true );
-		}
-
-		switch ( $field_type ) {
-			case 'geo_my_wp_address':
-				unset( $form_fields );
-				$form_fields['hidden']['name']         = new Element_Hidden( "buddyforms_options[form_fields][" . $field_id . "][name]", 'Address' );
-				$form_fields['hidden']['slug']         = new Element_Hidden( "buddyforms_options[form_fields][" . $field_id . "][slug]", 'geo_my_wp_address' );
-				$form_fields['hidden']['type']         = new Element_Hidden( "buddyforms_options[form_fields][" . $field_id . "][type]", $field_type );
-				$description                           = isset( $buddyform['form_fields'][ $field_id ]['description'] ) ? stripslashes( $buddyform['form_fields'][ $field_id ]['description'] ) : '';
-				$form_fields['Gallery']['description'] = new Element_Textbox( '<b>' . __( 'Description', 'buddyforms' ) . '</b>', "buddyforms_options[form_fields][" . $field_id . "][description]", array( 'value' => $description ) );
-				$required                              = isset( $buddyform['form_fields'][ $field_id ]['required'] ) ? $buddyform['form_fields'][ $field_id ]['required'] : 'false';
-				$form_fields['Gallery']['required']    = new Element_Checkbox( '<b>' . __( 'Required', 'buddyforms' ) . '</b>', "buddyforms_options[form_fields][" . $field_id . "][required]", array( 'required' => '<b>' . __( 'Make this field a required field', 'buddyforms' ) . '</b>' ), array(
-					'value' => $required,
-					'id'    => "buddyforms_options[form_fields][" . $field_id . "][required]"
-				) );
-
-				$this->load_script = true;
-				break;
-		}
-
-		return $form_fields;
 	}
 }
