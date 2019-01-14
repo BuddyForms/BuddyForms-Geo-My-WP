@@ -463,6 +463,10 @@ class BuddyFormsGeoMyWpElement {
 			$labels_layout = isset( $buddyforms[ $form_slug ]['layout']['labels_layout'] ) ? $buddyforms[ $form_slug ]['layout']['labels_layout'] : 'inline';
 			$is_multiple   = ! empty( $buddyforms[ $form_slug ]['form_fields'][ $field_id ]['is_multiple'][0] ) && $buddyforms[ $form_slug ]['form_fields'][ $field_id ]['is_multiple'][0] === 'true';
 
+			if ( empty( $is_multiple ) ) {
+				$customfield['custom_class'] .= ' is-single';
+			}
+
 			if ( isset( $customfield['required'] ) && $labels_layout == 'inline' ) {
 				$customfield['name'] = '* ' . $customfield['name'];
 			}
@@ -478,7 +482,7 @@ class BuddyFormsGeoMyWpElement {
 
 			//Build the base field to hide in the front to generate the others fields.
 			$field_group_string = '<div class="bf_field_group">' . $label_string;
-			$field_group_string .= $this->get_container_with_field( 0, $slug, 0, $customfield, $field_id, $description );
+			$field_group_string .= $this->get_container_with_field( 0, $slug, 0, $customfield, $field_id, $description, $is_multiple );
 			$field_group_string .= '</div>';
 			$form->addElement( new Element_HTML( $field_group_string ) );
 
@@ -504,19 +508,21 @@ class BuddyFormsGeoMyWpElement {
 	 * @param $custom_field
 	 * @param $field_id
 	 * @param $description
-	 * @param $form_type
+	 * @param $is_multiple
 	 *
 	 * @return string
 	 */
-	public function get_container_with_field( $i, $slug, $related_id, $custom_field, $field_id, $description ) {
+	public function get_container_with_field( $i, $slug, $related_id, $custom_field, $field_id, $description, $is_multiple ) {
 		$field_group_string = '<div class="bf-geo-address-fields bf-geo-address-example">';
-		$field_group_string .= '<div class="container-for-geo-address-field">';
+		$field_group_string .= '<div class="container-for-geo-address-field ' . ( empty( $is_multiple ) ? 'is-single' : '' ) .'">';
 		$field_group_string .= $this->get_address_elements( $slug, $related_id, $custom_field['default'], $field_id, $custom_field['name'], $description, $custom_field['custom_class'] );
 		$field_group_string .= '</div>';
 		$field_group_string .= '<div class="container-for-geo-address-controls">';
 		$field_group_string .= '<p class="gmw-lf-field group_actions message-field message gmw-lf-form-action error" id="gmw-lf-action-message"><i class="gmw-icon-spin"></i><i class="gmw-icon-cancel"></i><i class="gmw-icon-ok-light"></i></p>';
-		$field_group_string .= "<p class='bfgmw-action'><a class='geo-address-field-add' field_name='{$slug}' data-default-value='{$custom_field['default']}' data-description='{$description}'><span class='dashicons dashicons-plus'></span></a></p>";
-		$field_group_string .= "<p class='bfgmw-action'><a class='geo-address-field-delete' field_name='{$slug}' data-default-value='{$custom_field['default']}' data-description='{$description}'><span class='dashicons dashicons-minus'></span></a></p>";
+		if ( ! empty( $is_multiple ) ) {
+			$field_group_string .= "<p class='bfgmw-action'><a class='geo-address-field-add' field_name='{$slug}' data-default-value='{$custom_field['default']}' data-description='{$description}'><span class='dashicons dashicons-plus'></span></a></p>";
+			$field_group_string .= "<p class='bfgmw-action'><a class='geo-address-field-delete' field_name='{$slug}' data-default-value='{$custom_field['default']}' data-description='{$description}'><span class='dashicons dashicons-minus'></span></a></p>";
+		}
 		$field_group_string .= '</div>';
 		$field_group_string .= '</div>';
 
@@ -569,6 +575,8 @@ class BuddyFormsGeoMyWpElement {
 		global $wp_query;
 		if ( ! empty( $wp_query->query_vars['bf_form_slug'] ) ) {
 			$form_slug = sanitize_title( $wp_query->query_vars['bf_form_slug'] );
+		} else if (  $post->post_type === 'post' ) {
+			$form_slug = buddyforms_get_form_slug_by_post_id($post->ID);
 		} else if ( ! empty( $post->post_name ) ) {
 			$form_slug = $post->post_name;
 		}
