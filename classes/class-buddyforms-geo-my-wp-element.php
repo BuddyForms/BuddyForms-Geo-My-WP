@@ -514,7 +514,7 @@ class BuddyFormsGeoMyWpElement {
 	 */
 	public function get_container_with_field( $i, $slug, $related_id, $custom_field, $field_id, $description, $is_multiple ) {
 		$field_group_string = '<div class="bf-geo-address-fields bf-geo-address-example">';
-		$field_group_string .= '<div class="container-for-geo-address-field ' . ( empty( $is_multiple ) ? 'is-single' : '' ) .'">';
+		$field_group_string .= '<div class="container-for-geo-address-field ' . ( empty( $is_multiple ) ? 'is-single' : '' ) . '">';
 		$field_group_string .= $this->get_address_elements( $slug, $related_id, $custom_field['default'], $field_id, $custom_field['name'], $description, $custom_field['custom_class'] );
 		$field_group_string .= '</div>';
 		$field_group_string .= '<div class="container-for-geo-address-controls">';
@@ -575,9 +575,9 @@ class BuddyFormsGeoMyWpElement {
 		global $wp_query;
 		if ( ! empty( $wp_query->query_vars['bf_form_slug'] ) ) {
 			$form_slug = sanitize_title( $wp_query->query_vars['bf_form_slug'] );
-		} else if (  $post->post_type === 'post' ) {
-			$form_slug = buddyforms_get_form_slug_by_post_id($post->ID);
-		} else if ( ! empty( $post->post_name ) ) {
+		} else if ( ! empty( $post ) && $post->post_type === 'post' ) {
+			$form_slug = buddyforms_get_form_slug_by_post_id( $post->ID );
+		} else if ( ! empty( $post ) && ! empty( $post->post_name ) ) {
 			$form_slug = $post->post_name;
 		}
 

@@ -56,8 +56,10 @@
 }
 
 .postbox-submissions .standard-form .bf-geo-address-fields .container-for-geo-address-field input[type=text].bf-address-autocomplete,
+.edit-post-layout__content .metabox-location-normal .postbox-container .postbox fieldset .bf-geo-address-fields .container-for-geo-address-field input[type=text].bf-address-autocomplete,
 .container-for-geo-address-field .bf-address-autocomplete {
     width: 95%;
+    height: 45px;
 }
 
 .postbox-submissions .standard-form .bf_field_group .bf-geo-address-fields,
@@ -75,6 +77,7 @@
 .the_buddyforms_form p.bfgmw-action,
 .edit-post-layout__content .metabox-location-normal .postbox-container .postbox fieldset .bf_field_group p.bfgmw-action {
     padding: 15px 5px;
+    margin: 0;
 }
 
 .buddyforms-metabox p.gmw-lf-field.message,
