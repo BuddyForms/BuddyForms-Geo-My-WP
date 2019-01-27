@@ -575,11 +575,22 @@ class BuddyFormsGeoMyWpElement {
 		global $wp_query;
 		if ( ! empty( $wp_query->query_vars['bf_form_slug'] ) ) {
 			$form_slug = sanitize_title( $wp_query->query_vars['bf_form_slug'] );
+		} else if ( ! empty( $post ) && ! empty( $post->post_name ) && $post->post_type === 'buddyforms' ) {
+			$form_slug = $post->post_name;
 		} else if ( ! empty( $post ) && $post->post_type === 'post' ) {
 			$form_slug = buddyforms_get_form_slug_by_post_id( $post->ID );
-		} else if ( ! empty( $post ) && ! empty( $post->post_name ) ) {
-			$form_slug = $post->post_name;
+		} else if ( ! empty( $post ) && ! empty( $post->post_content ) ) {
+			$form_slug = buddyforms_get_form_slug_from_shortcode( $post->post_content );
+		} else if ( function_exists( 'bp_is_profile_component' ) && bp_is_profile_component() ) {
+			$member_type = bp_get_member_type( get_current_user_id() );
+
+			$form_slug = buddyforms_members_get_form_by_member_type( $member_type );
+
+			if ( ! $form_slug ) {
+				$form_slug = buddyforms_members_get_form_by_member_type( 'none' );
+			}
 		}
+
 
 		if ( empty( $buddyforms[ $form_slug ] ) ) {
 			return;

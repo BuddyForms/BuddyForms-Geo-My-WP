@@ -38,6 +38,8 @@ class BuddyFormsGeoMyWpManager {
 		new BuddyFormsGeoMyWpElement();
 		require_once 'class-buddyforms-geo-my-wp-submission.php';
 		new BuddyFormsGeoMyWpSubmission();
+		require_once 'class-buddyforms-geo-my-wp-shortcodes.php';
+		new BuddyFormsGeoMyWpShortCodes();
 	}
 
 	public static function get_slug() {
