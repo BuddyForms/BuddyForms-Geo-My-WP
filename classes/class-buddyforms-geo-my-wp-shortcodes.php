@@ -54,30 +54,13 @@ class BuddyFormsGeoMyWpShortCodes {
 			$attrs['object'] = 'post';
 		}
 
-		$post_form_options = array();
-		//Get the form slug from the form id
-		if ( ! empty( $attrs['form_slug'] ) ) {
-			if ( is_numeric( $attrs['form_slug'] ) ) {
-				$post_form          = get_post( $attrs['form_slug'] );
-				$attrs['form_slug'] = $post_form->post_name;
-			}
-			$post_form_options = buddyforms_get_form_by_slug( $attrs['form_slug'] );
-		} else {
+		if ( empty( $attrs['form_slug'] ) ) {
 			gmw_trigger_error( '[bf_geo_my_wp] shortcode attribute form_slug is mandatory.' );
+			return '';
 		}
 
-		//Get the form type
-		if(!empty($post_form_options) && $post_form_options['form_type'] === 'registration'){
-			$attrs['object'] = 'registration';
-		}
-		//decide the type of shortcode on base of the form type
-		require_once 'class-buddyforms-geo-my-wp-locate-posts.php';
-		if ( $attrs['object'] === 'registration' ) {
-			require_once 'class-buddyforms-geo-my-wp-locate-users.php';
-			$instance = new BuddyFormsGeoMyWpLocateUsers( $attrs );
-		} else if ( $attrs['object'] === 'post' ) {
-			$instance = new BuddyFormsGeoMyWpLocatePosts( $attrs );
-		}
+		require_once 'class-buddyforms-geo-my-wp-locate-entries.php';
+		$instance = new BuddyFormsGeoMyWpLocateEntries( $attrs );
 
 		if ( ! empty( $instance ) ) {
 			return $instance->map();

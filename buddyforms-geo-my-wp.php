@@ -59,6 +59,7 @@ if ( ! class_exists( 'buddyforms_geo_my_wp' ) ) {
 		private function constants() {
 			define( 'BF_GEO_FIELD_CSS_PATH', plugin_dir_url( __FILE__ ) . 'assets/css/' );
 			define( 'BF_GEO_FIELD_JS_PATH', plugin_dir_url( __FILE__ ) . 'assets/js/' );
+			define( 'BF_GEO_FIELD_IMAGES_PATH', plugin_dir_url( __FILE__ ) . 'assets/images/' );
 			define( 'BF_GEO_FIELD_VIEW_PATH', dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR );
 		}
 
