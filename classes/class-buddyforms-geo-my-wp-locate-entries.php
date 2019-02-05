@@ -364,6 +364,20 @@ class BuddyFormsGeoMyWpLocateEntries {
 	}
 
 	/**
+	 * Get the form post type from the string form slug or form id
+	 *
+	 * @param string $form_slug
+	 *
+	 * @return string
+	 */
+	public function get_form_post_type( $form_slug ) {
+		$post_form_options = buddyforms_get_form_by_slug( $form_slug );
+
+		//Return the form type
+		return ( ! empty( $post_form_options ) && ! empty( $post_form_options['post_type'] ) ) ? $post_form_options['post_type'] : 'post';
+	}
+
+	/**
 	 * Get the entries for a registration form
 	 *
 	 * @param $form_slug
@@ -428,8 +442,10 @@ class BuddyFormsGeoMyWpLocateEntries {
 		// if no locations found in cache get it from database
 		if ( false === $locations ) {
 
+			$post_type = $this->get_form_post_type($form_slug);
+
 			$query = new WP_Query( array(
-				'post_type'  => 'post',
+				'post_type'  => $post_type,
 				'fields'     => 'ids',
 				'meta_query' => array(
 					'relation' => 'AND',
