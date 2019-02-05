@@ -27,7 +27,7 @@ var fieldContainerExamples, bfGeoAddressFieldInstance = {
   loadAutoComplete: function(field_id) {
     var input_field = document.getElementById(field_id);
     // verify the field
-    if (input_field != null) {
+    if (input_field != null && typeof google !== 'undefined') {
       var fieldContainer = jQuery(input_field).closest('.container-for-geo-address-field').parent();
       var options = {
         types: ['geocode'],
@@ -57,6 +57,8 @@ var fieldContainerExamples, bfGeoAddressFieldInstance = {
         }
       });
       jQuery(input_field).attr('attached', 'true');
+    } else {
+      jQuery('.container-for-geo-address-controls').hide();
     }
   },
   updateAddButtonClass: function(conatiner) {
