@@ -589,13 +589,19 @@ class BuddyFormsGeoMyWpElement {
 			$form_slug = buddyforms_get_form_slug_by_post_id( $post->ID );
 		} else if ( ! empty( $post ) && ! empty( $post->post_content ) ) {
 			$form_slug = buddyforms_get_form_slug_from_shortcode( $post->post_content );
-		} else if ( function_exists( 'bp_is_profile_component' ) && bp_is_profile_component() && function_exists('buddyforms_members_get_form_by_member_type')) {
-			$member_type = bp_get_member_type( get_current_user_id() );
-
-			$form_slug = buddyforms_members_get_form_by_member_type( $member_type );
-
-			if ( ! $form_slug ) {
-				$form_slug = buddyforms_members_get_form_by_member_type( 'none' );
+		} else if ( function_exists( 'bp_current_component' ) && function_exists( 'bp_current_action' ) && function_exists( 'buddyforms_members_get_form_by_member_type' ) ) {
+			global $buddyforms_member_tabs;
+			$bp_action    = bp_current_action();
+			$bp_component = bp_current_component();
+			if ( ! empty( $buddyforms_member_tabs ) && 'xprofile' !== $bp_component ) {
+				$form_slug = $buddyforms_member_tabs[ bp_current_component() ][ bp_current_action() ];
+				if ( $form_slug . '-create' !== $bp_action && $form_slug . '-edit' !== $bp_action && $form_slug . '-revision' !== $bp_action ) {
+					$member_type = bp_get_member_type( get_current_user_id() );
+					$form_slug   = buddyforms_members_get_form_by_member_type( $member_type );
+					if ( ! $form_slug ) {
+						$form_slug = buddyforms_members_get_form_by_member_type( 'none' );
+					}
+				}
 			}
 		}
 
