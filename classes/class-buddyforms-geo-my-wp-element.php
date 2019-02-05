@@ -444,6 +444,8 @@ class BuddyFormsGeoMyWpElement {
 
 			if ( ! isset( $customfield['name'] ) ) {
 				$customfield['name'] = '';
+			} else {
+				$customfield['name'] = esc_attr( $customfield['name'] );
 			}
 
 			if ( ! isset( $customfield['custom_class'] ) ) {
@@ -468,16 +470,18 @@ class BuddyFormsGeoMyWpElement {
 			}
 
 			if ( isset( $customfield['required'] ) && $labels_layout == 'inline' ) {
-				$customfield['name'] = '* ' . $customfield['name'];
+				$customfield['name'] = $customfield['name'] . " <span class='required'>* </span>";
 			}
 
 			$label_string = '';
 			if ( $labels_layout != 'inline' ) {
-				$label_string .= '<label for="_' . esc_attr( $slug ) . '">';
+				$label_string .= '<label for="_' . esc_attr( $slug ) . '"> ' . $customfield['name'];
 				if ( isset( $customfield['required'] ) ) {
-					$label_string .= '<span class="required">* </span>';
+					$label_string .= "<span class='required'>* </span>";
 				}
-				$label_string .= esc_attr( $customfield['name'] ) . '</label>';
+				$label_string .= '</label>';
+			} else {
+				$label_string = sprintf( '<div class="bf-label"><label for="%s">%s</label></div>', esc_attr( $slug ), $customfield['name'] );
 			}
 
 			//Build the base field to hide in the front to generate the others fields.
@@ -575,7 +579,9 @@ class BuddyFormsGeoMyWpElement {
 		global $wp_query;
 		if ( ! empty( $wp_query->query_vars['bf_form_slug'] ) ) {
 			$form_slug = sanitize_title( $wp_query->query_vars['bf_form_slug'] );
-		} else if (! empty( $wp_query->query_vars['form_slug'] )) {
+		} else if ( ! empty( $_GET['form_slug'] ) ) {
+			$form_slug = sanitize_title( $_GET['form_slug'] );
+		} else if ( ! empty( $wp_query->query_vars['form_slug'] ) ) {
 			$form_slug = sanitize_title( $wp_query->query_vars['form_slug'] );
 		} else if ( ! empty( $post ) && ! empty( $post->post_name ) && $post->post_type === 'buddyforms' ) {
 			$form_slug = $post->post_name;
