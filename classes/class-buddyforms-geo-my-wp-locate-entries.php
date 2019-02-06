@@ -313,7 +313,7 @@ class BuddyFormsGeoMyWpLocateEntries {
 			foreach ( $form_slug as $item ) {
 				$item              = $this->get_form_slug_from_id( $item );
 				$current_form_type = $this->get_form_type( $item );
-				if ( $current_form_type === 'post' ) {
+				if ( $current_form_type !== 'registration' ) {
 					$result = array_merge( $this->get_locations_for_content_form( $item, $current_form_type, $cache ), $result );
 				} else {
 					$result = array_merge( $this->get_locations_for_registration_form( $item, $current_form_type, $cache ), $result );
@@ -322,7 +322,7 @@ class BuddyFormsGeoMyWpLocateEntries {
 		} else {//is string with one form
 			$form_slug         = $this->get_form_slug_from_id( $form_slug );
 			$current_form_type = $this->get_form_type( $form_slug );
-			if ( $current_form_type === 'post' ) {
+			if ( $current_form_type !== 'registration' ) {
 				$result = $this->get_locations_for_content_form( $form_slug, $current_form_type, $cache );
 			} else {
 				$result = $this->get_locations_for_registration_form( $form_slug, $current_form_type, $cache );
@@ -393,20 +393,38 @@ class BuddyFormsGeoMyWpLocateEntries {
 		// if no locations found in cache get it from database
 		if ( false === $locations ) {
 
+			$fields        = buddyforms_get_form_fields( $form_slug );
+			$fields_result = array();
+			foreach ( $fields as $field ) {
+				if ( $field['type'] == 'geo_my_wp_address' ) {
+					$fields_result[] = $field['slug'];
+				}
+			}
+			$meta_args = array();
+
+			if ( ! empty( $fields_result ) ) {
+				foreach ( $fields_result as $field_slug ) {
+					$meta_args[] = array(
+						'key'     => 'bf_' . $field_slug . '_count',
+						'compare' => 'EXISTS',
+					);
+				}
+			} else {
+				return array();
+			}
+
 			$query = new WP_User_Query( array(
 				'include'    => array(),
 				'fields'     => 'ID',
-				'meta_query' => array(
-					array(
-						'key'     => 'bf_address_count',
-						'compare' => 'EXISTS',
-					),
-				)
+				'meta_query' => $meta_args
 			) );
 
-			if ( ! empty( $query->get_results() ) ) {
-				foreach ( $query->get_results() as $user_id ) {
-					$locations[] = get_user_meta( $user_id, 'bf_address_count' );
+			$results = $query->get_results();
+			if ( ! empty( $results ) ) {
+				foreach ( $results as $user_id ) {
+					foreach ( $fields_result as $field_slug ) {
+						$locations[] = get_user_meta( $user_id, 'bf_' . $field_slug . '_count' );
+					}
 				}
 			}
 
@@ -442,27 +460,45 @@ class BuddyFormsGeoMyWpLocateEntries {
 		// if no locations found in cache get it from database
 		if ( false === $locations ) {
 
-			$post_type = $this->get_form_post_type($form_slug);
+			$post_type = $this->get_form_post_type( $form_slug );
+
+			$fields        = buddyforms_get_form_fields( $form_slug );
+			$fields_result = array();
+			foreach ( $fields as $field ) {
+				if ( $field['type'] == 'geo_my_wp_address' ) {
+					$fields_result[] = $field['slug'];
+				}
+			}
+			$meta_args = array(
+				'relation' => 'AND',
+				array(
+					'key'   => '_bf_form_slug',
+					'value' => sanitize_title( $form_slug ),
+				)
+			);
+
+			if ( ! empty( $fields_result ) ) {
+				foreach ( $fields_result as $field_slug ) {
+					$meta_args[] = array(
+						'key'     => 'bf_' . $field_slug . '_count',
+						'compare' => 'EXISTS',
+					);
+				}
+			} else {
+				return array();
+			}
 
 			$query = new WP_Query( array(
 				'post_type'  => $post_type,
 				'fields'     => 'ids',
-				'meta_query' => array(
-					'relation' => 'AND',
-					array(
-						'key'   => '_bf_form_slug',
-						'value' => sanitize_title( $form_slug ),
-					),
-					array(
-						'key'     => 'bf_address_count',
-						'compare' => 'EXISTS',
-					),
-				)
+				'meta_query' => $meta_args
 			) );
 
 			if ( ! empty( $query->posts ) ) {
 				foreach ( $query->posts as $post_id ) {
-					$locations[] = get_post_meta( $post_id, 'bf_address_count' );
+					foreach ( $fields_result as $field_slug ) {
+						$locations[] = get_post_meta( $post_id, 'bf_' . $field_slug . '_count' );
+					}
 				}
 			}
 
@@ -522,7 +558,7 @@ class BuddyFormsGeoMyWpLocateEntries {
 
 			foreach ( $this->args['address_fields'] as $field ) {
 				foreach ( $item['address_components'] as $address_component ) {
-					if ( empty( $address_component['types'][0] === $field ) ) {
+					if ( empty( $address_component['types'][0] ) && $address_component['types'][0] === $field ) {
 						continue;
 					}
 					if ( ! empty( $address_component['long_name'] ) ) {
