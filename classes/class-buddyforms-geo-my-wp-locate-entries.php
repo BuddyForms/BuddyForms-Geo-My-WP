@@ -394,6 +394,11 @@ class BuddyFormsGeoMyWpLocateEntries {
 		if ( false === $locations ) {
 
 			$fields        = buddyforms_get_form_fields( $form_slug );
+
+			if ( empty( $fields ) ) {
+				return array();
+			}
+
 			$fields_result = array();
 			foreach ( $fields as $field ) {
 				if ( $field['type'] == 'geo_my_wp_address' ) {
@@ -413,17 +418,26 @@ class BuddyFormsGeoMyWpLocateEntries {
 				return array();
 			}
 
-			$query = new WP_User_Query( array(
+			$query_args = array(
 				'include'    => array(),
 				'fields'     => 'ID',
 				'meta_query' => $meta_args
-			) );
+			);
+
+			if ( ! empty( $this->args['logged_in_user'] ) ) {
+				$query_args['include'] = array( get_current_user_id() );
+			}
+
+			$query = new WP_User_Query( $query_args );
 
 			$results = $query->get_results();
 			if ( ! empty( $results ) ) {
 				foreach ( $results as $user_id ) {
 					foreach ( $fields_result as $field_slug ) {
-						$locations[] = get_user_meta( $user_id, 'bf_' . $field_slug . '_count' );
+						$locations[] = array(
+							'form_slug' => $form_slug,
+							get_user_meta( $user_id, 'bf_' . $field_slug . '_count' ),
+						);
 					}
 				}
 			}
@@ -462,7 +476,12 @@ class BuddyFormsGeoMyWpLocateEntries {
 
 			$post_type = $this->get_form_post_type( $form_slug );
 
-			$fields        = buddyforms_get_form_fields( $form_slug );
+			$fields = buddyforms_get_form_fields( $form_slug );
+
+			if ( empty( $fields ) ) {
+				return array();
+			}
+
 			$fields_result = array();
 			foreach ( $fields as $field ) {
 				if ( $field['type'] == 'geo_my_wp_address' ) {
@@ -488,18 +507,31 @@ class BuddyFormsGeoMyWpLocateEntries {
 				return array();
 			}
 
-			$query = new WP_Query( array(
+			$query_args = array(
 				'post_type'  => $post_type,
 				'fields'     => 'ids',
 				'meta_query' => $meta_args
-			) );
+			);
+
+			if ( ! empty( $this->args['logged_in_user'] ) ) {
+				$query_args['author'] = get_current_user_id();
+			}
+
+			$query = new WP_Query( $query_args );
 
 			if ( ! empty( $query->posts ) ) {
 				foreach ( $query->posts as $post_id ) {
 					foreach ( $fields_result as $field_slug ) {
-						$locations[] = get_post_meta( $post_id, 'bf_' . $field_slug . '_count' );
+						$locations[] = array(
+							'form_slug' => $form_slug,
+							get_post_meta( $post_id, 'bf_' . $field_slug . '_count' ),
+						);
 					}
 				}
+			}
+
+			if ( empty( $locations ) ) {
+				return array();
 			}
 
 			// save to cache if location found
@@ -633,20 +665,29 @@ class BuddyFormsGeoMyWpLocateEntries {
 			'init_visible'   => true,
 		);
 
-		$locations = array();
+		$current_form_slug = '';
+		$locations         = array();
 		foreach ( $this->location_data as $location_item ) {
 			foreach ( $location_item as $parent_item ) {
-				foreach ( $parent_item as $item ) {
-					if ( ! empty( $item->data ) ) {
-						$map_icon    = ( $item->data['form_type'] === 'registration' ) ? BF_GEO_FIELD_IMAGES_PATH . 'smiley_happy.png' : BF_GEO_FIELD_IMAGES_PATH . 'text.png';
-						$locations[] = array(
-							'lat'                 => $item->data['location']['lat'],
-							'lng'                 => $item->data['location']['lng'],
-							'info_window_content' => $this->info_window_content( $item->data ),
-							'map_icon'            => apply_filters( 'bf_geo_my_wp_entry_map_icon', $map_icon, $this->args, $item, $this->user_position ),
-							'icon_size'           => $this->args['map_icon_size'],
-						);
+				if ( is_array( $parent_item ) ) {
+					foreach ( $parent_item as $item ) {
+						if ( is_array( $item ) ) {
+							foreach ( $item as $location_obj ) {
+								if ( ! empty( $location_obj->data ) ) {
+									$map_icon    = ( $location_obj->data['form_type'] === 'registration' ) ? BF_GEO_FIELD_IMAGES_PATH . 'smiley_happy.png' : BF_GEO_FIELD_IMAGES_PATH . 'text.png';
+									$locations[] = array(
+										'lat'                 => $location_obj->data['location']['lat'],
+										'lng'                 => $location_obj->data['location']['lng'],
+										'info_window_content' => $this->info_window_content( $location_obj->data ),
+										'map_icon'            => apply_filters( 'bf_geo_my_wp_entry_map_icon', $map_icon, $this->args, $location_obj, $this->user_position, $current_form_slug ),
+										'icon_size'           => $this->args['map_icon_size'],
+									);
+								}
+							}
+						}
 					}
+				} else {
+					$current_form_slug = $parent_item;
 				}
 			}
 		}

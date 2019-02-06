@@ -26,7 +26,7 @@ class BuddyFormsGeoMyWpShortCodes {
 		$attrs = shortcode_atts( array(
 			'form_slug'            => '',
 			'form'                 => '',
-			'logged_in_user'       => 'false',
+			'logged_in_user'       => '',
 			'map_width'            => '250px',
 			'map_height'           => '250px',
 			'elements'             => 'map,distance,location_meta',

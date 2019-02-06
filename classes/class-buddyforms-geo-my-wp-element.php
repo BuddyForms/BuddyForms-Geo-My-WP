@@ -594,7 +594,7 @@ class BuddyFormsGeoMyWpElement {
 			$bp_action    = bp_current_action();
 			$bp_component = bp_current_component();
 			if ( ! empty( $buddyforms_member_tabs ) && 'xprofile' !== $bp_component ) {
-				$form_slug = $buddyforms_member_tabs[ bp_current_component() ][ bp_current_action() ];
+				$form_slug = ! empty( $buddyforms_member_tabs[ bp_current_component() ][ bp_current_action() ] ) ? $buddyforms_member_tabs[ bp_current_component() ][ bp_current_action() ] : '';
 				if ( $form_slug . '-create' !== $bp_action && $form_slug . '-edit' !== $bp_action && $form_slug . '-revision' !== $bp_action ) {
 					$member_type = bp_get_member_type( get_current_user_id() );
 					$form_slug   = buddyforms_members_get_form_by_member_type( $member_type );
