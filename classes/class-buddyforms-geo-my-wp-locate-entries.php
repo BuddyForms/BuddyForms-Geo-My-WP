@@ -427,6 +427,9 @@ class BuddyFormsGeoMyWpLocateEntries {
 			if ( ! empty( $this->args['logged_in_user'] ) ) {
 				$query_args['include'] = array( get_current_user_id() );
 			}
+			if ( ! empty( $this->args['user_id'] ) ) {
+				$query_args['include'] = array( $this->args['user_id'] );
+			}
 
 			$query = new WP_User_Query( $query_args );
 
@@ -515,6 +518,9 @@ class BuddyFormsGeoMyWpLocateEntries {
 
 			if ( ! empty( $this->args['logged_in_user'] ) ) {
 				$query_args['author'] = get_current_user_id();
+			}
+			if ( ! empty( $this->args['user_id'] ) ) {
+				$query_args['author'] = $this->args['user_id'];
 			}
 
 			$query = new WP_Query( $query_args );

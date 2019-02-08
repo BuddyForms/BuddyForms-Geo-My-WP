@@ -27,6 +27,7 @@ class BuddyFormsGeoMyWpShortCodes {
 			'form_slug'            => '',
 			'form'                 => '',
 			'logged_in_user'       => '',
+			'user_id'              => '',
 			'map_width'            => '250px',
 			'map_height'           => '250px',
 			'elements'             => 'map,distance,location_meta',
