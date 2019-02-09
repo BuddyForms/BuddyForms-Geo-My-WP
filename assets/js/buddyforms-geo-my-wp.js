@@ -203,6 +203,17 @@ var fieldContainerExamples, bfGeoAddressFieldInstance = {
   },
 };
 
-jQuery(document).ready(function() {
+jQuery(document).ready(function($) {
+
+    jQuery.validator.addMethod("address-required", function (value, element) {
+
+        if(value && value != ''){
+            return true;
+        }
+        jQuery.validator.messages['address-required'] = buddyforms_geo_field.validation_error_message;
+        return false;
+    }, "");
   bfGeoAddressFieldInstance.init();
+
+
 });
