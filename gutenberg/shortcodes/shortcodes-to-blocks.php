@@ -2,7 +2,7 @@
 /**
  * Create Blocks from Shortcodes
  *
- * @since 2.3.1
+ * @since 1.0
  *
  */
 function buddyforms_gmw_shortcodes_to_block_init() {
@@ -68,7 +68,7 @@ add_action( 'init', 'buddyforms_gmw_shortcodes_to_block_init' );
 /**
  * Render a Form
  *
- * @since 2.3.1
+ * @since 1.0
  *
  */
 function buddyforms_gmw_block_render_map( $attributes ) {

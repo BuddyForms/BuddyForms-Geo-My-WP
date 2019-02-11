@@ -14,7 +14,7 @@ const iconBuddyFormsGMW = el('svg', {width: 24, height: 24},
 
 // for some strange reason this was creating a conflict with the core and I have comment itz out for now. 'BuddyForm Geo My Wp MAP' is not translatable
 // @todo:'BuddyForm Geo My Wp MAP' is not translatable.
-//const {__} = wp.i18n;
+// const {__} = wp.i18n;
 
 //
 // Embed a Geo My WP Map
