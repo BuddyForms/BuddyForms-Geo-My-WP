@@ -3,18 +3,15 @@
 // Require all needed files
 require( 'shortcodes/shortcodes-to-blocks.php' );
 
-define('IS_ADMIN', false);
 
-
-
-
+// Enqueue all needed css and js
 gmw_enqueue_scripts();
 
+
+// Load all needed frontend css and js
 add_action( 'admin_enqueue_scripts', 'buddyforms_gmw_enqueue_scripts', '999' );
-
-
-function buddyforms_gmw_enqueue_scripts(){
-	$map_scripts      = array( 'jquery', 'gmw' );
+function buddyforms_gmw_enqueue_scripts() {
+	$map_scripts = array( 'jquery', 'gmw' );
 
 	// include GMW main stylesheet
 	wp_enqueue_style( 'gmw-frontend', GMW_URL . '/assets/css/gmw.frontend.min.css', array(), GMW_VERSION );

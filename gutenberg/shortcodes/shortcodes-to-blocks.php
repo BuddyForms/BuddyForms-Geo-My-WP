@@ -8,7 +8,7 @@
 function buddyforms_gmw_shortcodes_to_block_init() {
 	global $buddyforms;
 
-	// Register block editor BuddyForms script.
+	// Register block editor BuddyForms GMW script.
 	wp_register_script(
 		'bf-gmw-embed-map',
 		plugins_url( 'shortcodes-to-blocks.js', __FILE__ ),
@@ -16,7 +16,7 @@ function buddyforms_gmw_shortcodes_to_block_init() {
 	);
 
 	//
-	// Localize the BuddyForms script with all needed data
+	// Localize the BuddyForms GMW script with all needed data
 	//
 
 	// All Forms as slug and label
@@ -28,7 +28,7 @@ function buddyforms_gmw_shortcodes_to_block_init() {
 
 
 	//
-	// Embed a form
+	// Embed a map
 	//
 	register_block_type( 'buddyforms/bf-gmw-embed-map', array(
 		'attributes'      => array(
@@ -61,30 +61,6 @@ function buddyforms_gmw_shortcodes_to_block_init() {
 		'editor_script'   => 'bf-gmw-embed-map',
 		'render_callback' => 'buddyforms_gmw_block_render_map',
 	) );
-
-//	''       => '',
-//			''              => '',
-//			''            =>
-//			''           =>
-//			''             => ,
-//			'object'               => 'post',
-//			'prefix'               => 'pt',
-//			'location_meta'        => 'address',
-//			'element_id'           => 0,
-//			'form_type'            => '',
-//			'address_fields'       => 'address',
-//			'units'                => 'metric',
-//			'map_type'             => 'ROADMAP',
-//			'zoom_level'           => 13,
-//			'scrollwheel_map_zoom' => 1,
-//			'expand_map_on_load'   => 0,
-//			'map_icon_url'         => '',
-//			'map_icon_size'        => '',
-//
-//			'user_map_icon_url'    => '',
-//			'user_map_icon_size'   => '',
-//			'user_info_window'     => __( 'Your Location', 'geo-my-wp' ),
-//			'no_location_message'  => 0,
 }
 
 add_action( 'init', 'buddyforms_gmw_shortcodes_to_block_init' );
@@ -99,18 +75,22 @@ function buddyforms_gmw_block_render_map( $attributes ) {
 	global $buddyforms;
 
 	if ( isset( $attributes['bf_form_slug'] ) && isset( $buddyforms[ $attributes['bf_form_slug'] ] ) ) {
+
 		$tmp = BuddyFormsGeoMyWpShortCodes::callback_bf_geo_my_wp(
 			array(
-				'form_slug'         => $attributes['bf_form_slug'],
-				'user_id'           => $attributes['bf_user_id'],
-				'map_width'      => $attributes['bf_map_width'],
-				'map_height'     => $attributes['bf_map_height'],
-				'elements'       => $attributes['bf_elements'],
-				'logged_in_user' => $attributes['bf_logged_in_user'],
-				'info_window'    => $attributes['bf_info_window'],
+				'form_slug'      => empty( $attributes['bf_form_slug'] ) ? '' : $attributes['bf_form_slug'],
+				'user_id'        => empty( $attributes['bf_user_id'] ) ? '' : $attributes['bf_user_id'],
+				'map_width'      => empty( $attributes['bf_map_width'] ) ? '' : $attributes['bf_map_width'],
+				'map_height'     => empty( $attributes['bf_map_height'] ) ? '' : $attributes['bf_map_height'],
+				'elements'       => empty( $attributes['bf_elements'] ) ? '' : $attributes['bf_elements'],
+				'logged_in_user' => empty( $attributes['bf_logged_in_user'] ) ? '' : $attributes['bf_logged_in_user'],
+				'info_window'    => empty( $attributes['bf_info_window'] ) ? '' : $attributes['bf_info_window'],
 			) );
 
-//		$tmp = do_shortcode('[bf_geo_my_wp form_slug="' . $attributes['bf_form_slug'] . '"]');
+		if ( empty( $tmp ) ) {
+			return __( 'No entry\'s found', 'buddyforms' );
+		}
+
 		return $tmp;
 	} else {
 		return '<p>' . __( 'Please select a form in the block settings sidebar!', 'buddyforms' ) . '</p>';
