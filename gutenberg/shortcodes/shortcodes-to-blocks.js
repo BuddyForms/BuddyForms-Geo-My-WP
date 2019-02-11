@@ -25,6 +25,13 @@ registerBlockType('buddyforms/bf-gmw-embed-map', {
 
     edit: function (props) {
 
+        var bf_by_author = [
+            {value: 'logged_in_user', label: 'Logged in Author Posts'},
+            {value: 'all_users', label: 'All Author Posts'},
+            {value: 'author_ids', label: 'Author ID\'S'},
+        ];
+
+
         var forms = [
             {value: 'no', label: 'Select a Form'},
         ];
@@ -48,7 +55,51 @@ registerBlockType('buddyforms/bf-gmw-embed-map', {
                     onChange: (value) => {
                         props.setAttributes({bf_form_slug: value});
                     },
-                })
+                }),
+                el(SelectControl, {
+                    label: 'Please Select a form',
+                    value: props.attributes.bf_logged_in_user,
+                    options: bf_by_author,
+                    onChange: (value) => {
+                        props.setAttributes({bf_logged_in_user: value});
+                    },
+                }),
+                el(TextControl, {
+                    label: 'User ID',
+                    value: props.attributes.bf_user_id,
+                    onChange: (value) => {
+                        props.setAttributes({bf_user_id: value});
+                    },
+                }),
+                el(TextControl, {
+                    label: 'Width',
+                    value: props.attributes.bf_map_width,
+                    onChange: (value) => {
+                        props.setAttributes({bf_map_width: value});
+                    },
+                }),
+                el(TextControl, {
+                    label: 'Height',
+                    value: props.attributes.bf_map_height,
+                    onChange: (value) => {
+                        props.setAttributes({bf_map_height: value});
+                    },
+                }),
+                el(TextControl, {
+                    label: 'Elements',
+                    value: props.attributes.bf_elements,
+                    onChange: (value) => {
+                        props.setAttributes({bf_elements: value});
+                    },
+                }),
+                el(TextControl, {
+                    label: 'Info Window',
+                    value: props.attributes.bf_info_window,
+                    onChange: (value) => {
+                        props.setAttributes({bf_info_window: value});
+                    },
+                }),
+
             )
         ];
     },
