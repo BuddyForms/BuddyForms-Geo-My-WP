@@ -237,14 +237,15 @@ class BuddyFormsGeoMyWpLocateEntries {
 	 * Get the title
 	 *
 	 * @param $item
+	 * @param $form_slug
 	 *
 	 * @return string
 	 */
-	public function title( $item ) {
+	public function title( $item, $form_slug ) {
 		if ( isset( $item['form_type'] ) && $item['form_type'] === 'registration' ) {
-			return $this->title_of_registration_form( $item );
+			return $this->title_of_registration_form( $item, $form_slug );
 		} else {
-			return $this->title_of_content_form( $item );
+			return $this->title_of_content_form( $item, $form_slug );
 		}
 	}
 
@@ -252,28 +253,30 @@ class BuddyFormsGeoMyWpLocateEntries {
 	 * Get the Post Title to show as title of the info window
 	 *
 	 * @param $item
+	 * @param $form_slug
 	 *
 	 * @return string
 	 */
-	public function title_of_content_form( $item ) {
+	public function title_of_content_form( $item, $form_slug ) {
 		$title     = get_the_title( $item['post_id'] );
 		$permalink = get_the_permalink( $item['post_id'] );
 
-		return apply_filters( 'bf_geo_my_wp_form_content_title', "<h3 class=\"gmw-sl-title post-title gmw-sl-element\"><a href=\"{$permalink}\" title=\"{$title}\"'>{$title}</a></h3>", $this->location_data, $this->args, $this->user_position, $this );
+		return apply_filters( 'bf_geo_my_wp_form_content_title', "<h3 class=\"gmw-sl-title post-title gmw-sl-element\"><a href=\"{$permalink}\" title=\"{$title}\"'>{$title}</a></h3>", $item, $this->args, $this->user_position, $this, $form_slug );
 	}
 
 	/**
 	 * Get the User Display Name to show as title of the info window
 	 *
 	 * @param $item
+	 * @param $form_slug
 	 *
 	 * @return mixed
 	 */
-	public function title_of_registration_form( $item ) {
+	public function title_of_registration_form( $item, $form_slug ) {
 		$title     = get_the_author_meta( 'display_name', $item['user_id'] );
 		$permalink = ( function_exists( 'bp_core_get_userlink' ) ) ? bp_core_get_userlink( $item['user_id'], false, true ) : get_author_posts_url( $item['user_id'] );
 
-		return apply_filters( 'bf_geo_my_wp_form_registration_title', "<h3 class=\"gmw-sl-title post-title gmw-sl-element\"><a href=\"{$permalink}\" title=\"{$title}\"'>{$title}</a></h3>", $this->location_data, $this->args, $this->user_position, $this );
+		return apply_filters( 'bf_geo_my_wp_form_registration_title', "<h3 class=\"gmw-sl-title post-title gmw-sl-element\"><a href=\"{$permalink}\" title=\"{$title}\"'>{$title}</a></h3>", $item, $this->args, $this->user_position, $this, $form_slug );
 	}
 
 	/**
@@ -431,7 +434,7 @@ class BuddyFormsGeoMyWpLocateEntries {
 				$query_args['include'] = array( $this->args['user_id'] );
 			}
 
-			$query = new WP_User_Query( $query_args );
+			$query = new WP_User_Query( apply_filters('bf_geo_my_wp_locations_for_registration_query_args', $query_args, $form_slug ) );
 
 			$results = $query->get_results();
 			if ( ! empty( $results ) ) {
@@ -523,7 +526,7 @@ class BuddyFormsGeoMyWpLocateEntries {
 				$query_args['author'] = $this->args['user_id'];
 			}
 
-			$query = new WP_Query( $query_args );
+			$query = new WP_Query( apply_filters('bf_geo_my_wp_locations_for_content_query_args', $query_args, $form_slug, $post_type ) );
 
 			if ( ! empty( $query->posts ) ) {
 				foreach ( $query->posts as $post_id ) {
@@ -566,17 +569,13 @@ class BuddyFormsGeoMyWpLocateEntries {
 	}
 
 	/**
-	 *
-	 * Get address
-	 *
-	 * The address of the displayed item
+	 * Get the address from the given item
 	 *
 	 * @param $item
 	 *
-	 * @return bool|string
+	 * @return string
 	 */
-	public function address( $item ) {
-
+	public function get_address_from_item( $item ) {
 		// if item has no location, abort!
 		if ( empty( $item['location'] ) ) {
 			return ! empty( $this->args['no_location_message'] ) ? $this->no_location_message() : false;
@@ -608,9 +607,27 @@ class BuddyFormsGeoMyWpLocateEntries {
 			$address = implode( ' ', $address_array );
 		}
 
+		return $address;
+	}
+
+	/**
+	 *
+	 * Get address
+	 *
+	 * The address of the displayed item
+	 *
+	 * @param $item
+	 * @param $form_slug
+	 *
+	 * @return bool|string
+	 */
+	public function address( $item, $form_slug ) {
+
+		$address = $this->get_address_from_item($item);
+
 		$output = '<div class="gmw-sl-address gmw-sl-element"><i class="gmw-location-icon gmw-icon-location"></i><span class="address">' . esc_attr( stripslashes( $address ) ) . '</span></div>';
 
-		return apply_filters( 'bf_geo_my_wp_address', $output, $address, $this->args, $item['location'], $this->user_position, $this );
+		return apply_filters( 'bf_geo_my_wp_address', $output, $address, $this->args, $item, $this->user_position, $this, $form_slug );
 	}
 
 	/**
@@ -619,10 +636,11 @@ class BuddyFormsGeoMyWpLocateEntries {
 	 * Get the distance betwwen the user's position to the item being displayed
 	 *
 	 * @param $item
+	 * @param $form_slug
 	 *
 	 * @return bool|string
 	 */
-	public function distance( $item ) {
+	public function distance( $item, $form_slug ) {
 
 		// if item has no location, abort!
 		if ( empty( $item ) ) {
@@ -647,7 +665,7 @@ class BuddyFormsGeoMyWpLocateEntries {
 		$output .= '<span class="label">' . esc_attr( $this->labels['distance'] ) . '</span> ';
 		$output .= '<span>' . $distance . ' ' . $units . '</span></div>';
 
-		return apply_filters( 'bf_geo_my_wp_distance', $output, $distance, $units, $this->args, $item['location'], $this->user_position, $this );
+		return apply_filters( 'bf_geo_my_wp_distance', $output, $distance, $units, $this->args, $item, $this->user_position, $this, $form_slug );
 	}
 
 	/**
@@ -684,7 +702,7 @@ class BuddyFormsGeoMyWpLocateEntries {
 									$locations[] = array(
 										'lat'                 => $location_obj->data['location']['lat'],
 										'lng'                 => $location_obj->data['location']['lng'],
-										'info_window_content' => $this->info_window_content( $location_obj->data ),
+										'info_window_content' => $this->info_window_content( $location_obj->data, $current_form_slug ),
 										'map_icon'            => apply_filters( 'bf_geo_my_wp_entry_map_icon', $map_icon, $this->args, $location_obj, $this->user_position, $current_form_slug ),
 										'icon_size'           => $this->args['map_icon_size'],
 									);
@@ -824,10 +842,11 @@ class BuddyFormsGeoMyWpLocateEntries {
 	 * Create the content of the info window
 	 *
 	 * @param $item
+	 * @param $form_slug
 	 *
 	 * @return bool|string
 	 */
-	public function info_window_content( $item ) {
+	public function info_window_content( $item, $form_slug ) {
 
 		if ( empty( $this->args['info_window'] ) ) {
 			return false;
@@ -847,16 +866,16 @@ class BuddyFormsGeoMyWpLocateEntries {
 		$iw_elements['iw_end'] = '</div>';
 
 		if ( isset( $iw_elements['distance'] ) ) {
-			$iw_elements['distance'] = $this->distance( $item );
+			$iw_elements['distance'] = $this->distance( $item, $form_slug );
 		}
 		if ( isset( $iw_elements['title'] ) ) {
-			$iw_elements['title'] = $this->title( $item );
+			$iw_elements['title'] = $this->title( $item, $form_slug );
 		}
 		if ( isset( $iw_elements['address'] ) ) {
-			$iw_elements['address'] = $this->address( $item );
+			$iw_elements['address'] = $this->address( $item, $form_slug );
 		}
 
-		$output = apply_filters( 'bf_geo_my_wp_object_info_window', $iw_elements, $this->args, $this->location_data, $this->user_position, $this );
+		$output = apply_filters( 'bf_geo_my_wp_object_info_window', $iw_elements, $this->args, $this->location_data, $this->user_position, $this, $form_slug );
 
 		return implode( ' ', $output );
 	}
