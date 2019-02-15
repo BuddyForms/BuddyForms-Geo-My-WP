@@ -80,7 +80,7 @@ class BuddyFormsGeoMyWpLocateEntries {
 		$this->args = $attr;
 
 		// set random element id if not exists.
-		$this->args['element_id'] = ! empty( $this->args['element_id'] ) ? $this->args['element_id'] : wp_rand( 100, 549 );
+		$this->args['element_id'] = ! empty( $this->args['element_id'] ) ? $this->args['element_id'] : $attr['form_slug'];
 
 		// If icon size provided, make it an array.
 		if ( ! empty( $this->args['map_icon_size'] ) ) {

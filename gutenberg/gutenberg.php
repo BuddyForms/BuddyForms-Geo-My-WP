@@ -3,21 +3,106 @@
 // Require all needed files
 require( 'shortcodes/shortcodes-to-blocks.php' );
 
-
-// Enqueue all needed css and js
-gmw_enqueue_scripts();
-
+add_action( 'enqueue_block_editor_assets', 'buddyforms_gmw_enqueue_base_scripts' );
+function buddyforms_gmw_enqueue_base_scripts() {
+	buddyforms_gmw_enqueue_scripts();
+	GMW_Maps_API::load_scripts();
+}
 
 // Load all needed frontend css and js
-add_action( 'admin_enqueue_scripts', 'buddyforms_gmw_enqueue_scripts', '999' );
+//add_action( 'admin_enqueue_scripts', 'buddyforms_gmw_enqueue_scripts', '999' );
 function buddyforms_gmw_enqueue_scripts() {
-	$map_scripts = array( 'jquery', 'gmw' );
+	$gmw_options      = gmw_get_options_group();
+	$maps_provider    = GMW()->maps_provider;
+	$geocode_provider = GMW()->geocoding_provider;
+	$main_scripts     = array( 'jquery' );
+	$map_scripts      = array( 'jquery', 'gmw' );
+	$lf_scripts       = array( 'jquery', 'gmw' );
+
+	// load maps provider
+	if ( 'google_maps' == $maps_provider ) {
+
+		$main_scripts[] = 'google-maps';
+		gmw_register_google_maps_api();
+
+	} else if ( 'leaflet' == $maps_provider ) {
+
+		$map_scripts[] = $lf_scripts[] = 'leaflet';
+		wp_register_script( 'leaflet', GMW_URL . '/assets/lib/leaflet/leaflet.bundle.min.js', array(), GMW_VERSION, true );
+
+	} else {
+		do_action( 'gmw_register_maps_provider_' . $maps_provider );
+	}
+
+	// load geocoding providers.
+	if ( 'google_maps' == $geocode_provider ) {
+
+		// Load geocoding provider only if other than Google Maps.
+		// Otherwise, no need to load Google Maps again as it is already loaded as map provider.
+		if ( 'google_maps' != $maps_provider ) {
+			$main_scripts[] = 'google-maps';
+			gmw_register_google_maps_api();
+		};
+
+		// Load custom geocoding provider.
+	} else {
+		do_action( 'gmw_register_geocoding_provider_' . $geocode_provider );
+	}
+
+	//$main_scripts = apply_filters( 'gmw_main_script_dependencies', $main_scripts );
+
+	// register gmw script
+	wp_register_script( 'gmw', GMW_URL . '/assets/js/gmw.core.min.js', $main_scripts, GMW_VERSION, true );
+
+	// Variables to localize as JavaScript.
+	$options = apply_filters( 'gmw_localize_options', array(
+		'settings'          => array(
+			'general' => $gmw_options['general_settings'],
+			'api'     => isset( $gmw_options['api_providers'] ) ? $gmw_options['api_providers'] : array(),
+		),
+		'mapsProvider'      => $maps_provider,
+		'geocodingProvider' => $geocode_provider,
+		'defaultIcons'      => GMW()->default_icons,
+		'isAdmin'           => IS_ADMIN,
+		'ajaxUrl'           => GMW()->ajax_url,
+	), $gmw_options );
+
+	wp_localize_script( 'gmw', 'gmwVars', $options );
+
+	// deprecated.
+	wp_localize_script( 'gmw', 'gmwAjaxUrl', GMW()->ajax_url );
+
+	// register location form.
+	wp_register_style( 'gmw-location-form', GMW_URL . '/includes/location-form/assets/css/gmw.location.form.min.css', array(), GMW_VERSION );
+	wp_register_script( 'gmw-location-form', GMW_URL . '/includes/location-form/assets/js/gmw.location.form.min.js', $lf_scripts, GMW_VERSION, true );
+
+
+	// fonts file in admin only. In front-end it is combined with front-end stylesheet.
+	wp_enqueue_style( 'gmw-fonts', GMW_URL . '/assets/css/gmw.font.min.css', array(), GMW_VERSION );
+	wp_enqueue_style( 'gmw-admin', GMW_URL . '/assets/css/gmw.admin.min.css', array(), GMW_VERSION );
+
+	// enqueue on GMW admin pages only
+	if ( ! empty( $_GET['page'] ) && strpos( $_GET['page'], 'gmw' ) !== false ) {
+		wp_enqueue_script( 'gmw-admin', GMW_URL . '/assets/js/gmw.admin.min.js', array( 'jquery', 'gmw' ), GMW_VERSION, true );
+	}
+
+	// register locations importer
+	wp_register_script( 'gmw-locations-importer', GMW_URL . '/includes/admin/pages/import-export/locations-importer/assets/js/gmw.locations.importer.min.js', array( 'jquery' ), GMW_VERSION );
+	wp_register_style( 'gmw-locations-importer', GMW_URL . '/includes/admin/pages/import-export/locations-importer/assets/css/gmw.locations.importer.min.css', array(), GMW_VERSION );
+
+	// register chosen scripts/style in back-end
+	if ( ! wp_style_is( 'chosen', 'registered' ) ) {
+		wp_register_style( 'chosen', GMW_URL . '/assets/lib/chosen/chosen.min.css', array(), '1.8.7' );
+	}
+	if ( ! wp_script_is( 'chosen', 'registered' ) ) {
+		wp_register_script( 'chosen', GMW_URL . '/assets/lib/chosen/chosen.jquery.min.js', array( 'jquery' ), '1.8.7', true );
+	}
 
 	// include GMW main stylesheet
 	wp_enqueue_style( 'gmw-frontend', GMW_URL . '/assets/css/gmw.frontend.min.css', array(), GMW_VERSION );
 
 	// Map script.
-	wp_register_script( 'gmw-map', GMW_URL . '/assets/js/gmw.map.min.js', $map_scripts, GMW_VERSION, true );
+	wp_register_script( 'gmw-map', GMW_URL . '/assets/js/gmw.map.js', $map_scripts, GMW_VERSION, true );
 
 	// load styles in head
 	$form_styles = apply_filters( 'gmw_load_form_styles_in_head', array() );
@@ -29,3 +114,11 @@ function buddyforms_gmw_enqueue_scripts() {
 		}
 	}
 }
+
+function bf_gmw_custom_load_map_via_ajax( $output, $args ) {
+	$output['cover'] = '<div class="gmw-map-cover" data-argument="' . wp_json_encode( $args ) . '"></div>';
+
+	return $output;
+}
+
+add_filter( 'gmw_map_output', 'bf_gmw_custom_load_map_via_ajax', 50, 2 );

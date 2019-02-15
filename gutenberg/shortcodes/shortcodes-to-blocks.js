@@ -1,3 +1,5 @@
+"use strict";
+
 var el = wp.element.createElement,
     Fragment = wp.element.Fragment,
     registerBlockType = wp.blocks.registerBlockType,
@@ -24,7 +26,24 @@ registerBlockType('buddyforms/bf-gmw-embed-map', {
     icon: iconBuddyFormsGMW,
     category: 'buddyforms',
 
+    startMap: function (mapId, mapArgs) {
+        GMW_Maps[mapId] = new GMW_Map(mapArgs.settings, mapArgs.map_options, mapArgs.form);
+
+        // render the map.
+        GMW_Maps[mapId].render(mapArgs.locations, mapArgs.user_location);
+    },
+
     edit: function (props) {
+
+        console.log('edit-block');
+
+        if(document.getElementsByClassName('gmw-map-cover').length > 0){
+
+            for(var ele in document.getElementsByClassName('gmw-map-cover')){
+                var arg = ele.dataset.argument;
+                console.log('argument'+arg);
+            }
+        }
 
         var bf_by_author = [
             {value: 'logged_in_user', label: 'Logged in Author Posts'},
