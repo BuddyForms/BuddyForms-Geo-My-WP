@@ -53,9 +53,6 @@ if ( ! class_exists( 'buddyforms_geo_my_wp' ) ) {
 			if ( BuddyFormsGeoMyWpRequirements::is_buddy_form_active() && BuddyFormsGeoMyWpRequirements::is_geo_my_wp_active() ) {
 				require_once 'classes/class-buddyforms-geo-my-wp-manager.php';
 				new BuddyFormsGeoMyWpManager();
-
-				// Gutenberg
-				require_once 'gutenberg/gutenberg.php';
 			}
 		}
 
