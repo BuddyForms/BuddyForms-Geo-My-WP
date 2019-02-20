@@ -174,6 +174,15 @@ var fieldContainerExamples, bfGeoAddressFieldInstance = {
     var form = jQuery('form');
     fieldContainerExamples = jQuery('.bf-geo-address-example');
     if (fieldContainerExamples.length > 0 && form.length > 0) {
+      if(jQuery && jQuery.validator) {
+        jQuery.validator.addMethod("address-required", function (value, element) {
+            if (value && value !== '') {
+                return true;
+            }
+            jQuery.validator.messages['address-required'] = buddyforms_geo_field.validation_error_message;
+            return false;
+        }, "");
+      }
       jQuery.each(fieldContainerExamples, function(key, container) {
         var fieldExampleInput = jQuery(container).find('.container-for-geo-address-field input[type="text"].bf-address-autocomplete-example');
         if (fieldExampleInput) {
@@ -203,17 +212,6 @@ var fieldContainerExamples, bfGeoAddressFieldInstance = {
   },
 };
 
-jQuery(document).ready(function($) {
-
-    jQuery.validator.addMethod("address-required", function (value, element) {
-
-        if(value && value != ''){
-            return true;
-        }
-        jQuery.validator.messages['address-required'] = buddyforms_geo_field.validation_error_message;
-        return false;
-    }, "");
-  bfGeoAddressFieldInstance.init();
-
-
+jQuery(document).ready(function () {
+    bfGeoAddressFieldInstance.init();
 });
