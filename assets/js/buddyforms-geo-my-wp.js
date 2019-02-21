@@ -103,7 +103,10 @@ var fieldContainerExamples, bfGeoAddressFieldInstance = {
     //Set field status
     jQuery(source).find('.container-for-geo-address-controls p.gmw-lf-field.message').removeClass('error ok changed');
     jQuery(source).find('.container-for-geo-address-controls p.gmw-lf-field.message').addClass(status);
-    jQuery(source).find('.container-for-geo-address-controls p.bfgmw-action .geo-address-field-delete:visible').first().hide();
+    //Hide the first delete button
+    if(jQuery('.container-for-geo-address-controls p.bfgmw-action .geo-address-field-delete').length <= 1 ){
+      jQuery(source).find('.container-for-geo-address-controls p.bfgmw-action .geo-address-field-delete').hide();
+    }
     //Append to higher container
     target.append(source);
     //Update action links

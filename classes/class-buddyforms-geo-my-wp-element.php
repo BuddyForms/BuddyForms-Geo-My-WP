@@ -596,12 +596,16 @@ class BuddyFormsGeoMyWpElement {
 			$form_slug = sanitize_title( $_GET['form_slug'] );
 		} else if ( ! empty( $wp_query->query_vars['form_slug'] ) ) {
 			$form_slug = sanitize_title( $wp_query->query_vars['form_slug'] );
-		} else if ( ! empty( $post ) && ! empty( $post->post_name ) && $post->post_type === 'buddyforms' ) {
-			$form_slug = $post->post_name;
-		} else if ( ! empty( $post ) && $post->post_type === 'post' ) {
-			$form_slug = buddyforms_get_form_slug_by_post_id( $post->ID );
-		} else if ( ! empty( $post ) && ! empty( $post->post_content ) ) {
-			$form_slug = buddyforms_get_form_slug_from_shortcode( $post->post_content );
+		} else if(! empty( $post )){
+			$post_content = apply_filters( 'the_content', $post->post_content );
+			if(! empty( $post->post_name ) && $post->post_type === 'buddyforms'){
+				$form_slug = $post->post_name;
+			} else if ( $post->post_type === 'post' ) {
+				$form_slug = buddyforms_get_form_slug_by_post_id( $post->ID );
+			} else if ( ! empty( $post_content ) ) {
+				//Extract the shortcode inside the content
+				$form_slug = buddyforms_get_form_slug_from_content( $post_content );
+			}
 		} else if ( function_exists( 'bp_current_component' ) && function_exists( 'bp_current_action' ) && function_exists( 'buddyforms_members_get_form_by_member_type' ) ) {
 			global $buddyforms_member_tabs;
 			$bp_action    = bp_current_action();
