@@ -21,6 +21,7 @@ class BuddyFormsGeoMyWpElement {
 		add_action( 'wp_enqueue_scripts', array( $this, 'wp_enqueue_scripts' ), 99 );
 		add_action( 'admin_enqueue_scripts', array( $this, 'wp_enqueue_scripts' ), 99 );
 		add_action( 'buddyforms_update_post_meta', array( $this, 'buddyforms_geo_my_wp_update_post_meta' ), 11, 2 );
+		add_action( 'buddyforms_update_user_meta', array( $this, 'buddyforms_geo_my_wp_update_post_meta' ), 11, 2 );
 	}
 
 	/**
@@ -47,17 +48,17 @@ class BuddyFormsGeoMyWpElement {
 
 			$form_slug = sanitize_title( $_POST['form_slug'] );
 
-			$user_id = get_current_user_id();
-			if ( empty( $user_id ) ) {
-				$user_id = 0;
-			}
+			$user_id = 0;
 
 			$form_type = BuddyFormsGeoMyWpElement::get_buddyforms_form_type( $form_slug );
 			$type      = 'post';
 			$id        = $post_id;
 			if ( isset( $buddyforms[ $form_slug ] ) && 'registration' === $form_type ) {
 				$type = 'user';
-				$id   = $user_id;
+				$user_id = $post_id;
+				if ( is_user_logged_in() ) {
+					$user_id = get_current_user_id();//Ensure the user modify the data belong to him
+				}
 			}
 
 			$field_data_string = 0;
