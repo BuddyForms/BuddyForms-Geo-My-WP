@@ -19,6 +19,7 @@ class BuddyFormsGeoMyWpElement {
 	public function __construct() {
 		add_filter( 'buddyforms_create_edit_form_display_element', array( $this, 'buddyforms_create_new_form_field' ), 10, 2 );
 		add_action( 'wp_enqueue_scripts', array( $this, 'wp_enqueue_scripts' ), 99 );
+		add_action( 'buddyforms_front_js_css_after_enqueue', array( $this, 'wp_enqueue_scripts' ), 99 );
 		add_action( 'admin_enqueue_scripts', array( $this, 'wp_enqueue_scripts' ), 99 );
 		add_action( 'buddyforms_update_post_meta', array( $this, 'buddyforms_geo_my_wp_update_post_meta' ), 11, 2 );
 		add_action( 'buddyforms_update_user_meta', array( $this, 'buddyforms_geo_my_wp_update_post_meta' ), 11, 2 );
@@ -586,7 +587,7 @@ class BuddyFormsGeoMyWpElement {
 		return $html;
 	}
 
-	public function wp_enqueue_scripts() {
+	public function wp_enqueue_scripts($content) {
 		global $buddyforms, $form_slug, $post;
 
 		$form_slug = '';
@@ -598,7 +599,7 @@ class BuddyFormsGeoMyWpElement {
 		} else if ( ! empty( $wp_query->query_vars['form_slug'] ) ) {
 			$form_slug = sanitize_title( $wp_query->query_vars['form_slug'] );
 		} else if(! empty( $post )){
-			$post_content = apply_filters( 'the_content', $post->post_content );
+			$post_content = ! empty( $content ) ? $content : $post->post_content;
 			if(! empty( $post->post_name ) && $post->post_type === 'buddyforms'){
 				$form_slug = $post->post_name;
 			} else if ( $post->post_type === 'post' ) {
