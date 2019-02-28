@@ -402,7 +402,7 @@ class BuddyFormsGeoMyWpLocateEntries {
 				return array();
 			}
 
-			$fields_result = array();
+			$fields_result = apply_filters( 'bf_geo_my_wp_locations_query_args_fields_slug', array() );
 			foreach ( $fields as $field ) {
 				if ( $field['type'] == 'geo_my_wp_address' ) {
 					$fields_result[] = $field['slug'];
@@ -410,15 +410,17 @@ class BuddyFormsGeoMyWpLocateEntries {
 			}
 			$meta_args = array();
 
-			if ( ! empty( $fields_result ) ) {
-				foreach ( $fields_result as $field_slug ) {
-					$meta_args[] = array(
-						'key'     => 'bf_' . $field_slug . '_count',
-						'compare' => 'EXISTS',
-					);
+			if ( ! apply_filters( 'bf_geo_my_wp_locations_query_args_avoid_field_validation', false ) ) {
+				if ( ! empty( $fields_result ) ) {
+					foreach ( $fields_result as $field_slug ) {
+						$meta_args[] = array(
+							'key'     => 'bf_' . $field_slug . '_count',
+							'compare' => 'EXISTS',
+						);
+					}
+				} else {
+					return array();
 				}
-			} else {
-				return array();
 			}
 
 			$query_args = array(
@@ -488,12 +490,13 @@ class BuddyFormsGeoMyWpLocateEntries {
 				return array();
 			}
 
-			$fields_result = array();
+			$fields_result = apply_filters( 'bf_geo_my_wp_locations_query_args_fields_slug', array() );
 			foreach ( $fields as $field ) {
 				if ( $field['type'] == 'geo_my_wp_address' ) {
 					$fields_result[] = $field['slug'];
 				}
 			}
+
 			$meta_args = array(
 				'relation' => 'AND',
 				array(
@@ -502,15 +505,17 @@ class BuddyFormsGeoMyWpLocateEntries {
 				)
 			);
 
-			if ( ! empty( $fields_result ) ) {
-				foreach ( $fields_result as $field_slug ) {
-					$meta_args[] = array(
-						'key'     => 'bf_' . $field_slug . '_count',
-						'compare' => 'EXISTS',
-					);
+			if ( ! apply_filters( 'bf_geo_my_wp_locations_query_args_avoid_field_validation', false ) ) {
+				if ( ! empty( $fields_result ) ) {
+					foreach ( $fields_result as $field_slug ) {
+						$meta_args[] = array(
+							'key'     => 'bf_' . $field_slug . '_count',
+							'compare' => 'EXISTS',
+						);
+					}
+				} else {
+					return array();
 				}
-			} else {
-				return array();
 			}
 
 			$query_args = array(
