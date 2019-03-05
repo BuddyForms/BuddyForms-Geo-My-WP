@@ -32,6 +32,7 @@ class BuddyFormsGeoMyWpManager {
 	}
 
 	public function load_dependency() {
+		require_once 'buddyforms-geo-my-wp-functions.php';
 		require_once 'class-buddyforms-geo-my-wp-builder.php';
 		new BuddyFormsGeoMyWpBuilder();
 		require_once 'class-buddyforms-geo-my-wp-element.php';
