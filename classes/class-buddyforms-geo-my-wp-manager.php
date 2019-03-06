@@ -32,13 +32,14 @@ class BuddyFormsGeoMyWpManager {
 	}
 
 	public function load_dependency() {
-		require_once 'buddyforms-geo-my-wp-functions.php';
 		require_once 'class-buddyforms-geo-my-wp-builder.php';
 		new BuddyFormsGeoMyWpBuilder();
 		require_once 'class-buddyforms-geo-my-wp-element.php';
 		new BuddyFormsGeoMyWpElement();
 		require_once 'class-buddyforms-geo-my-wp-submission.php';
 		new BuddyFormsGeoMyWpSubmission();
+		require_once 'class-buddyforms-geo-my-wp-locate-entries.php';
+		require_once 'buddyforms-geo-my-wp-functions.php';
 		require_once 'class-buddyforms-geo-my-wp-shortcodes.php';
 		new BuddyFormsGeoMyWpShortCodes();
 	}

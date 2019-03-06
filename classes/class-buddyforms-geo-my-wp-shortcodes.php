@@ -59,8 +59,7 @@ class BuddyFormsGeoMyWpShortCodes {
 			gmw_trigger_error( '[bf_geo_my_wp] shortcode attribute form_slug is mandatory.' );
 			return '';
 		}
-
-		require_once 'class-buddyforms-geo-my-wp-locate-entries.php';
+		
 		$instance = new BuddyFormsGeoMyWpLocateEntries( $attrs );
 
 		if ( ! empty( $instance ) ) {
