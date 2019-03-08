@@ -402,7 +402,7 @@ class BuddyFormsGeoMyWpLocateEntries {
 				return array();
 			}
 			
-			$fields_result = apply_filters( 'bf_geo_my_wp_locations_query_args_fields_slug', array() );
+			$fields_result = apply_filters( 'bf_geo_my_wp_locations_query_args_fields_slug', array(), $form_slug, $form_type, $this->args );
 			foreach ( $fields as $field ) {
 				if ( $field['type'] == 'geo_my_wp_address' ) {
 					$fields_result[] = $field['slug'];
@@ -410,7 +410,7 @@ class BuddyFormsGeoMyWpLocateEntries {
 			}
 			$meta_args = array();
 			
-			if ( ! apply_filters( 'bf_geo_my_wp_locations_query_args_avoid_field_validation', false ) ) {
+			if ( ! apply_filters( 'bf_geo_my_wp_locations_query_args_avoid_field_validation', false, $form_slug, $form_type, $this->args ) ) {
 				if ( ! empty( $fields_result ) ) {
 					foreach ( $fields_result as $field_slug ) {
 						$meta_args[] = array(
@@ -436,7 +436,7 @@ class BuddyFormsGeoMyWpLocateEntries {
 				$query_args['include'] = array( $this->args['user_id'] );
 			}
 			
-			$query = new WP_User_Query( apply_filters( 'bf_geo_my_wp_locations_for_registration_query_args', $query_args, $form_slug ) );
+			$query = new WP_User_Query( apply_filters( 'bf_geo_my_wp_locations_for_registration_query_args', $query_args, $form_slug, $this->args ) );
 			
 			$results = $query->get_results();
 			if ( ! empty( $results ) ) {
@@ -490,7 +490,7 @@ class BuddyFormsGeoMyWpLocateEntries {
 				return array();
 			}
 			
-			$fields_result = apply_filters( 'bf_geo_my_wp_locations_query_args_fields_slug', array() );
+			$fields_result = apply_filters( 'bf_geo_my_wp_locations_query_args_fields_slug', array(), $form_slug, $post_type, $this->args );
 			foreach ( $fields as $field ) {
 				if ( $field['type'] == 'geo_my_wp_address' ) {
 					$fields_result[] = $field['slug'];
@@ -505,7 +505,7 @@ class BuddyFormsGeoMyWpLocateEntries {
 				)
 			);
 			
-			if ( ! apply_filters( 'bf_geo_my_wp_locations_query_args_avoid_field_validation', false ) ) {
+			if ( ! apply_filters( 'bf_geo_my_wp_locations_query_args_avoid_field_validation', false, $form_slug, $post_type, $this->args ) ) {
 				if ( ! empty( $fields_result ) ) {
 					foreach ( $fields_result as $field_slug ) {
 						$meta_args[] = array(
@@ -531,7 +531,7 @@ class BuddyFormsGeoMyWpLocateEntries {
 				$query_args['author'] = $this->args['user_id'];
 			}
 			
-			$query = new WP_Query( apply_filters( 'bf_geo_my_wp_locations_for_content_query_args', $query_args, $form_slug, $post_type ) );
+			$query = new WP_Query( apply_filters( 'bf_geo_my_wp_locations_for_content_query_args', $query_args, $form_slug, $post_type, $this->args ) );
 			
 			if ( ! empty( $query->posts ) ) {
 				foreach ( $query->posts as $post_id ) {
