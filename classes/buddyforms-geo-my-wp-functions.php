@@ -65,17 +65,18 @@ function bf_geo_my_wp_get_content_address_by_component( $post_id, $field_slug, $
 /**
  * Get the user location from the given user_id and field slug
  *
- * @param $user_id
- * @param $field_slug
+ * @param      $user_id
+ * @param      $field_slug
+ * @param bool $is_single
  *
  * @return array
  */
-function bf_geo_my_wp_get_user_location_meta( $user_id, $field_slug ) {
+function bf_geo_my_wp_get_user_location_meta( $user_id, $field_slug, $is_single = true ) {
 	if ( empty( $user_id ) || empty( $field_slug ) ) {
 		return array();
 	}
 	
-	$meta = get_user_meta( $user_id, 'bf_' . $field_slug . '_count', true );
+	$meta = get_user_meta( $user_id, 'bf_' . $field_slug . '_count', $is_single );
 	
 	return ( empty( $meta ) ) ? array() : $meta;
 }
@@ -83,17 +84,18 @@ function bf_geo_my_wp_get_user_location_meta( $user_id, $field_slug ) {
 /**
  * Get the location for the given post and field slug
  *
- * @param $post_id
- * @param $field_slug
+ * @param      $post_id
+ * @param      $field_slug
+ * @param bool $is_single
  *
  * @return array
  */
-function bf_geo_my_wp_get_content_location_meta( $post_id, $field_slug ) {
+function bf_geo_my_wp_get_content_location_meta( $post_id, $field_slug, $is_single = true  ) {
 	if ( empty( $post_id ) || empty( $field_slug ) ) {
 		return array();
 	}
 	
-	$meta = get_post_meta( $post_id, 'bf_' . $field_slug . '_count', true );
+	$meta = get_post_meta( $post_id, 'bf_' . $field_slug . '_count', $is_single );
 	
 	return ( empty( $meta ) ) ? array() : $meta;
 }

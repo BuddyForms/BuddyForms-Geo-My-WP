@@ -442,10 +442,11 @@ class BuddyFormsGeoMyWpLocateEntries {
 			if ( ! empty( $results ) ) {
 				foreach ( $results as $user_id ) {
 					foreach ( $fields_result as $field_slug ) {
-						$locations[] = array(
+						$location = array(
 							'form_slug' => $form_slug,
 							get_user_meta( $user_id, 'bf_' . $field_slug . '_count' ),
 						);
+						$locations[] = apply_filters( 'bf_geo_my_wp_locations_for_registration', $location, $query_args, $form_slug, $form_type, $this->args, $field_slug );
 					}
 				}
 			}
@@ -536,10 +537,11 @@ class BuddyFormsGeoMyWpLocateEntries {
 			if ( ! empty( $query->posts ) ) {
 				foreach ( $query->posts as $post_id ) {
 					foreach ( $fields_result as $field_slug ) {
-						$locations[] = array(
+						$location = array(
 							'form_slug' => $form_slug,
 							get_post_meta( $post_id, 'bf_' . $field_slug . '_count' ),
 						);
+						$locations[] = apply_filters( 'bf_geo_my_wp_locations_for_content', $location, $query_args, $form_slug, $post_type, $this->args, $post_id, $field_slug );
 					}
 				}
 			}
