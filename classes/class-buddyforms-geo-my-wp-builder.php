@@ -41,8 +41,7 @@ class BuddyFormsGeoMyWpBuilder {
 		$elements_select_options['geo_my_wp']['label']                       = 'Geo My Wp';
 		$elements_select_options['geo_my_wp']['class']                       = 'bf_show_if_f_type_all';
 		$elements_select_options['geo_my_wp']['fields']['geo_my_wp_address'] = array(
-			'label'  => __( 'Address', 'buddyforms_geo_my_wp_locale' ),
-			'unique' => 'unique'
+			'label'  => __( 'Address', 'buddyforms_geo_my_wp_locale' )
 		);
 
 		return $elements_select_options;
