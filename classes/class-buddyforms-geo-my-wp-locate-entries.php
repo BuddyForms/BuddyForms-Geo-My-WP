@@ -333,7 +333,6 @@ class BuddyFormsGeoMyWpLocateEntries {
 		}
 		
 		return $result;
-		
 	}
 	
 	/**
@@ -436,13 +435,19 @@ class BuddyFormsGeoMyWpLocateEntries {
 				$query_args['include'] = array( $this->args['user_id'] );
 			}
 			
-			$query = new WP_User_Query( apply_filters( 'bf_geo_my_wp_locations_for_registration_query_args', $query_args, $form_slug, $this->args ) );
+			$query_args = apply_filters( 'bf_geo_my_wp_locations_for_registration_query_args', $query_args, $form_slug, $this->args );
+			
+			if ( empty( $query_args ) ) {
+				return array();
+			}
+			
+			$query = new WP_User_Query( $query_args );
 			
 			$results = $query->get_results();
 			if ( ! empty( $results ) ) {
 				foreach ( $results as $user_id ) {
 					foreach ( $fields_result as $field_slug ) {
-						$location = array(
+						$location    = array(
 							'form_slug' => $form_slug,
 							get_user_meta( $user_id, 'bf_' . $field_slug . '_count' ),
 						);
@@ -532,12 +537,18 @@ class BuddyFormsGeoMyWpLocateEntries {
 				$query_args['author'] = $this->args['user_id'];
 			}
 			
-			$query = new WP_Query( apply_filters( 'bf_geo_my_wp_locations_for_content_query_args', $query_args, $form_slug, $post_type, $this->args ) );
+			$query_args = apply_filters( 'bf_geo_my_wp_locations_for_content_query_args', $query_args, $form_slug, $post_type, $this->args );
+			
+			if ( empty( $query_args ) ) {
+				return array();
+			}
+			
+			$query = new WP_Query( $query_args );
 			
 			if ( ! empty( $query->posts ) ) {
 				foreach ( $query->posts as $post_id ) {
 					foreach ( $fields_result as $field_slug ) {
-						$location = array(
+						$location    = array(
 							'form_slug' => $form_slug,
 							get_post_meta( $post_id, 'bf_' . $field_slug . '_count' ),
 						);
@@ -602,14 +613,14 @@ class BuddyFormsGeoMyWpLocateEntries {
 	public static function get_address_component_from_item( $item, $component = array( 'formatted_address' ), $glue = ' ' ) {
 		if ( is_array( $component ) ) {
 			// get the full address.
-			if ( in_array('formatted_address',  $component ) ) {
+			if ( in_array( 'formatted_address', $component ) ) {
 				$address = ! empty( $item['formatted_address'] ) ? $item['formatted_address'] : '';
 			} else {
 				// Otherwise, get specific address fields.
 				$address_array = array();
 				foreach ( $component as $field ) {
 					foreach ( $item ['address_components'] as $address_component ) {
-						if ( !empty( $address_component['types'][0] ) && $address_component['types'][0] === $field ) {
+						if ( ! empty( $address_component['types'][0] ) && $address_component['types'][0] === $field ) {
 							if ( ! empty( $address_component['long_name'] ) ) {
 								$address_array[] = $address_component['long_name'];
 							}
