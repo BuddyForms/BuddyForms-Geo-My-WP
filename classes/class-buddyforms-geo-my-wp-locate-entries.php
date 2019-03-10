@@ -411,11 +411,17 @@ class BuddyFormsGeoMyWpLocateEntries {
 			
 			if ( ! apply_filters( 'bf_geo_my_wp_locations_query_args_avoid_field_validation', false, $form_slug, $form_type, $this->args ) ) {
 				if ( ! empty( $fields_result ) ) {
+					$metas = array(
+						'relation' => 'OR'
+					);
 					foreach ( $fields_result as $field_slug ) {
-						$meta_args[] = array(
+						$metas[] = array(
 							'key'     => 'bf_' . $field_slug . '_count',
 							'compare' => 'EXISTS',
 						);
+					}
+					if ( count( $metas ) > 1 ) {
+						$meta_args[] = $metas;
 					}
 				} else {
 					return array();
@@ -513,11 +519,17 @@ class BuddyFormsGeoMyWpLocateEntries {
 			
 			if ( ! apply_filters( 'bf_geo_my_wp_locations_query_args_avoid_field_validation', false, $form_slug, $post_type, $this->args ) ) {
 				if ( ! empty( $fields_result ) ) {
+					$metas = array(
+						'relation' => 'OR'
+					);
 					foreach ( $fields_result as $field_slug ) {
-						$meta_args[] = array(
+						$metas[] = array(
 							'key'     => 'bf_' . $field_slug . '_count',
 							'compare' => 'EXISTS',
 						);
+					}
+					if ( count($metas ) > 1 ) {
+						$meta_args[] = $metas;
 					}
 				} else {
 					return array();

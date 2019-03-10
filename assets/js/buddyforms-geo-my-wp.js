@@ -156,7 +156,7 @@ var fieldContainerExamples, bfGeoAddressFieldInstance = {
     if (dataFields.length > 0) {
       jQuery.each(dataFields, function(key, currentDataField) {
         var fieldTarget = jQuery(currentDataField).attr('field_name');
-        var hiddenFieldsData = jQuery('input[type="hidden"][name^="' + fieldTarget + '_"][name$="_data"]');
+        var hiddenFieldsData = jQuery('.bf-address-autocomplete-active input[type="hidden"][name^="' + fieldTarget + '_"][name$="_data"]');
         if (hiddenFieldsData.length > 0) {
           var allResults = [];
           jQuery.each(hiddenFieldsData, function(i, currentHiddenField) {
@@ -174,7 +174,7 @@ var fieldContainerExamples, bfGeoAddressFieldInstance = {
     }
   },
   init: function() {
-    var form = jQuery('form');
+    var form = jQuery('form#post, form[id^="buddyforms_form_"]');
     fieldContainerExamples = jQuery('.bf-geo-address-example');
     if (fieldContainerExamples.length > 0 && form.length > 0) {
       if(jQuery && jQuery.validator) {
@@ -210,7 +210,7 @@ var fieldContainerExamples, bfGeoAddressFieldInstance = {
       });
       form.on('click', '.geo-address-field-add', bfGeoAddressFieldInstance.actionAddField);
       form.on('click', '.geo-address-field-delete', bfGeoAddressFieldInstance.actionRemoveField);
-      form.on('click', 'button[type="submit"].bf-submit', bfGeoAddressFieldInstance.submitForm);
+      form.on('click', 'button[type="submit"].bf-submit, #publishing-action input[type="submit"]', bfGeoAddressFieldInstance.submitForm);
     }
   },
 };

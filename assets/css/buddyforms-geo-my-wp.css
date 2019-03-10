@@ -1,3 +1,4 @@
+.postbox .bf-geo-address-fields .container-for-geo-address-field,
 .postbox-submissions .standard-form .bf-geo-address-fields .container-for-geo-address-field,
 .edit-post-layout__content .metabox-location-normal .postbox-container .postbox fieldset .container-for-geo-address-field,
 .the_buddyforms_form fieldset .col-xs-12 .container-for-geo-address-field {
@@ -13,11 +14,13 @@
     width: 95%;
 }
 
+.postbox .bf-geo-address-fields .container-for-geo-address-field.is-single,
 .postbox-submissions .standard-form .bf-geo-address-fields .container-for-geo-address-field.is-single,
 .the_buddyforms_form fieldset .col-xs-12 .container-for-geo-address-field.is-single {
-    width: calc(100% - 30px);
+    width: calc(100% - 60px);
 }
 
+.postbox .bf-geo-address-fields .container-for-geo-address-controls,
 .postbox-submissions .standard-form .bf-geo-address-fields .container-for-geo-address-controls,
 .edit-post-layout__content .metabox-location-normal .postbox-container .postbox fieldset .container-for-geo-address-controls,
 .the_buddyforms_form fieldset .col-xs-12 .container-for-geo-address-controls {
@@ -29,14 +32,17 @@
     overflow: hidden;
 }
 
+.postbox .bf-geo-address-fields .container-for-geo-address-controls > p > a,
 .postbox-submissions .standard-form .bf-geo-address-fields .container-for-geo-address-controls > p > a,
 .edit-post-layout__content .metabox-location-normal .postbox-container .postbox fieldset .container-for-geo-address-controls > p > a,
 .the_buddyforms_form fieldset .col-xs-12 .container-for-geo-address-controls > p > a {
     cursor: pointer;
 }
 
+.postbox .bf-geo-address-fields .container-for-geo-address-controls [class*=" gmw-icon-"]:before,
 .postbox-submissions .standard-form .bf-geo-address-fields .container-for-geo-address-controls [class*=" gmw-icon-"]:before,
 .edit-post-layout__content .metabox-location-normal .postbox-container .postbox fieldset .container-for-geo-address-controls [class*=" gmw-icon-"]:before,
+.postbox .bf-geo-address-fields .container-for-geo-address-controls [class^=gmw-icon-]:before,
 .postbox-submissions .standard-form .bf-geo-address-fields .container-for-geo-address-controls [class^=gmw-icon-]:before,
 .edit-post-layout__content .metabox-location-normal .postbox-container .postbox fieldset .container-for-geo-address-controls [class^=gmw-icon-]:before,
 .the_buddyforms_form fieldset .col-xs-12 .container-for-geo-address-controls [class*=" gmw-icon-"]:before,
@@ -46,6 +52,7 @@
     width: 0.5rem;
 }
 
+.postbox .bf-geo-address-fields .container-for-geo-address-controls > p > a > span.dashicons,
 .postbox-submissions .standard-form .bf-geo-address-fields .container-for-geo-address-controls > p > a > span.dashicons,
 .edit-post-layout__content .metabox-location-normal .postbox-container .postbox fieldset .container-for-geo-address-controls > p > a > span.dashicons,
 .the_buddyforms_form fieldset .col-xs-12 .container-for-geo-address-controls > p > a > span.dashicons,
@@ -56,6 +63,7 @@
 }
 
 .postbox-submissions .standard-form .bf-geo-address-fields .container-for-geo-address-field input[type=text].bf-address-autocomplete,
+.postbox fieldset .bf-geo-address-fields .container-for-geo-address-field input[type=text].bf-address-autocomplete,
 .edit-post-layout__content .metabox-location-normal .postbox-container .postbox fieldset .bf-geo-address-fields .container-for-geo-address-field input[type=text].bf-address-autocomplete,
 .container-for-geo-address-field .bf-address-autocomplete {
     width: 95%;
@@ -67,6 +75,7 @@
     height: 50px;
 }
 
+.postbox p.bfgmw-action a.geo-address-field-add,
 .the_buddyforms_form p.bfgmw-action a.geo-address-field-add,
 .edit-post-layout__content .metabox-location-normal .postbox-container .postbox fieldset p.bfgmw-action a.geo-address-field-add {
     display: none;
@@ -74,12 +83,14 @@
     text-decoration-style: unset;
 }
 
+.postbox p.bfgmw-action,
 .the_buddyforms_form p.bfgmw-action,
 .edit-post-layout__content .metabox-location-normal .postbox-container .postbox fieldset .bf_field_group p.bfgmw-action {
     padding: 15px 5px;
     margin: 0;
 }
 
+.postbox p.gmw-lf-field.message,
 .buddyforms-metabox p.gmw-lf-field.message,
 .edit-post-layout__content .metabox-location-normal .postbox-container .postbox fieldset .bf_field_group p.gmw-lf-field.message,
 #buddypress .the_buddyforms_form p.gmw-lf-field.message,
@@ -109,18 +120,23 @@
 .edit-post-layout__content .metabox-location-normal .postbox-container .postbox fieldset .bf_field_group p.gmw-lf-field.message.error i.gmw-icon-cancel,
 .buddyforms-metabox p.gmw-lf-field.message.ok i.gmw-icon-ok-light,
 .edit-post-layout__content .metabox-location-normal .postbox-container .postbox fieldset .bf_field_group p.gmw-lf-field.message.ok i.gmw-icon-ok-light,
+.postbox p.gmw-lf-field.message.changed i.gmw-icon-spin,
 .the_buddyforms_form p.gmw-lf-field.message.changed i.gmw-icon-spin,
+.postbox p.gmw-lf-field.message.error i.gmw-icon-cancel,
 .the_buddyforms_form p.gmw-lf-field.message.error i.gmw-icon-cancel,
+.postbox p.gmw-lf-field.message.ok i.gmw-icon-ok-light,
 .the_buddyforms_form p.gmw-lf-field.message.ok i.gmw-icon-ok-light {
     display: inline-block;
 }
 
+.postbox p.gmw-lf-field.message i,
 .buddyforms-metabox p.gmw-lf-field.message i,
 .edit-post-layout__content .metabox-location-normal .postbox-container .postbox fieldset .bf_field_group p.gmw-lf-field.message i,
 .the_buddyforms_form p.gmw-lf-field.message i {
     display: none;
 }
 
+.postbox p.gmw-lf-field.message.error,
 .buddyforms-metabox p.gmw-lf-field.message.error,
 #buddypress .the_buddyforms_form p.gmw-lf-field.message.error,
 .edit-post-layout__content .metabox-location-normal .postbox-container .postbox fieldset p.gmw-lf-field.message.error,
@@ -129,6 +145,7 @@
     background-color: #f2dede;
 }
 
+.postbox p.gmw-lf-field.message.ok,
 .buddyforms-metabox p.gmw-lf-field.message.ok,
 .edit-post-layout__content .metabox-location-normal .postbox-container .postbox fieldset p.gmw-lf-field.message.ok,
 .the_buddyforms_form p.gmw-lf-field.message.ok {
@@ -138,6 +155,7 @@
     border-color: #82b77b
 }
 
+.postbox p.gmw-lf-field.message.changed,
 .buddyforms-metabox p.gmw-lf-field.message.changed,
 .edit-post-layout__content .metabox-location-normal .postbox-container .postbox fieldset p.gmw-lf-field.message.changed,
 .the_buddyforms_form p.gmw-lf-field.message.changed {
