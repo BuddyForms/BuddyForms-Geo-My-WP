@@ -66,7 +66,7 @@ if ( ! class_exists( 'buddyforms_geo_my_wp' ) ) {
 		function buddyforms_geo_my_wp_free_version_admin_notice() {
 			?>
             <div class="notice notice-warning">
-                <p><u>BuddyForms Geo My Wp.</u> <?php _e( 'Need the Professional version to work.', 'buddyforms_geo_my_wp_locale' ); ?></p>
+                <p><?php _e( 'You need to activate the license of the extension <u>BuddyForms Geo My Wp.</u>', 'buddyforms_geo_my_wp_locale' ); ?></p>
             </div>
 			<?php
 		}
