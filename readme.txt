@@ -1,9 +1,9 @@
 === BuddyForms Geo My WP ===
 
 Contributors: themekraft, svenl77, gfirem
-Tags: WooCommerce, BuddyPress, Geo My WP
+Tags: WooCommerce, BuddyPress, Geo My WP, BuddyForms
 Requires at least: 4.0
-Tested up to: 4.9.6
+Tested up to: 5.1
 Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -12,7 +12,7 @@ Shop solution for your BuddyPress community. Integrates a WooCommerce installati
 
 == Description ==
 
-Create a seamless customer experience and get more engagement on your site by integrating your WooCommerce store with your BuddyPress community.
+With BuddyForms Geo my WP you can geolocate any Post Type and your site members.
 
 ---
 
@@ -32,7 +32,7 @@ Activate the plugin through the 'Plugins' menu in WordPress.
 == Changelog ==
 = 1.1.0 =
 * Adding the new shortcodes to display entries from registration and content forms
-* Fixed the way the way the plugin grab the form slug from the query args when is showing the form trough the form preview
+* Fixed the way the plugin grab the form slug from the query args when is showing the form trough the form preview
 * Implemented the logic to show multiples form in one shortcode and differentiate from registration and content form using different icons
 * Added a validation just in case google js is not detected
 * Fixed the field name
