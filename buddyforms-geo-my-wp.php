@@ -2,7 +2,7 @@
 /*
  * Plugin Name: BuddyForms Geo My Wp
  * Plugin URI: http://buddyforms.com/
- * Description: This Plugin adds field to link with Geo My Wp
+ * Description: This Plugin brings the power of Geo My Wp into BuddyForms
  * Version: 1.1.0
  * Author: ThemeKraft Dev Team
  * Author URI: https://themkraft.com/#team
@@ -36,6 +36,9 @@ if ( ! defined( 'WPINC' ) ) {
 
 if ( ! class_exists( 'buddyforms_geo_my_wp' ) ) {
 
+	require_once dirname( __FILE__ ) . '/classes/class-buddyforms-geo-my-wp-fs.php';
+	new BuddyFormsGeoMyWpFs();
+
 	class buddyforms_geo_my_wp {
 
 		/**
@@ -50,10 +53,22 @@ if ( ! class_exists( 'buddyforms_geo_my_wp' ) ) {
 			$this->load_plugin_textdomain();
 			require_once 'classes/class-buddyforms-geo-my-wp-requirements.php';
 			new BuddyFormsGeoMyWpRequirements();
-			if ( BuddyFormsGeoMyWpRequirements::is_buddy_form_active() && BuddyFormsGeoMyWpRequirements::is_geo_my_wp_active() ) {
-				require_once 'classes/class-buddyforms-geo-my-wp-manager.php';
-				new BuddyFormsGeoMyWpManager();
+			if ( BuddyFormsGeoMyWpFs::getFreemius()->is_paying_or_trial__premium_only() ) {
+				if ( BuddyFormsGeoMyWpRequirements::is_buddy_form_active() && BuddyFormsGeoMyWpRequirements::is_geo_my_wp_active() ) {
+					require_once 'classes/class-buddyforms-geo-my-wp-manager.php';
+					new BuddyFormsGeoMyWpManager();
+				}
+			} else {
+				add_action( 'admin_notices', array( $this, 'buddyforms_geo_my_wp_free_version_admin_notice' ) );
 			}
+		}
+
+		function buddyforms_geo_my_wp_free_version_admin_notice() {
+			?>
+            <div class="notice notice-warning">
+                <p><u>BuddyForms Geo My Wp.</u> <?php _e( 'Need the Professional version to work.', 'buddyforms_geo_my_wp_locale' ); ?></p>
+            </div>
+			<?php
 		}
 
 		private function constants() {
