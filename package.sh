@@ -25,6 +25,7 @@ echo "-Cleaning in Progress..."
 rm -rf ./.git*
 rm -rf ./.sass-cache
 rm -rf ./.directory
+rm -rf ./.github
 rm -rf ./node_modules
 rm -rf ./wp-config-test.php
 rm -rf ./*.yml
