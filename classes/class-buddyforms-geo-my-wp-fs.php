@@ -112,6 +112,10 @@ class BuddyFormsGeoMyWpFs {
 					'is_premium_only'  => true,
 					'has_paid_plans'   => true,
 					'is_org_compliant' => false,
+					'trial' => array(
+						'days'               => 14,
+						'is_require_payment' => true,
+					),
 					'parent'           => array(
 						'id'         => '391',
 						'slug'       => 'buddyforms',
