@@ -4,7 +4,7 @@ Contributors: themekraft, svenl77, gfirem
 Tags: WooCommerce, BuddyPress, Geo My WP, BuddyForms
 Requires at least: 4.0
 Tested up to: 5.1
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 

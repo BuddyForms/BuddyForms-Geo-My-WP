@@ -1,0 +1,33 @@
+{
+    "name": "themekraft/buddyform-geo-my-wp",
+    "description": "This Plugin brings the power of Geo My Wp into BuddyForms.",
+    "keywords": [
+        "social networking", "woocommerce", "Geo My WP", "BuddyPress"
+    ],
+    "homepage": "http://www.themekraft.com",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0+",
+    "authors": [
+        {
+            "name": "Sven Lehnert",
+            "email": "svenl@themekraft.com"
+        },
+        {
+            "name": "Guillermo Figueroa Mesa",
+            "email": "gfirem@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "php": ">=5.2"
+    },
+    "require-dev": {
+        "bruli/php-git-hooks": "^5.1"
+    },
+    "scripts":{
+        "package": "sh .tk/package.sh buddyforms-geo-my-wp",
+        "wp-release": "sh .tk/wp_release.sh",
+        "beta-release": "sh .tk/full-deploy.sh buddyforms-geo-my-wp 3376 false beta",
+        "full-release": "sh .tk/full-deploy.sh buddyforms-geo-my-wp 3376 false released"
+    }
+}
