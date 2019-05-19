@@ -288,7 +288,7 @@ class BuddyFormsGeoMyWpLocateEntries {
 
 		// check if provided object ID.
 		if ( empty( $this->args['form_slug'] ) ) {
-			return;
+			return array();
 		}
 
 		// get the location data.
@@ -431,6 +431,7 @@ class BuddyFormsGeoMyWpLocateEntries {
 			$query_args = array(
 				'include'    => array(),
 				'fields'     => 'ID',
+				'number'     => -1,
 				'meta_query' => $meta_args
 			);
 
@@ -537,9 +538,10 @@ class BuddyFormsGeoMyWpLocateEntries {
 			}
 
 			$query_args = array(
-				'post_type'  => $post_type,
-				'fields'     => 'ids',
-				'meta_query' => $meta_args
+				'post_type'      => $post_type,
+				'fields'         => 'ids',
+				'posts_per_page' => - 1,
+				'meta_query'     => $meta_args
 			);
 
 			if ( ! empty( $this->args['logged_in_user'] ) ) {
