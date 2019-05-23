@@ -53,7 +53,8 @@ if ( ! class_exists( 'buddyforms_geo_my_wp' ) ) {
 			$this->load_plugin_textdomain();
 			require_once 'classes/class-buddyforms-geo-my-wp-requirements.php';
 			new BuddyFormsGeoMyWpRequirements();
-			if ( BuddyFormsGeoMyWpFs::getFreemius()->is_paying_or_trial__premium_only() ) {
+			$bf_freemius = BuddyFormsGeoMyWpFs::getFreemius();
+			if ( ! empty( $bf_freemius ) && $bf_freemius->is_paying_or_trial__premium_only() ) {
 				if ( BuddyFormsGeoMyWpRequirements::is_buddy_form_active() && BuddyFormsGeoMyWpRequirements::is_geo_my_wp_active() ) {
 					require_once 'classes/class-buddyforms-geo-my-wp-manager.php';
 					new BuddyFormsGeoMyWpManager();
