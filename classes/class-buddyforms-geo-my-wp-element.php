@@ -651,7 +651,7 @@ class BuddyFormsGeoMyWpElement {
 				'url_base' => '://maps.googleapis.com/maps/api/js?',
 				'url_data' => http_build_query( apply_filters( 'gmw_google_maps_api_args', array(
 					'libraries' => 'places',
-					'key'       => gmw_get_option( 'general_settings', 'google_api', 'AIzaSyA2Anj6SqW4mFGZGrrZgDcFECprGP6Kt0k' ),
+					'key'       => gmw_get_option( 'general_settings', 'google_api', '' ),
 					'region'    => gmw_get_option( 'general_settings', 'country_code', 'US' ),
 					'language'  => gmw_get_option( 'general_settings', 'language_code', 'EN' ),
 				) ), '', '&amp;' ),
