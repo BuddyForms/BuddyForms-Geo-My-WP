@@ -3,8 +3,9 @@ var fieldContainerExamples, bfGeoAddressFieldInstance = {
     var text = '';
     var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
-    for (var i = 0; i < 5; i++)
+    for (var i = 0; i < 5; i++) {
       text += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
 
     return text;
   },
@@ -104,7 +105,7 @@ var fieldContainerExamples, bfGeoAddressFieldInstance = {
     jQuery(source).find('.container-for-geo-address-controls p.gmw-lf-field.message').removeClass('error ok changed');
     jQuery(source).find('.container-for-geo-address-controls p.gmw-lf-field.message').addClass(status);
     //Hide the first delete button
-    if(jQuery('.container-for-geo-address-controls p.bfgmw-action .geo-address-field-delete').length <= 1 ){
+    if (jQuery('.container-for-geo-address-controls p.bfgmw-action .geo-address-field-delete').length <= 1) {
       jQuery(source).find('.container-for-geo-address-controls p.bfgmw-action .geo-address-field-delete').hide();
     }
     //Append to higher container
@@ -174,17 +175,17 @@ var fieldContainerExamples, bfGeoAddressFieldInstance = {
     }
   },
   init: function() {
-    var form = jQuery('form#post, form[id^="buddyforms_form_"]');
+    var form = jQuery('form#post, form[id^="buddyforms_form_"], #editor div.edit-post-layout__metaboxes div[id^="buddyforms_"]');
     fieldContainerExamples = jQuery('.bf-geo-address-example');
     if (fieldContainerExamples.length > 0 && form.length > 0) {
-      if(jQuery && jQuery.validator) {
-        jQuery.validator.addMethod("address-required", function (value, element) {
-            if (value && value !== '') {
-                return true;
-            }
-            jQuery.validator.messages['address-required'] = buddyforms_geo_field.validation_error_message;
-            return false;
-        }, "");
+      if (jQuery && jQuery.validator) {
+        jQuery.validator.addMethod('address-required', function(value, element) {
+          if (value && value !== '') {
+            return true;
+          }
+          jQuery.validator.messages['address-required'] = buddyforms_geo_field.validation_error_message;
+          return false;
+        }, '');
       }
       jQuery.each(fieldContainerExamples, function(key, container) {
         var fieldExampleInput = jQuery(container).find('.container-for-geo-address-field input[type="text"].bf-address-autocomplete-example');
@@ -215,6 +216,6 @@ var fieldContainerExamples, bfGeoAddressFieldInstance = {
   },
 };
 
-jQuery(document).ready(function () {
-    bfGeoAddressFieldInstance.init();
+jQuery(document).ready(function() {
+  bfGeoAddressFieldInstance.init();
 });

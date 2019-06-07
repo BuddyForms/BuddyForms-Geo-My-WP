@@ -88,7 +88,7 @@ class BuddyFormsGeoMyWpElement {
 									$lat_value = isset( $data_value['location']['lat'] ) ? $data_value['location']['lat'] : 0;
 									$lng_value = isset( $data_value['location']['lng'] ) ? $data_value['location']['lng'] : 0;
 
-									if ( defined( 'GMW_PT_PATH' ) && ! empty( $data_value ) && ! empty( $lat_value ) && ! empty( $lng_value ) ) {
+									if ( ! empty( $data_value ) && ! empty( $lat_value ) && ! empty( $lng_value ) ) {
 										//include the update location file file
 										include_once( GMW_PT_PATH . '/includes/gmw-pt-update-location.php' );
 										//make sure the file included and the function exists
@@ -651,7 +651,7 @@ class BuddyFormsGeoMyWpElement {
 				'url_base' => '://maps.googleapis.com/maps/api/js?',
 				'url_data' => http_build_query( apply_filters( 'gmw_google_maps_api_args', array(
 					'libraries' => 'places',
-					'key'       => gmw_get_option( 'general_settings', 'google_api', '' ),
+					'key'       => gmw_get_option( 'general_settings', 'google_api', 'AIzaSyA2Anj6SqW4mFGZGrrZgDcFECprGP6Kt0k' ),
 					'region'    => gmw_get_option( 'general_settings', 'country_code', 'US' ),
 					'language'  => gmw_get_option( 'general_settings', 'language_code', 'EN' ),
 				) ), '', '&amp;' ),
@@ -662,7 +662,7 @@ class BuddyFormsGeoMyWpElement {
 
 		$js_asset  = BuddyFormsGeoMyWpManager::assets_path( 'buddyforms-geo-my-wp' );
 		$css_asset = BuddyFormsGeoMyWpManager::assets_path( 'buddyforms-geo-my-wp', 'css' );
-		wp_register_script( 'buddyforms-geo-field', $js_asset, array( "jquery" ), BuddyFormsGeoMyWpManager::get_version(), true );
+		wp_register_script( 'buddyforms-geo-field', $js_asset, array( "jquery" ), BuddyFormsGeoMyWpManager::get_version() );
 		wp_register_style( 'buddyforms-geo-field', $css_asset, array(), BuddyFormsGeoMyWpManager::get_version() );
 
 		//enqueue google maps api if not already enqueued
