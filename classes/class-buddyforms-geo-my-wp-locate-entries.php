@@ -763,7 +763,7 @@ class BuddyFormsGeoMyWpLocateEntries {
 
 		$map_options = array(
 			'mapTypeId'         => $this->args['map_type'],
-			'zoom'              => 'auto',
+			'zoom'              => $this->args['zoom_level'],
 			'mapTypeControl'    => true,
 			'streetViewControl' => false,
 			'scrollwheel'       => ! empty( $this->args['scrollwheel_map_zoom'] ) ? true : false,
