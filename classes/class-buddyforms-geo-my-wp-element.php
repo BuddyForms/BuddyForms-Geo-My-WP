@@ -62,8 +62,9 @@ class BuddyFormsGeoMyWpElement {
 			$type      = 'post';
 			$id        = $post_id;
 			if ( isset( $buddyforms[ $form_slug ] ) && 'registration' === $form_type ) {
-				$type    = 'user';
-				$user_id = $post_id;
+				$type                    = 'user';
+				$bf_registration_user_id = get_post_meta( $post_id, '_bf_registration_user_id', true );
+				$user_id                 = $bf_registration_user_id;
 			}
 
 			$field_data_string = 0;
@@ -465,8 +466,6 @@ class BuddyFormsGeoMyWpElement {
 				$customfield['default'] = '';
 			}
 
-			$user_id = get_current_user_id();
-
 			$description = apply_filters( 'buddyforms_form_field_description', $description, $post_id );
 
 			global $buddyforms;
@@ -504,7 +503,8 @@ class BuddyFormsGeoMyWpElement {
 			if ( $form_type !== 'registration' ) {
 				$field_data = get_post_meta( $post_id, 'bf_' . $slug . '_count', true );
 			} else {
-				$field_data = get_user_meta( $user_id, 'bf_' . $slug . '_count', true );
+				$bf_registration_user_id = get_post_meta( $post_id, '_bf_registration_user_id', true );
+				$field_data = get_user_meta( $bf_registration_user_id, 'bf_' . $slug . '_count', true );
 			}
 			//Hidden field with the fields data
 
@@ -533,7 +533,7 @@ class BuddyFormsGeoMyWpElement {
 		$field_group_string .= $this->get_address_elements( $slug, $related_id, $custom_field['default'], $field_id, $custom_field['name'], $description, $custom_field['custom_class'], $custom_field );
 		$field_group_string .= '</div>';
 		$field_group_string .= '<div class="container-for-geo-address-controls">';
-		$field_group_string .= '<p class="gmw-lf-field group_actions message-field message gmw-lf-form-action error" id="gmw-lf-action-message"><i class="gmw-icon-spin"></i><i class="gmw-icon-cancel"></i><i class="gmw-icon-ok-light"></i></p>';
+		$field_group_string .= '<p class="bfgmw-action gmw-lf-field group_actions message-field message gmw-lf-form-action error" id="gmw-lf-action-message"><i class="gmw-icon-spin"></i><i class="gmw-icon-cancel"></i><i class="gmw-icon-ok-light"></i></p>';
 		if ( ! empty( $is_multiple ) ) {
 			$field_group_string .= "<p class='bfgmw-action'><a class='geo-address-field-add' field_name='{$slug}' data-default-value='{$custom_field['default']}' data-description='{$description}'><span class='dashicons dashicons-plus'></span></a></p>";
 		}

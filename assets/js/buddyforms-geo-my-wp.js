@@ -114,6 +114,14 @@ var fieldContainerExamples, bfGeoAddressFieldInstance = {
     bfGeoAddressFieldInstance.updateAddButtonClass(target);
     //Attach the geocode auto-complete
     bfGeoAddressFieldInstance.loadAutoComplete(targetSlug);
+    //Hide actions if field is disabled
+    // bfGeoAddressFieldInstance.hideActionIfDisabled(source);
+  },
+  hideActionIfDisabled: function(source){
+    var isDisabled = jQuery(source).find('input[type="text"]').is(':disabled');
+    if(isDisabled){
+      jQuery(source).find('.container-for-geo-address-controls').hide();
+    }
   },
   removeField: function(targetSlug, element) {
     var targetContainer = jQuery(element).closest('.container-for-geo-address-controls').parent();
@@ -138,6 +146,8 @@ var fieldContainerExamples, bfGeoAddressFieldInstance = {
     }
     //Update action links
     bfGeoAddressFieldInstance.updateAddButtonClass(container);
+    //Hide actions if field is disabled
+    // bfGeoAddressFieldInstance.hideActionIfDisabled(container);
   },
   actionAddField: function() {
     var element = jQuery(this);
@@ -175,7 +185,7 @@ var fieldContainerExamples, bfGeoAddressFieldInstance = {
     }
   },
   init: function() {
-    var form = jQuery('form#post, form[id^="buddyforms_form_"], #editor div.edit-post-layout__metaboxes div[id^="buddyforms_"]');
+    var form = jQuery('form#post, form[id^="buddyforms_form_"], form[id^="submissions_"].bf-submission, #editor div.edit-post-layout__metaboxes div[id^="buddyforms_"]');
     fieldContainerExamples = jQuery('.bf-geo-address-example');
     if (fieldContainerExamples.length > 0 && form.length > 0) {
       if (jQuery && jQuery.validator) {
@@ -191,7 +201,7 @@ var fieldContainerExamples, bfGeoAddressFieldInstance = {
         var fieldExampleInput = jQuery(container).find('.container-for-geo-address-field input[type="text"].bf-address-autocomplete-example');
         if (fieldExampleInput) {
           var fieldSlug = fieldExampleInput.attr('name');
-          var currentDataField = jQuery('input[type="hidden"][name="bf_' + fieldSlug + '_count"]');
+          var currentDataField = jQuery(container).closest('fieldset').find('input[type="hidden"][name="bf_' + fieldSlug + '_count"]');
           var allFieldData = currentDataField.val();
           if (allFieldData) {
             allFieldData = JSON.parse(currentDataField.val());
