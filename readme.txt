@@ -4,7 +4,7 @@ Contributors: themekraft, svenl77, gfirem
 Tags: WooCommerce, BuddyPress, Geo My WP, BuddyForms
 Requires at least: 4.0
 Tested up to: 5.1
-Stable tag: 1.1.3
+Stable tag: 1.1.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,7 +30,10 @@ Activate the plugin through the 'Plugins' menu in WordPress.
 
 
 == Changelog ==
-= 1.1.3 = May 17 2019
+= 1.1.4 = Jun 11 2019
+* Fix the function to store the user related meta.
+
+= 1.1.3 = Jun 10 2019
 * Removing the limit for the queries to bring the result from the forms.
 * Improved the check for BuddyForms.
 * Fixed issue to avoid save the location in the post meta.

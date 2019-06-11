@@ -62,9 +62,8 @@ class BuddyFormsGeoMyWpElement {
 			$type      = 'post';
 			$id        = $post_id;
 			if ( isset( $buddyforms[ $form_slug ] ) && 'registration' === $form_type ) {
-				$type                    = 'user';
-				$bf_registration_user_id = get_post_meta( $post_id, '_bf_registration_user_id', true );
-				$user_id                 = $bf_registration_user_id;
+				$type    = 'user';
+				$user_id = $post_id;
 			}
 
 			$field_data_string = 0;
