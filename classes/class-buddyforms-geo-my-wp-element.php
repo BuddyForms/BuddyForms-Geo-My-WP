@@ -679,7 +679,8 @@ class BuddyFormsGeoMyWpElement {
 			foreach ( $buddyforms[ $form_slug ]['form_fields'] as $field_id => $field_data ) {
 				if ( $field_data['type'] === 'geo_my_wp_address' ) {
 					$field_args[ $field_id ] = array(
-						'is_multi' => ! empty( $field_data['is_multiple'][0] ) && $field_data['is_multiple'][0] === 'true'
+						'is_multi' => ! empty( $field_data['is_multiple'][0] ) && $field_data['is_multiple'][0] === 'true',
+                        'validation_error_message' => ! empty( $field_data['validation_error_message'] )? $field_data['validation_error_message'] : __('This Field is required', 'buddyforms_geo_my_wp_locale')
 					);
 				}
 			}

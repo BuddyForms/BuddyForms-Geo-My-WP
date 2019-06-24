@@ -6,7 +6,7 @@
 .bf-geo-address-fields .container-for-geo-address-controls [class*=" gmw-icon-"]:before,.container-for-geo-address-controls [class*=" gmw-icon-"]:before,.bf-geo-address-fields .container-for-geo-address-controls [class^=gmw-icon-]:before,.container-for-geo-address-controls [class^=gmw-icon-]:before,.container-for-geo-address-controls [class*=" gmw-icon-"]:before,.container-for-geo-address-controls [class^=gmw-icon-]:before{width:.5rem}
 .bf-geo-address-fields .container-for-geo-address-controls>p>a>span.dashicons,.container-for-geo-address-controls>p>a>span.dashicons{width:10px;height:10px;font-size:16px}
 .bf-geo-address-fields .container-for-geo-address-field input[type=text].bf-address-autocomplete,.container-for-geo-address-field .bf-address-autocomplete{width:95%;height:45px}
-.bf-geo-address-fields{height:50px}
+.bf-geo-address-fields{height:auto}
 p.bfgmw-action a.geo-address-field-delete{display:none;text-decoration:none;text-decoration-style:unset}
 p.bfgmw-action a.geo-address-field-add{display:none;text-decoration:none;text-decoration-style:unset}
 p.bfgmw-action{padding:15px 5px;margin:0}

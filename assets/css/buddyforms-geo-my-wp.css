@@ -51,7 +51,7 @@
 }
 
 .bf-geo-address-fields{
-    height: 50px;
+    height: auto;
 }
 
 p.bfgmw-action a.geo-address-field-delete{

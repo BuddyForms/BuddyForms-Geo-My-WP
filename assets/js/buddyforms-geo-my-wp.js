@@ -184,18 +184,47 @@ var fieldContainerExamples, bfGeoAddressFieldInstance = {
       });
     }
   },
+  getFormSlug: function (element) {
+    var formSlug = false;
+    if (!formSlug) {
+      var form = jQuery(element).closest('form');
+      var formId = form.attr('id');
+      if (formId) {
+        formSlug = formId.split('buddyforms_form_');
+        formSlug = (formSlug[1]) ? formSlug[1] : false;
+      } else {
+        formSlug = false;
+      }
+    }
+    return formSlug;
+  },
+  validateField: function () {
+    jQuery.validator.addMethod('address-required', function (value, element) {
+      var currentElement = jQuery(element);
+      var fieldId = currentElement.attr('field_id');
+      var formSlug = bfGeoAddressFieldInstance.getFormSlug(element);
+      if (formSlug && buddyformsGlobal && buddyformsGlobal[formSlug] && buddyformsGlobal[formSlug].js_validation && buddyformsGlobal[formSlug].js_validation[0] === 'enabled') {
+        if (currentElement.hasClass('bf-address-autocomplete-example')) {
+          //Avoid validate example element
+          return true;
+        }
+        if (value && value !== '') {
+          jQuery('label#'+fieldId+'-error').hide();
+          return true;
+        }
+        var error =  '<label id="'+fieldId+'-error" class="error" for="'+fieldId+'" style="display: block;">'+buddyforms_geo_field.fields[fieldId].validation_error_message+'</label>';
+        currentElement.parent().parent().prepend(error);
+        return false;
+      }
+      return true;
+    }, '');
+  },
   init: function() {
     var form = jQuery('form#post, form[id^="buddyforms_form_"], form[id^="submissions_"].bf-submission, #editor div.edit-post-layout__metaboxes div[id^="buddyforms_"]');
     fieldContainerExamples = jQuery('.bf-geo-address-example');
     if (fieldContainerExamples.length > 0 && form.length > 0) {
       if (jQuery && jQuery.validator) {
-        jQuery.validator.addMethod('address-required', function(value, element) {
-          if (value && value !== '') {
-            return true;
-          }
-          jQuery.validator.messages['address-required'] = buddyforms_geo_field.validation_error_message;
-          return false;
-        }, '');
+        bfGeoAddressFieldInstance.validateField();
       }
       jQuery.each(fieldContainerExamples, function(key, container) {
         var fieldExampleInput = jQuery(container).find('.container-for-geo-address-field input[type="text"].bf-address-autocomplete-example');
@@ -221,7 +250,7 @@ var fieldContainerExamples, bfGeoAddressFieldInstance = {
       });
       form.on('click', '.geo-address-field-add', bfGeoAddressFieldInstance.actionAddField);
       form.on('click', '.geo-address-field-delete', bfGeoAddressFieldInstance.actionRemoveField);
-      form.on('click', 'button[type="submit"].bf-submit, #publishing-action input[type="submit"]', bfGeoAddressFieldInstance.submitForm);
+      jQuery(document.body).on('click', 'button[type="submit"].bf-submit, #publishing-action input[type="submit"]', bfGeoAddressFieldInstance.submitForm);
     }
   },
 };
