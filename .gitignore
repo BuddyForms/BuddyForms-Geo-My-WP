@@ -8,4 +8,5 @@ node_modules
 # You may choose to ignore a library lock file http://getcomposer.org/doc/02-libraries.md#lock-file
 composer.lock
 .env
+package-lock.json
 
