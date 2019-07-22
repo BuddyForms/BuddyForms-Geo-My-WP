@@ -39,7 +39,7 @@ class BuddyFormsGeoMyWpShortCodes {
 			'address_fields'       => 'address',
 			'units'                => 'metric',
 			'map_type'             => 'ROADMAP',
-			'zoom_level'           => 13,
+			'zoom_level'           => 7,
 			'scrollwheel_map_zoom' => 1,
 			'expand_map_on_load'   => 0,
 			'map_icon_url'         => '',
@@ -59,7 +59,7 @@ class BuddyFormsGeoMyWpShortCodes {
 			gmw_trigger_error( '[bf_geo_my_wp] shortcode attribute form_slug is mandatory.' );
 			return '';
 		}
-		
+
 		$instance = new BuddyFormsGeoMyWpLocateEntries( $attrs );
 
 		if ( ! empty( $instance ) ) {

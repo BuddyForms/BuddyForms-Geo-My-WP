@@ -14,6 +14,10 @@
     "prune": "rimraf .codeclimate.yml .git .github .gitignore .travis.yml gulpfile.js composer.json"
   },
   "repository": "Themekraft/wc4bp.git",
+  "engines": {
+    "node": ">=8.0.0",
+    "npm": ">=6.0.0"
+  },
   "devDependencies": {
     "css-mqpacker": "^6.0.2",
     "cssnano": "^3.10.0",
