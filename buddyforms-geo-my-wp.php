@@ -1,6 +1,6 @@
 <?php
 /*
- * Plugin Name: BuddyForms Geo My Wp
+ * Plugin Name: BuddyForms Geo My WP
  * Plugin URI: http://buddyforms.com/
  * Description: This Plugin brings the power of Geo My Wp into BuddyForms
  * Version: 1.1.2
