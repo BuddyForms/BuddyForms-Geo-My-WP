@@ -61,7 +61,9 @@ class BuddyFormsGeoMyWpElement {
 			$type      = 'post';
 			$id        = $post_id;
 			if ( isset( $buddyforms[ $form_slug ] ) && 'registration' === $form_type ) {
-				$type    = 'user';
+				$type                    = 'user';
+				$bf_registration_user_id = get_post_meta( $post_id, '_bf_registration_user_id', true );
+				$user_id                 = $bf_registration_user_id;
 			}
 
 			$field_data_string = 0;
@@ -128,7 +130,7 @@ class BuddyFormsGeoMyWpElement {
 										$location_data = array(
 											'object_type'       => $type,
 											'object_id'         => $id,
-											'user_id'           => 'registration' === $form_type ? $user_id : $post_id,
+											'user_id'           => $user_id,
 											'latitude'          => $lat_value,
 											'longitude'         => $lng_value,
 											'premise'           => '',
@@ -500,8 +502,8 @@ class BuddyFormsGeoMyWpElement {
 			if ( $form_type !== 'registration' ) {
 				$field_data = get_post_meta( $post_id, 'bf_' . $slug . '_count', true );
 			} else {
-				$user_id = get_current_user_id();
-				$field_data = get_user_meta( $user_id, 'bf_' . $slug . '_count', true );
+				$bf_registration_user_id = get_post_meta( $post_id, '_bf_registration_user_id', true );
+				$field_data = get_user_meta( $bf_registration_user_id, 'bf_' . $slug . '_count', true );
 			}
 			//Hidden field with the fields data
 			$field_data = wp_json_encode( $field_data );
