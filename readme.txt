@@ -4,7 +4,7 @@ Contributors: themekraft, svenl77, gfirem
 Tags: WooCommerce, BuddyPress, Geo My WP, BuddyForms
 Requires at least: 4.0
 Tested up to: 5.2
-Stable tag: 1.1.5
+Stable tag: 1.1.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,6 +30,12 @@ Activate the plugin through the 'Plugins' menu in WordPress.
 
 
 == Changelog ==
+= 1.1.6 = 7 Oct 2019
+* Fixed the validation, because it was avoiding to submit the form.
+* Fixed the save issue when the element was single.
+* Fixed the store address for a registration form.
+* Fixed the way the plugin is loading the user id from the entry.
+
 = 1.1.5 = Jun 11 2019
 * Fixed the validation, because it was avoiding to submit the form.
 
