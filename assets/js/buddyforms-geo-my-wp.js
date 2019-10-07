@@ -248,9 +248,13 @@ var fieldContainerExamples, bfGeoAddressFieldInstance = {
           }
         }
       });
-      form.on('click', '.geo-address-field-add', bfGeoAddressFieldInstance.actionAddField);
-      form.on('click', '.geo-address-field-delete', bfGeoAddressFieldInstance.actionRemoveField);
-      jQuery(document.body).on('click', 'button[type="submit"].bf-submit, #publishing-action input[type="submit"]', bfGeoAddressFieldInstance.submitForm);
+      if (BuddyFormsHooks && buddyformsGlobal) {
+        form.on('click', '.geo-address-field-add', bfGeoAddressFieldInstance.actionAddField);
+        form.on('click', '.geo-address-field-delete', bfGeoAddressFieldInstance.actionRemoveField);
+        BuddyFormsHooks.addAction('buddyforms:submit', function (form) {
+           bfGeoAddressFieldInstance.submitForm(form);
+        }, 10);
+      }
     }
   },
 };

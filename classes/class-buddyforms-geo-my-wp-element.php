@@ -22,7 +22,6 @@ class BuddyFormsGeoMyWpElement {
 		add_action( 'buddyforms_front_js_css_after_enqueue', array( $this, 'wp_enqueue_scripts' ), 99 );
 		add_action( 'admin_enqueue_scripts', array( $this, 'wp_enqueue_scripts' ), 99 );
 		add_action( 'buddyforms_update_post_meta', array( $this, 'buddyforms_geo_my_wp_update_post_meta' ), 11, 2 );
-		add_action( 'buddyforms_update_user_meta', array( $this, 'buddyforms_geo_my_wp_update_post_meta' ), 11, 2 );
 	}
 
 	/**
@@ -63,7 +62,6 @@ class BuddyFormsGeoMyWpElement {
 			$id        = $post_id;
 			if ( isset( $buddyforms[ $form_slug ] ) && 'registration' === $form_type ) {
 				$type    = 'user';
-				$user_id = $post_id;
 			}
 
 			$field_data_string = 0;
@@ -130,7 +128,7 @@ class BuddyFormsGeoMyWpElement {
 										$location_data = array(
 											'object_type'       => $type,
 											'object_id'         => $id,
-											'user_id'           => $user_id,
+											'user_id'           => 'registration' === $form_type ? $user_id : $post_id,
 											'latitude'          => $lat_value,
 											'longitude'         => $lng_value,
 											'premise'           => '',
@@ -502,12 +500,12 @@ class BuddyFormsGeoMyWpElement {
 			if ( $form_type !== 'registration' ) {
 				$field_data = get_post_meta( $post_id, 'bf_' . $slug . '_count', true );
 			} else {
-				$bf_registration_user_id = get_post_meta( $post_id, '_bf_registration_user_id', true );
-				$field_data = get_user_meta( $bf_registration_user_id, 'bf_' . $slug . '_count', true );
+				$user_id = get_current_user_id();
+				$field_data = get_user_meta( $user_id, 'bf_' . $slug . '_count', true );
 			}
 			//Hidden field with the fields data
-
-			$form->addElement( new Element_Hidden( 'bf_' . $slug . '_count', wp_json_encode( $field_data ), array( 'field_name' => $slug, 'data-rule-address-required' => true ) ) );
+			$field_data = wp_json_encode( $field_data );
+			$form->addElement( new Element_Hidden( 'bf_' . $slug . '_count', $field_data, array( 'field_name' => $slug, 'data-rule-address-required' => true ) ) );
 		}
 
 		return $form;
