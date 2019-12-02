@@ -35,6 +35,7 @@ var fieldContainerExamples, bfGeoAddressFieldInstance = {
       };
       var autocomplete = new google.maps.places.Autocomplete(input_field, options);
       google.maps.event.addListener(autocomplete, 'place_changed', function() {
+        BuddyFormsHooks.doAction('buddyforms:submit:disable');
         bfGeoAddressFieldInstance.setFieldStatus('changed', fieldContainer);
         var place = autocomplete.getPlace();
         if (place.geometry) {
@@ -56,6 +57,7 @@ var fieldContainerExamples, bfGeoAddressFieldInstance = {
         } else {
           bfGeoAddressFieldInstance.setFieldStatus('error', fieldContainer);
         }
+        BuddyFormsHooks.doAction('buddyforms:submit:enable');
       });
       jQuery(input_field).attr('attached', 'true');
     } else {
