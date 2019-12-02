@@ -514,7 +514,7 @@ class BuddyFormsGeoMyWpLocateEntries {
 				'relation' => 'AND',
 				array(
 					'key'   => '_bf_form_slug',
-					'value' => sanitize_title( $form_slug ),
+					'value' => buddyforms_sanitize_slug( $form_slug ),
 				)
 			);
 

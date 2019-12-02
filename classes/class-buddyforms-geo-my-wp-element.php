@@ -37,16 +37,16 @@ class BuddyFormsGeoMyWpElement {
 			}
 
 			if ( empty( $slug ) ) {
-				$slug = sanitize_title( $customfield['name'] );
+				$slug = buddyforms_sanitize_slug( $customfield['name'] );
 			}
 
 			if ( empty( $slug ) ) {
 				return;
 			}
 
-			$form_slug = isset( $_POST['form_slug'] ) ? sanitize_title( $_POST['form_slug'] ) : '';
+			$form_slug = isset( $_POST['form_slug'] ) ? buddyforms_sanitize_slug( $_POST['form_slug'] ) : '';
 			if ( empty( $form_slug ) ) {
-				$form_slug = isset( $_POST['_bf_form_slug'] ) ? sanitize_title( $_POST['_bf_form_slug'] ) : '';
+				$form_slug = isset( $_POST['_bf_form_slug'] ) ? buddyforms_sanitize_slug( $_POST['_bf_form_slug'] ) : '';
 			}
 
 			if ( empty( $form_slug ) ) {
@@ -424,7 +424,7 @@ class BuddyFormsGeoMyWpElement {
 	 * @return mixed
 	 */
 	public function buddyforms_create_new_form_field( $form, $form_args ) {
-		$customfield = false;
+		$customfield = array();
 		$post_id     = 0;
 		$field_id    = '';
 		$form_slug   = '';
@@ -439,11 +439,11 @@ class BuddyFormsGeoMyWpElement {
 			$this->load_script = true;
 
 			if ( isset( $customfield['slug'] ) ) {
-				$slug = sanitize_title( $customfield['slug'] );
+				$slug = buddyforms_sanitize_slug( $customfield['slug'] );
 			}
 
 			if ( empty( $slug ) ) {
-				$slug = sanitize_title( $customfield['name'] );
+				$slug = buddyforms_sanitize_slug( $customfield['name'] );
 			}
 
 			$description = '';
@@ -598,11 +598,11 @@ class BuddyFormsGeoMyWpElement {
 		$form_slug = '';
 		global $wp_query;
 		if ( ! empty( $wp_query->query_vars['bf_form_slug'] ) ) {
-			$form_slug = sanitize_title( $wp_query->query_vars['bf_form_slug'] );
+			$form_slug = buddyforms_sanitize_slug( $wp_query->query_vars['bf_form_slug'] );
 		} else if ( ! empty( $_GET['form_slug'] ) ) {
-			$form_slug = sanitize_title( $_GET['form_slug'] );
+			$form_slug = buddyforms_sanitize_slug( $_GET['form_slug'] );
 		} else if ( ! empty( $wp_query->query_vars['form_slug'] ) ) {
-			$form_slug = sanitize_title( $wp_query->query_vars['form_slug'] );
+			$form_slug = buddyforms_sanitize_slug( $wp_query->query_vars['form_slug'] );
 		} else if ( function_exists( 'bp_current_component' ) && function_exists( 'bp_current_action' ) && function_exists( 'buddyforms_members_get_form_by_member_type' ) ) {
 			global $buddyforms_member_tabs;
 			$bp_action    = bp_current_action();
