@@ -300,8 +300,8 @@ class BuddyFormsGeoMyWpLocateEntries {
 	/**
 	 * Get all locations based on form_type - form_slug pair.
 	 *
-	 * @param  string|array $form_slug the form Slug
-	 * @param  boolean      $cache     Look for location in cache
+	 * @param string|array $form_slug the form Slug
+	 * @param boolean $cache Look for location in cache
 	 *
 	 * @return array of locations data.
 	 */
@@ -431,7 +431,7 @@ class BuddyFormsGeoMyWpLocateEntries {
 			$query_args = array(
 				'include'    => array(),
 				'fields'     => 'ID',
-				'number'     => -1,
+				'number'     => - 1,
 				'meta_query' => $meta_args
 			);
 
@@ -529,7 +529,7 @@ class BuddyFormsGeoMyWpLocateEntries {
 							'compare' => 'EXISTS',
 						);
 					}
-					if ( count($metas ) > 1 ) {
+					if ( count( $metas ) > 1 ) {
 						$meta_args[] = $metas;
 					}
 				} else {
@@ -739,7 +739,11 @@ class BuddyFormsGeoMyWpLocateEntries {
 						if ( is_array( $item ) ) {
 							foreach ( $item as $location_obj ) {
 								if ( ! empty( $location_obj->data ) ) {
-									$map_icon    = ( $location_obj->data['form_type'] === 'registration' ) ? BF_GEO_FIELD_IMAGES_PATH . 'smiley_happy.png' : BF_GEO_FIELD_IMAGES_PATH . 'text.png';
+									if ( empty( $this->args['map_icon_url'] ) ) {
+										$map_icon = ( $location_obj->data['form_type'] === 'registration' ) ? BF_GEO_FIELD_IMAGES_PATH . 'smiley_happy.png' : BF_GEO_FIELD_IMAGES_PATH . 'text.png';
+									} else {
+										$map_icon = $this->args['map_icon_url'];
+									}
 									$locations[] = array(
 										'lat'                 => $location_obj->data['location']['lat'],
 										'lng'                 => $location_obj->data['location']['lng'],

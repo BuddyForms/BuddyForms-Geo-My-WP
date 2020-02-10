@@ -90,7 +90,7 @@ class BuddyFormsGeoMyWpElement {
 
 									if ( ! empty( $data_value ) && ! empty( $lat_value ) && ! empty( $lng_value ) ) {
 										//include the update location file file
-										include_once( GMW_PT_PATH . '/includes/gmw-pt-update-location.php' );
+										include_once( GMW_PLUGINS_PATH . '/posts-locator/includes/gmw-posts-locator-functions.php' );
 										//make sure the file included and the function exists
 										if ( ! function_exists( 'gmw_update_location' ) ) {
 											return;

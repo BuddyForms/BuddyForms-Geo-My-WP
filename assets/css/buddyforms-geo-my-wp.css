@@ -17,7 +17,7 @@
 
 .bf-geo-address-fields .container-for-geo-address-controls{
     float: right;
-    width: auto;
+    width: 80px;
     box-sizing: border-box;
     position: relative;
     display: inline-flex;
@@ -67,7 +67,7 @@ p.bfgmw-action a.geo-address-field-add{
 }
 
 p.bfgmw-action {
-    padding: 15px 5px;
+    padding: 9px 5px;
     margin: 0;
 }
 
@@ -121,4 +121,5 @@ p.gmw-lf-field.message.ok {
 .bf-geo-address-fields {
     overflow: auto;
     clear: both;
+    margin-top: 5px;
 }
