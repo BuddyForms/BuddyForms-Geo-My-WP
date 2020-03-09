@@ -38,72 +38,6 @@ var fieldContainerExamples, bfGeoAddressFieldInstance = {
         }
     },
     /**
-     * Set cookie
-     *
-     * @param {[type]} name   [description]
-     * @param {[type]} value  [description]
-     * @param {[type]} exdays [description]
-     */
-    set_cookie: function (name, value, exdays) {
-        var exdate = new Date();
-        exdate.setTime(exdate.getTime() + (exdays * 24 * 60 * 60 * 1000));
-        var cooki = escape(encodeURIComponent(value)) + ((exdays == null) ? "" : "; expires=" + exdate.toUTCString());
-        document.cookie = name + "=" + cooki + "; path=/";
-    },
-
-    /**
-     * Get cookie
-     *
-     * @param  {[type]} name [description]
-     * @return {[type]}      [description]
-     */
-    get_cookie: function (name) {
-        var results = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
-        return results ? decodeURIComponent(results[2]) : null;
-    },
-
-    /**
-     * Delete cookie
-     *
-     * @param  {[type]} name [description]
-     * @return {[type]}      [description]
-     */
-    delete_cookie: function (name) {
-        //jQuery.cookie( name, '', { path: '/' } );
-        document.cookie = encodeURIComponent(name) + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-        //document.cookie = encodeURIComponent( name ) + '=; expires=Thu, 01-Jan-70 00:00:01 GMT;';
-        //document.cookie = encodeURIComponent( name ) + "=deleted; expires=" + new Date(0).toUTCString();
-    },
-    /**
-     * Save location fields into cookies and current location hidden form
-     *
-     * @param  {object} results location data returned forom geocoder
-     *
-     * @return {[type]}         [description]
-     */
-    save_location_fields: function (result) {
-
-        var cl_form = jQuery('form#gmw-current-location-hidden-form');
-
-        GMW.do_action('gmw_save_location_fields', result);
-
-        // save location in current location form and cookies.
-        for (fieldName in result) {
-
-            // we only want some fields to save in cookies.
-            if (jQuery.inArray(fieldName, GMW.current_location_fields) !== -1) {
-                GMW.set_cookie('gmw_ul_'.fieldName, result[fieldName], 7);
-            }
-
-            cl_form.find('input#gmw_cl_' + fieldName).val(result[fieldName]);
-
-            // hook custom functions
-            GMW.do_action('gmw_save_location_field', result[fieldName], result);
-        }
-
-        return result;
-    },
-    /**
      * Page load locator function.
      *
      * Get the user's current location on page load
@@ -192,6 +126,7 @@ var fieldContainerExamples, bfGeoAddressFieldInstance = {
                         //Update the hidden data
                         bfGeoAddressFieldInstance.submitForm();
                         bfGeoAddressFieldInstance.setFieldStatus('ok', fieldContainer);
+                        //todo improve the process using a cookie to not call each time
                         success(results[0].formatted_address, results[0], fieldID);
                     } else {
                         window.alert('No results found');
@@ -367,11 +302,13 @@ var fieldContainerExamples, bfGeoAddressFieldInstance = {
         var sourceFieldContainer = inputFieldContainer.parent().parent();
         var newFieldSlug = fieldName + '_' + bfGeoAddressFieldInstance.generateFieldId();
         bfGeoAddressFieldInstance.addField(sourceFieldContainer.clone(), sourceFieldContainer.parent(), newFieldSlug);
+        bfGeoAddressFieldInstance.handleNewActions(newFieldSlug);
     },
     actionRemoveField: function () {
         var element = jQuery(this);
         var fieldTarget = element.attr('field_target');
         bfGeoAddressFieldInstance.removeField(fieldTarget, element);
+        bfGeoAddressFieldInstance.handleNewActions(fieldTarget);
     },
     submitForm: function () {
         var dataFields = jQuery('input[type="hidden"][name^="bf_"][name$="_count"]');
@@ -406,7 +343,7 @@ var fieldContainerExamples, bfGeoAddressFieldInstance = {
                                         allResults.splice(currentItem, 1);
                                     }
                                 } else {
-                                    if(data) {
+                                    if (data) {
                                         allResults.push({field: fieldTarget, data: JSON.parse(data)});
                                     }
                                 }
@@ -460,6 +397,31 @@ var fieldContainerExamples, bfGeoAddressFieldInstance = {
     isGutenbergActive: function () {
         return typeof wp !== 'undefined' && typeof wp.blocks !== 'undefined';
     },
+    handleNewActions: function (fieldName) {
+        var currentElement = jQuery('input[type="text"][name="' + fieldName + '"]');
+        if (currentElement && currentElement.length > 0) {
+            var fieldID = currentElement.attr('field_id');
+            if (fieldID && buddyforms_geo_field && buddyforms_geo_field.fields && buddyforms_geo_field.fields[fieldID]) {
+                var parentContainer = currentElement.closest('.bf-geo-address-fields.bf-address-autocomplete-active:visible');
+                if (parentContainer && parentContainer.length > 0) {
+                    var isLoadUserLocationActive = buddyforms_geo_field.fields[fieldID].is_load_user_location_enabled == true;
+                    var isUserLocationIconActive = buddyforms_geo_field.fields[fieldID].is_user_location_icon_enabled == true;
+                    var isCleanEnabled = buddyforms_geo_field.fields[fieldID].is_clean_enabled == true;
+                    if (isLoadUserLocationActive) {
+                        bfGeoAddressFieldInstance.autoLocator(currentElement.attr('id'), false, false);
+                    }
+                    if (isUserLocationIconActive) {
+                        parentContainer.find('.bf-geo-address-user-location').show();
+                        parentContainer.on('click', '.bf-geo-address-user-location', bfGeoAddressFieldInstance.actionUserLocation);
+                    }
+                    if (isCleanEnabled) {
+                        parentContainer.find('.bf-geo-address-clean-control').show();
+                        parentContainer.on('click', '.bf-geo-address-clean-control', bfGeoAddressFieldInstance.actionCleanLocationControl);
+                    }
+                }
+            }
+        }
+    },
     init: function () {
         var form = jQuery('form#post, form[id^="buddyforms_form_"], form[id^="submissions_"].bf-submission, #editor div.edit-post-layout__metaboxes div[id^="buddyforms_"], .block-editor #metaboxes div[id^="buddyforms_form_"]');
         fieldContainerExamples = jQuery('.bf-geo-address-example');
@@ -471,6 +433,7 @@ var fieldContainerExamples, bfGeoAddressFieldInstance = {
                 var fieldExampleInput = jQuery(container).find('.container-for-geo-address-field input[type="text"].bf-address-autocomplete-example');
                 if (fieldExampleInput) {
                     var fieldSlug = fieldExampleInput.attr('name');
+                    var fieldID = fieldExampleInput.attr('field_id');
                     var currentDataField = jQuery(container).closest('fieldset').find('input[type="hidden"][name="bf_' + fieldSlug + '_count"]');
                     var allFieldData = currentDataField.val();
                     if (allFieldData) {
@@ -487,22 +450,13 @@ var fieldContainerExamples, bfGeoAddressFieldInstance = {
                         var newFieldSlug = fieldSlug + '_' + bfGeoAddressFieldInstance.generateFieldId();
                         bfGeoAddressFieldInstance.addField(jQuery(container).clone(), jQuery(container).parent(), newFieldSlug);
                     }
-                    bfGeoAddressFieldInstance.autoLocator(newFieldSlug, false, false);
+
+                    bfGeoAddressFieldInstance.handleNewActions(newFieldSlug);
                 }
             });
             if (BuddyFormsHooks && buddyformsGlobal) {
                 form.on('click', '.geo-address-field-add', bfGeoAddressFieldInstance.actionAddField);
                 form.on('click', '.geo-address-field-delete', bfGeoAddressFieldInstance.actionRemoveField);
-                var isUserLocationActive = true;
-                if (isUserLocationActive) {
-                    jQuery('.bf-geo-address-user-location').show();
-                    form.on('click', '.bf-geo-address-user-location', bfGeoAddressFieldInstance.actionUserLocation);
-                }
-                var isUserLocationClearActive = true;
-                if (isUserLocationClearActive) {
-                    jQuery('.bf-geo-address-clean-control').show();
-                    form.on('click', '.bf-geo-address-clean-control', bfGeoAddressFieldInstance.actionCleanLocationControl);
-                }
             }
         }
     },

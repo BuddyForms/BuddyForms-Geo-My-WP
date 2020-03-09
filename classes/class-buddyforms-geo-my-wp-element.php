@@ -672,9 +672,9 @@ class BuddyFormsGeoMyWpElement {
 		}
 
 		$args = array(
-			'admin_url' => admin_url( 'admin-ajax.php' ),
-			'nonce'     => wp_create_nonce( 'buddyforms-geo-field' ),
-			'country_code' => 'us',
+			'admin_url'     => admin_url( 'admin-ajax.php' ),
+			'nonce'         => wp_create_nonce( 'buddyforms-geo-field' ),
+			'country_code'  => 'us',
 			'language_code' => 'en',
 		);
 
@@ -683,8 +683,11 @@ class BuddyFormsGeoMyWpElement {
 			foreach ( $buddyforms[ $form_slug ]['form_fields'] as $field_id => $field_data ) {
 				if ( $field_data['type'] === 'geo_my_wp_address' ) {
 					$field_args[ $field_id ] = array(
-						'is_multi'                 => ! empty( $field_data['is_multiple'][0] ) && $field_data['is_multiple'][0] === 'true',
-						'validation_error_message' => ! empty( $field_data['validation_error_message'] ) ? $field_data['validation_error_message'] : __( 'This Field is required', 'buddyforms_geo_my_wp_locale' )
+						'is_multi'                      => ! empty( $field_data['is_multiple'][0] ) && $field_data['is_multiple'][0] === 'true',
+						'is_load_user_location_enabled' => ! empty( $field_data['is_load_user_location_enabled'][0] ) && $field_data['is_load_user_location_enabled'][0] === 'true',
+						'is_user_location_icon_enabled' => ! empty( $field_data['is_user_location_icon_enabled'][0] ) && $field_data['is_user_location_icon_enabled'][0] === 'true',
+						'is_clean_enabled'              => ! empty( $field_data['is_clean_enabled'][0] ) && $field_data['is_clean_enabled'][0] === 'true',
+						'validation_error_message'      => ! empty( $field_data['validation_error_message'] ) ? $field_data['validation_error_message'] : __( 'This Field is required', 'buddyforms_geo_my_wp_locale' )
 					);
 				}
 			}

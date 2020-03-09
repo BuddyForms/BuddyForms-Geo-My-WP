@@ -3,7 +3,7 @@
     display: inline;
     min-height: 1px;
     float: left;
-    width: calc(100% - 120px);
+    width: calc(100% - 130px);
     box-sizing: border-box;
 }
 
@@ -16,6 +16,7 @@
 }
 
 .bf-geo-address-fields .container-for-geo-address-controls {
+    margin-left: 5px;
     float: left;
     width: auto;
     box-sizing: border-box;
@@ -72,7 +73,9 @@
     height: auto;
 }
 
-p.bfgmw-action a.geo-address-field-delete, .bf-geo-address-fields .container-for-geo-address-controls .bf-geo-address-user-location {
+p.bfgmw-action a.geo-address-field-delete,
+.bf-geo-address-fields .container-for-geo-address-controls .bf-geo-address-clean-control,
+.bf-geo-address-fields .container-for-geo-address-controls .bf-geo-address-user-location{
     display: none;
     text-decoration: none;
     text-decoration-style: unset;
