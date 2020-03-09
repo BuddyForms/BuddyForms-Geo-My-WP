@@ -37,7 +37,7 @@ class BuddyFormsGeoMyWpBuilder {
 				array( 'value' => !empty( $buddyform['form_fields'][ $field_id ]['is_user_location_icon_enabled'] ))
 			);
 
-			$form_fields['general']['is_load_user_location_enabled'] = new Element_Checkbox( '<b>' . __( 'User Location', 'buddyforms_geo_my_wp_locale' ) . '</b>', "buddyforms_options[form_fields][" . $field_id . "][is_load_user_location_enabled]",
+			$form_fields['general']['is_load_user_location_enabled'] = new Element_Checkbox( '<b>' . __( 'Auto Location', 'buddyforms_geo_my_wp_locale' ) . '</b>', "buddyforms_options[form_fields][" . $field_id . "][is_load_user_location_enabled]",
 				array( 'true' => __( 'Enable the auto fill of the user location on Form load', 'buddyforms_geo_my_wp_locale' ) ),
 				array( 'value' => !empty( $buddyform['form_fields'][ $field_id ]['is_load_user_location_enabled'] ))
 			);

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<bundle name="BuddyForms Geo My WP">
+  <domain name="buddyforms_geo_my_wp_locale">
+    <project name="BuddyForms Geo My WP" slug="buddyforms_geo_my_wp_locale">
+      <source>
+        <directory>.</directory>
+      </source>
+      <target>
+        <directory>languages</directory>
+      </target>
+    </project>
+  </domain>
+  <exclude>
+    <directory>node_modules</directory>
+  </exclude>
+</bundle>

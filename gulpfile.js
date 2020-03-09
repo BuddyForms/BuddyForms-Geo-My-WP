@@ -49,7 +49,7 @@ require('dotenv').config();
 const gulp = require('gulp');
 const minifycss = require('gulp-uglifycss');
 const concat = require('gulp-concat');
-const uglify = require('gulp-uglify');
+var uglify = require('gulp-uglify-es').default;
 const rename = require('gulp-rename');
 const notify = require('gulp-notify');
 const clean = require('gulp-clean');
