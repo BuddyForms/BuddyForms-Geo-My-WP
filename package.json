@@ -6,14 +6,12 @@
   "homepage": "http://www.themekraft.com",
   "version": "1.0.0",
   "main": "gulpfile.js",
-  "dependencies": {
-    "gulp": "^3.9.1"
-  },
+  "dependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "prune": "rimraf .codeclimate.yml .git .github .gitignore .travis.yml gulpfile.js composer.json"
   },
-  "repository": "Themekraft/wc4bp.git",
+  "repository": "BuddyForms/BuddyForms-Geo-My-WP.git",
   "engines": {
     "node": ">=8.0.0",
     "npm": ">=6.0.0"
@@ -24,21 +22,26 @@
     "dotenv": "^6.0.0",
     "eslint-config-loopback": "^10.0.0",
     "google-translate": "^2.2.0",
+    "gulp": "^3.9.1",
     "gulp-clean": "^0.4.0",
+    "gulp-clean-css": "^4.2.0",
     "gulp-concat": "^2.6.1",
     "gulp-deporder": "^1.1.0",
     "gulp-eslint": "^4.0.2",
     "gulp-gettext": "^0.3.0",
     "gulp-imagemin": "^4.1.0",
+    "gulp-minify": "^3.1.0",
     "gulp-notify": "^3.2.0",
     "gulp-plumber": "^1.2.0",
     "gulp-pofill": "^1.0.0",
+    "gulp-rev": "^9.0.0",
     "gulp-strip-debug": "^3.0.0",
     "gulp-uglify": "^3.0.0",
+    "gulp-uglify-es": "^2.0.0",
     "gulp-uglifycss": "^1.1.0",
     "gulp-util": "^3.0.8",
-    "gulp-wp-pot": "^2.3.1",
+    "gulp-wp-pot": "^2.3.6",
     "install": "^0.12.0",
-    "npm": "^6.1.0"
+    "npm": "^6.14.2"
   }
 }

@@ -4,7 +4,7 @@ Contributors: themekraft, svenl77, gfirem
 Tags: WooCommerce, BuddyPress, Geo My WP, BuddyForms
 Requires at least: 4.0
 Tested up to: 5.3
-Stable tag: 1.1.8
+Stable tag: 1.1.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,6 +30,13 @@ Activate the plugin through the 'Plugins' menu in WordPress.
 
 
 == Changelog ==
+= 1.1.9 = 9 Mar 2020
+* Added the location icon to get the user location from the navigator.
+* Implemented the user auto-location of the user on form load.
+* Added a Clean icon to clean the form element.
+* Added the options to enabled/disabled the clean icon, the location icon and the function to auto-fill the user location on load.
+* Updated the localization field. * Added compatibility with Loco Translate plugin.
+
 = 1.1.8 = 11 Feb 2020
 * Improved the compatibility with BuddyForms 2.5.^.
 * Fixed the metabox in the administration when the Post was edit.

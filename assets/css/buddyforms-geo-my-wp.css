@@ -1,13 +1,13 @@
-.bf-geo-address-fields .container-for-geo-address-field{
+.bf-geo-address-fields .container-for-geo-address-field {
     position: relative;
     display: inline;
     min-height: 1px;
     float: left;
-    width: calc(100% - 90px);
+    width: calc(100% - 130px);
     box-sizing: border-box;
 }
 
-.edit-post-layout__content .metabox-location-normal .postbox-container .postbox fieldset .container-for-geo-address-field.is-single{
+.edit-post-layout__content .metabox-location-normal .postbox-container .postbox fieldset .container-for-geo-address-field.is-single {
     width: 95%;
 }
 
@@ -15,16 +15,20 @@
     width: calc(100% - 60px);
 }
 
-.bf-geo-address-fields .container-for-geo-address-controls{
-    float: right;
-    width: 80px;
+.bf-geo-address-fields .container-for-geo-address-controls {
+    margin-left: 5px;
+    float: left;
+    width: auto;
     box-sizing: border-box;
     position: relative;
     display: inline-flex;
     overflow: hidden;
+    height: 45px;
 }
 
-.bf-geo-address-fields .container-for-geo-address-controls > p > a{
+.bf-geo-address-fields .container-for-geo-address-controls > p > a,
+.bf-geo-address-fields .container-for-geo-address-controls .dashicons.dashicons-update-alt,
+.bf-geo-address-fields .container-for-geo-address-controls .dashicons.dashicons-location {
     cursor: pointer;
 }
 
@@ -42,33 +46,64 @@
     width: 10px;
     height: 10px;
     font-size: 16px;
+    margin-top: 15px;
 }
 
 .bf-geo-address-fields .container-for-geo-address-field input[type=text].bf-address-autocomplete,
 .container-for-geo-address-field .bf-address-autocomplete {
-    width: 95%;
+    width: 100%;
     height: 45px;
 }
 
-.bf-geo-address-fields{
+.bf-geo-address-fields .container-for-geo-address-controls .dashicons.dashicons-update-alt {
+    position: relative;
+    display: inline-block;
+    margin-top: 13px;
+    padding: 0 3px 0 3px;
+}
+
+.bf-geo-address-fields .container-for-geo-address-controls .dashicons.dashicons-location {
+    position: relative;
+    display: inline-block;
+    margin-top: 13px;
+    padding: 0 3px 0 3px;
+}
+
+.bf-geo-address-fields {
     height: auto;
 }
 
-p.bfgmw-action a.geo-address-field-delete{
+p.bfgmw-action a.geo-address-field-delete,
+.bf-geo-address-fields .container-for-geo-address-controls .bf-geo-address-clean-control,
+.bf-geo-address-fields .container-for-geo-address-controls .bf-geo-address-user-location{
     display: none;
     text-decoration: none;
     text-decoration-style: unset;
 }
 
-p.bfgmw-action a.geo-address-field-add{
+.bf-geo-address-fields .container-for-geo-address-controls .bf-geo-address-user-location.loading .dashicons-location{
+    -webkit-animation: rotation 2s infinite linear;
+}
+
+@-webkit-keyframes rotation {
+    from {
+        -webkit-transform: rotate(359deg);
+    }
+    to {
+        -webkit-transform: rotate(0deg);
+    }
+}
+
+p.bfgmw-action a.geo-address-field-add {
     display: none;
     text-decoration: none;
     text-decoration-style: unset;
 }
 
 p.bfgmw-action {
-    padding: 9px 5px;
+    padding: 0 5px;
     margin: 0;
+    height: 45px;
 }
 
 p.gmw-lf-field.message {
@@ -77,8 +112,9 @@ p.gmw-lf-field.message {
     display: inline-table;
     font-size: 0.7rem;
     border-radius: 3px;
-    padding: 9px 5px;
+    padding: 0 5px;
     margin: 0;
+    height: 45px
 }
 
 .buddyforms-metabox [class^=gmw-icon-], .bf_field_group [class^=gmw-icon-],
@@ -92,8 +128,9 @@ p.gmw-lf-field.message {
 
 p.gmw-lf-field.message.changed i.gmw-icon-spin,
 p.gmw-lf-field.message.error i.gmw-icon-cancel,
-p.gmw-lf-field.message.ok i.gmw-icon-ok-light{
+p.gmw-lf-field.message.ok i.gmw-icon-ok-light {
     display: inline-block;
+    margin-top: 15px;
 }
 
 p.gmw-lf-field.message i {

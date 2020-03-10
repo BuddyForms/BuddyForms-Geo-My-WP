@@ -250,7 +250,7 @@ class BuddyFormsGeoMyWpElement {
 			}
 		}
 
-		if( is_user_logged_in() ) {
+		if ( is_user_logged_in() ) {
 			// verify user ID
 			if ( ! GMW_Location::verify_id( $location_data['user_id'] ) ) {
 
@@ -267,7 +267,7 @@ class BuddyFormsGeoMyWpElement {
 	 * Save location - Save a location to gmw_locations database table.
 	 * IMPORTANT: This function not check for existing location.
 	 *
-	 * @param  array $args array of location fields and data.
+	 * @param array $args array of location fields and data.
 	 *
 	 * @return int location ID
 	 */
@@ -336,7 +336,7 @@ class BuddyFormsGeoMyWpElement {
 	 * Delete an item from the gmw location table.
 	 *
 	 * @param string $object_type
-	 * @param int    $object_id
+	 * @param int $object_id
 	 *
 	 * @return bool
 	 */
@@ -418,7 +418,7 @@ class BuddyFormsGeoMyWpElement {
 	/**
 	 * Build the fields inside the form
 	 *
-	 * @param Form  $form
+	 * @param Form $form
 	 * @param array $form_args
 	 *
 	 * @return mixed
@@ -503,7 +503,7 @@ class BuddyFormsGeoMyWpElement {
 				$field_data = get_post_meta( $post_id, 'bf_' . $slug . '_count', true );
 			} else {
 				$bf_registration_user_id = get_post_meta( $post_id, '_bf_registration_user_id', true );
-				$field_data = get_user_meta( $bf_registration_user_id, 'bf_' . $slug . '_count', true );
+				$field_data              = get_user_meta( $bf_registration_user_id, 'bf_' . $slug . '_count', true );
 			}
 			//Hidden field with the fields data
 			$field_data = wp_json_encode( $field_data );
@@ -532,6 +532,8 @@ class BuddyFormsGeoMyWpElement {
 		$field_group_string .= $this->get_address_elements( $slug, $related_id, $custom_field['default'], $field_id, $custom_field['name'], $description, $custom_field['custom_class'], $custom_field );
 		$field_group_string .= '</div>';
 		$field_group_string .= '<div class="container-for-geo-address-controls">';
+		$field_group_string .= sprintf( "<span><a title=\"%s\" class=\"bf-geo-address-clean-control\"><i class=\"dashicons dashicons-update-alt\" title=\"%s\"></i></a></span>", __( 'Clean your location', 'buddyforms_geo_my_wp_locale' ), __( 'Clean your location', 'buddyforms_geo_my_wp_locale' ) );;
+		$field_group_string .= sprintf( "<span><a title=\"%s\" class=\"bf-geo-address-user-location\"><i class=\"dashicons dashicons-location\" title=\"%s\"></i></a></span>", __( 'Get you current location', 'buddyforms_geo_my_wp_locale' ), __( 'Get you current location', 'buddyforms_geo_my_wp_locale' ) );;
 		$field_group_string .= '<p class="bfgmw-action gmw-lf-field group_actions message-field message gmw-lf-form-action error" id="gmw-lf-action-message"><i class="gmw-icon-spin"></i><i class="gmw-icon-cancel"></i><i class="gmw-icon-ok-light"></i></p>';
 		if ( ! empty( $is_multiple ) ) {
 			$field_group_string .= "<p class='bfgmw-action'><a class='geo-address-field-add' field_name='{$slug}' data-default-value='{$custom_field['default']}' data-description='{$description}'><span class='dashicons dashicons-plus'></span></a></p>";
@@ -547,7 +549,7 @@ class BuddyFormsGeoMyWpElement {
 	 * Get the Address field with the hidden field
 	 *
 	 * @param        $slug
-	 * @param int    $related_id
+	 * @param int $related_id
 	 * @param string $default_value
 	 * @param        $field_id
 	 * @param        $name
@@ -670,8 +672,10 @@ class BuddyFormsGeoMyWpElement {
 		}
 
 		$args = array(
-			'admin_url' => admin_url( 'admin-ajax.php' ),
-			'nonce'     => wp_create_nonce( 'buddyforms-geo-field' ),
+			'admin_url'     => admin_url( 'admin-ajax.php' ),
+			'nonce'         => wp_create_nonce( 'buddyforms-geo-field' ),
+			'country_code'  => 'us',
+			'language_code' => 'en',
 		);
 
 		$field_args = array();
@@ -679,8 +683,11 @@ class BuddyFormsGeoMyWpElement {
 			foreach ( $buddyforms[ $form_slug ]['form_fields'] as $field_id => $field_data ) {
 				if ( $field_data['type'] === 'geo_my_wp_address' ) {
 					$field_args[ $field_id ] = array(
-						'is_multi' => ! empty( $field_data['is_multiple'][0] ) && $field_data['is_multiple'][0] === 'true',
-                        'validation_error_message' => ! empty( $field_data['validation_error_message'] )? $field_data['validation_error_message'] : __('This Field is required', 'buddyforms_geo_my_wp_locale')
+						'is_multi'                      => ! empty( $field_data['is_multiple'][0] ) && $field_data['is_multiple'][0] === 'true',
+						'is_load_user_location_enabled' => ! empty( $field_data['is_load_user_location_enabled'][0] ) && $field_data['is_load_user_location_enabled'][0] === 'true',
+						'is_user_location_icon_enabled' => ! empty( $field_data['is_user_location_icon_enabled'][0] ) && $field_data['is_user_location_icon_enabled'][0] === 'true',
+						'is_clean_enabled'              => ! empty( $field_data['is_clean_enabled'][0] ) && $field_data['is_clean_enabled'][0] === 'true',
+						'validation_error_message'      => ! empty( $field_data['validation_error_message'] ) ? $field_data['validation_error_message'] : __( 'This Field is required', 'buddyforms_geo_my_wp_locale' )
 					);
 				}
 			}
