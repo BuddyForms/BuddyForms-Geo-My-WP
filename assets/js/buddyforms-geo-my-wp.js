@@ -328,6 +328,9 @@ var fieldContainerExamples, bfGeoAddressFieldInstance = {
                 if (bfGeoAddressFieldInstance.isJsonString(currentResultJSON)) {
                     allResults = JSON.parse(currentResultJSON);
                 }
+                if (!Array.isArray(allResults)) {
+                    allResults = [];
+                }
                 var hiddenFieldsData = jQuery('.bf-address-autocomplete-active input[type="hidden"][name^="' + fieldTarget + '_"][name$="_data"]');
                 if (hiddenFieldsData.length > 0) {
                     jQuery.each(hiddenFieldsData, function (i, currentHiddenField) {

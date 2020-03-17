@@ -63,7 +63,11 @@ class BuddyFormsGeoMyWpElement {
 			if ( isset( $buddyforms[ $form_slug ] ) && 'registration' === $form_type ) {
 				$type                    = 'user';
 				$bf_registration_user_id = get_post_meta( $post_id, '_bf_registration_user_id', true );
-				$user_id                 = $bf_registration_user_id;
+				if ( ! empty( $bf_registration_user_id ) ) {
+					$user_id = $bf_registration_user_id;
+				} else {
+					update_post_meta( $post_id, '_bf_registration_user_id', $user_id );
+				}
 			}
 
 			$field_data_string = 0;
@@ -498,15 +502,19 @@ class BuddyFormsGeoMyWpElement {
 			$field_group_string .= $this->get_container_with_field( 0, $slug, 0, $customfield, $field_id, $description, $is_multiple );
 			$field_group_string .= '</div>';
 			$form->addElement( new Element_HTML( $field_group_string ) );
-
+			$field_data = array();
 			if ( $form_type !== 'registration' ) {
 				$field_data = get_post_meta( $post_id, 'bf_' . $slug . '_count', true );
 			} else {
 				$bf_registration_user_id = get_post_meta( $post_id, '_bf_registration_user_id', true );
-				$field_data              = get_user_meta( $bf_registration_user_id, 'bf_' . $slug . '_count', true );
+				if ( ! empty( $bf_registration_user_id ) ) {
+					$field_data = get_user_meta( $bf_registration_user_id, 'bf_' . $slug . '_count', true );
+				}
 			}
-			//Hidden field with the fields data
-			$field_data = wp_json_encode( $field_data );
+			if ( ! empty( $field_data ) ) {
+				//Hidden field with the fields data
+				$field_data = wp_json_encode( $field_data );
+			}
 			$form->addElement( new Element_Hidden( 'bf_' . $slug . '_count', $field_data, array( 'field_name' => $slug, 'data-rule-address-required' => true ) ) );
 		}
 
