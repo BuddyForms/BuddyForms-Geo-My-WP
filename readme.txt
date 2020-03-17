@@ -4,7 +4,7 @@ Contributors: themekraft, svenl77, gfirem
 Tags: WooCommerce, BuddyPress, Geo My WP, BuddyForms
 Requires at least: 4.0
 Tested up to: 5.3
-Stable tag: 1.1.9
+Stable tag: 1.1.10
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,6 +30,9 @@ Activate the plugin through the 'Plugins' menu in WordPress.
 
 
 == Changelog ==
+= 1.1.10 - 16 Mar 2020 =
+* Fixed the not saving behavior for a single Address field.
+
 = 1.1.9 = 9 Mar 2020
 * Added the location icon to get the user location from the navigator.
 * Implemented the user auto-location of the user on form load.
