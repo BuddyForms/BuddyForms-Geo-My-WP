@@ -310,6 +310,14 @@ var fieldContainerExamples, bfGeoAddressFieldInstance = {
         bfGeoAddressFieldInstance.removeField(fieldTarget, element);
         bfGeoAddressFieldInstance.handleNewActions(fieldTarget);
     },
+    isJsonString: function (str) {
+        try {
+            JSON.parse(str);
+        } catch (e) {
+            return false;
+        }
+        return true;
+    },
     submitForm: function () {
         var dataFields = jQuery('input[type="hidden"][name^="bf_"][name$="_count"]');
         if (dataFields.length > 0) {
@@ -317,11 +325,8 @@ var fieldContainerExamples, bfGeoAddressFieldInstance = {
                 var fieldTarget = jQuery(currentDataField).attr('field_name');
                 var currentResultJSON = jQuery(currentDataField).val();
                 var allResults = [];
-                if (currentResultJSON) {
+                if (bfGeoAddressFieldInstance.isJsonString(currentResultJSON)) {
                     allResults = JSON.parse(currentResultJSON);
-                }
-                if (typeof allResults === 'string') {
-                    allResults = [];
                 }
                 var hiddenFieldsData = jQuery('.bf-address-autocomplete-active input[type="hidden"][name^="' + fieldTarget + '_"][name$="_data"]');
                 if (hiddenFieldsData.length > 0) {
@@ -333,7 +338,7 @@ var fieldContainerExamples, bfGeoAddressFieldInstance = {
                                 if (data) {
                                     allResults.push({field: fieldTarget, data: JSON.parse(data)});
                                 }
-                            } else {
+                            } else if (Array.isArray(allResults)) {
                                 var currentItem = allResults.find(o => o.field === fieldTarget);
                                 if (currentItem) {
                                     var currentItemIndex = allResults.indexOf(currentItem);

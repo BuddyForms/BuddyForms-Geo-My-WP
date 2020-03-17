@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class BuddyFormsGeoMyWpManager {
-	protected static $version = '1.1.9';
+	protected static $version = '1.1.10';
 	private static $plugin_slug = 'bf_geo_wp';
 
 	public function __construct() {
