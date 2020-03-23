@@ -480,21 +480,22 @@ class BuddyFormsGeoMyWpElement {
 				$customfield['custom_class'] .= ' is-single';
 			}
 
-			if ( isset( $customfield['required'] ) && $labels_layout == 'inline' ) {
-				$customfield['name'] = $customfield['name'] . " <span class='required'>* </span>";
-			}
-
 			$label_string = '';
 			if ( $labels_layout != 'inline' ) {
-				$label_string .= '<label for="_' . esc_attr( $slug ) . '"> ' . $customfield['name'];
+				$label_string .= sprintf( "<label for=\"_%s\"> %s", esc_attr( $slug ), $customfield['name'] );
 				if ( isset( $customfield['required'] ) ) {
-					$label_string .= "<span class='required'>* </span>";
+					$label_string .= sprintf("<span class='required'>%s</span>", $form->getRequiredSignal());
 				}
 				$label_string .= '</label>';
 			} else {
-				$label_string = sprintf( '<div class="bf-label"><label for="%s">%s</label></div>', esc_attr( $slug ), $customfield['name'] );
+				$required = '';
+				if ( isset( $customfield['required'] ) ) {
+					$required = $form->getRequiredPlainSignal();
+				}
+				$customfield['name'] .= $required;
 			}
-			$customfield['slug'] = $slug;
+			$customfield['slug']      = $slug;
+			$customfield['form_slug'] = $form_slug;
 			wp_localize_script( 'buddyforms-geo-field', 'buddyforms_geo_field', $customfield );
 
 			//Build the base field to hide in the front to generate the others fields.
@@ -579,20 +580,15 @@ class BuddyFormsGeoMyWpElement {
 			'autocomplete'       => 'nope',
 			'data-description'   => $description,
 			'data-default-value' => $default_value,
+			'data-form'          => $custom_field['form_slug'],
 		);
 
 		if ( isset( $custom_field['required'] ) ) {
 			$element_attr['data-rule-address-required'] = "true";
 		}
 
-		$text_box = new Element_Textbox( $name, $slug, $element_attr );
-		$required = '';
-		//$properties = array( 'data-rule-address-required'=>"true","id"=>"buddyform-geo-location-address-".$slug );
-		/*if(isset( $customfield['required'] )){
-			$properties['required']="true";
-		}*/
+		$text_box = new Element_Textbox( $name, $slug, $element_attr, $custom_field );
 		$hidden_data = new Element_Hidden( $slug . '_data', '' );
-
 
 		ob_start();
 		$text_box->render();
