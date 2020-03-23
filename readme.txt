@@ -30,7 +30,7 @@ Activate the plugin through the 'Plugins' menu in WordPress.
 
 
 == Changelog ==
-= 1.1.12 - 16 Mar 2020 =
+= 1.1.12 - 23 Mar 2020 =
 * Fixed the save functionality for the Address for the user profile.
 * Fixed the required validation.
 * Improved the compatibility with BuddyForms labels and required signal.
