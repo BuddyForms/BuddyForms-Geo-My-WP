@@ -412,7 +412,7 @@ var fieldContainerExamples, bfGeoAddressFieldInstance = {
 			jQuery('label#' + fieldId + '-error').remove();
 			var error = '<label id="' + fieldId + '-error" class="error" for="' + fieldId + '" style="display: inline-block;">' + buddyforms_geo_field.fields[fieldId].validation_error_message + '</label>';
 
-			var isValid = (value && value.length === 0);
+			var isValid = (value && value.length > 0);
 			if (!isValid) {
 			    currentElement.parent().parent().append(error);
 				return false;
