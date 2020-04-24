@@ -31,7 +31,7 @@ Activate the plugin through the 'Plugins' menu in WordPress.
 
 == Changelog ==
 = 1.1.16 - 24 April 2020 =
-* Fixed the required validation. 
+* Fixed the required validation.
 
 = 1.1.15 - 24 April 2020 =
 * Updated the JS assets.
