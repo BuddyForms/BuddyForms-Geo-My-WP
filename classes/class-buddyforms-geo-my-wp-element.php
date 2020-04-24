@@ -224,10 +224,7 @@ class BuddyFormsGeoMyWpElement {
 		if ( ! empty( $location_id ) ) {
 			$fields = buddyforms_get_form_fields( $form_slug );
 			foreach ( $fields as $field ) {
-				$field_type = $field['type'];
-				if ( $field_type === 'email' ) {
-					$result_field = buddyforms_get_field_with_meta( $form_slug, $post_id, $field['slug'], true );
-				}
+				$result_field = buddyforms_get_field_with_meta( $form_slug, $post_id, $field['slug'], true );
 				$field_result_value = ! empty( $result_field['value'] ) ? $result_field['value'] : apply_filters( 'buddyforms_field_shortcode_empty_value', '', $result_field, $form_slug, $post_id, $field['slug'] );
 				if ( ! empty( $field_result_value ) ) {
 					GMW_Location_Meta::update_metas( $location_id, $field['slug'], $field_result_value );
