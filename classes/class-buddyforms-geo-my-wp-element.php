@@ -22,6 +22,7 @@ class BuddyFormsGeoMyWpElement {
 		add_action( 'buddyforms_front_js_css_after_enqueue', array( $this, 'wp_enqueue_scripts' ), 99 );
 		add_action( 'admin_enqueue_scripts', array( $this, 'wp_enqueue_scripts' ), 99 );
 		add_action( 'buddyforms_update_post_meta', array( $this, 'buddyforms_geo_my_wp_update_post_meta' ), 11, 2 );
+		add_filter( 'gmw_get_location_meta_list_labels', array( $this, 'sanitize_geowp_contact_meta' ), 10, 3 );
 	}
 
 	/**
@@ -124,7 +125,7 @@ class BuddyFormsGeoMyWpElement {
 											foreach ( $address_components as $target => $source ) {
 												if ( $address_item['types'][0] === 'sublocality_level_1' || $address_item['types'][0] === 'locality' ) {
 													$address['neighborhood'] = $address_item[ $source[0] ];
-												} else if ( $address_item['types'][0] === $source[1] ) {
+												} elseif ( $address_item['types'][0] === $source[1] ) {
 													$address[ $target ] = $address_item[ $source[0] ];
 												}
 											}
@@ -156,6 +157,11 @@ class BuddyFormsGeoMyWpElement {
 										} else {
 											// Save information to database
 											$location_id = $this->add_new_address( $location_data );
+										}
+
+										//Update the wp geo meta
+										if ( ! empty( $location_id ) ) {
+											$this->update_location_meta( $form_slug, $location_id, $post_id );
 										}
 
 										if ( ! isset( $location_data['ID'] ) ) {
@@ -205,6 +211,56 @@ class BuddyFormsGeoMyWpElement {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Update geo my wp location meta
+	 *
+	 * @param $form_slug
+	 * @param $location_id
+	 * @param $post_id
+	 */
+	public function update_location_meta( $form_slug, $location_id, $post_id ) {
+		if ( ! empty( $location_id ) ) {
+			$fields = buddyforms_get_form_fields( $form_slug );
+			foreach ( $fields as $field ) {
+				$field_type = $field['type'];
+				if ( $field_type === 'email' ) {
+					$result_field = buddyforms_get_field_with_meta( $form_slug, $post_id, $field['slug'], true );
+				}
+				$field_result_value = ! empty( $result_field['value'] ) ? $result_field['value'] : apply_filters( 'buddyforms_field_shortcode_empty_value', '', $result_field, $form_slug, $post_id, $field['slug'] );
+				if ( ! empty( $field_result_value ) ) {
+					GMW_Location_Meta::update_metas( $location_id, $field['slug'], $field_result_value );
+				}
+			}
+		}
+	}
+
+	/**
+	 * Updating the labels for geo my wp the search result
+	 *
+	 * @param $labels
+	 * @param $fields
+	 * @param $location
+	 *
+	 * @return mixed
+	 */
+	public function sanitize_geowp_contact_meta( $labels, $fields, $location ) {
+		if ( ! empty( $fields ) ) {
+			$form_slug = buddyforms_get_form_slug_by_post_id( $location->ID );
+			if ( ! empty( $form_slug ) ) {
+				foreach ( $fields as $field ) {
+					if ( ! isset( $labels[ $field ] ) ) {
+						$bf_field = buddyforms_get_form_field_by( $form_slug, $field );
+						if ( ! empty( $bf_field ) ) {
+							$labels[ $field ] = $bf_field['name'];
+						}
+					}
+				}
+			}
+		}
+
+		return $labels;
 	}
 
 	/**
