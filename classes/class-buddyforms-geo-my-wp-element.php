@@ -23,6 +23,11 @@ class BuddyFormsGeoMyWpElement {
 		add_action( 'admin_enqueue_scripts', array( $this, 'wp_enqueue_scripts' ), 99 );
 		add_action( 'buddyforms_update_post_meta', array( $this, 'buddyforms_geo_my_wp_update_post_meta' ), 11, 2 );
 		add_filter( 'gmw_get_location_meta_list_labels', array( $this, 'sanitize_geowp_contact_meta' ), 10, 3 );
+		add_filter('buddyforms_force_field_html', array($this, 'force_buddyforms_fields_html'));
+	}
+
+	public function force_buddyforms_fields_html() {
+		return false;
 	}
 
 	/**
@@ -224,9 +229,15 @@ class BuddyFormsGeoMyWpElement {
 		if ( ! empty( $location_id ) ) {
 			$fields = buddyforms_get_form_fields( $form_slug );
 			foreach ( $fields as $field ) {
-				$result_field = buddyforms_get_field_with_meta( $form_slug, $post_id, $field['slug'], true );
+				$field_type         = $field['type'];
+				$result_field       = buddyforms_get_field_with_meta( $form_slug, $post_id, $field['slug'], true, false );
 				$field_result_value = ! empty( $result_field['value'] ) ? $result_field['value'] : apply_filters( 'buddyforms_field_shortcode_empty_value', '', $result_field, $form_slug, $post_id, $field['slug'] );
 				if ( ! empty( $field_result_value ) ) {
+					$field_result_value = apply_filters( 'buddyforms-geo-my-wp-location-meta-value', $field_result_value, $field, $form_slug, $location_id );
+					if ( $field_type === 'email' || $field_type === 'user_email' ) {
+						//Mapping the email or user_email field to the location email meta
+						GMW_Location_Meta::update_metas( $location_id, 'email', $field_result_value );
+					}
 					GMW_Location_Meta::update_metas( $location_id, $field['slug'], $field_result_value );
 				}
 			}
