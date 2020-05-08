@@ -261,9 +261,12 @@ var fieldContainerExamples, bfGeoAddressFieldInstance = {
         //Hide actions if field is disabled
         // bfGeoAddressFieldInstance.hideActionIfDisabled(source);
 		//Add to validation rules
-		var formSlug = jQuery(source).attr('data-form-slug');
+        var targetField = jQuery(source).find('input#'+targetSlug);
+		var formSlug = jQuery(targetField).attr('data-form');
 		if (jQuery && jQuery.validator && formSlug) {
-			jQuery(source).rules('add', {'address-required': true});
+		    setTimeout(function() {
+                jQuery('#' + targetSlug).rules('add', {'address-required': 1});
+            }, 0);
 		}
     },
     hideActionIfDisabled: function (source) {
@@ -387,7 +390,7 @@ var fieldContainerExamples, bfGeoAddressFieldInstance = {
         return formSlug;
     },
     validateField: function () {
-        jQuery.validator.addMethod('address-required', function (value, element, param) {
+        jQuery.validator.addMethod("address-required", function (value, element, param) {
             var currentElement = jQuery(element);
             if(!currentElement.hasClass('address-field')){
             	return true;
@@ -409,7 +412,7 @@ var fieldContainerExamples, bfGeoAddressFieldInstance = {
 			jQuery('label#' + fieldId + '-error').remove();
 			var error = '<label id="' + fieldId + '-error" class="error" for="' + fieldId + '" style="display: inline-block;">' + buddyforms_geo_field.fields[fieldId].validation_error_message + '</label>';
 
-			var isValid = (value && value.length === 0);
+			var isValid = (value && value.length > 0);
 			if (!isValid) {
 			    currentElement.parent().parent().append(error);
 				return false;
@@ -485,15 +488,10 @@ var fieldContainerExamples, bfGeoAddressFieldInstance = {
 
 jQuery(document).on('buddyforms-ready', function () {
 	bfGeoAddressFieldInstance.init();
+	bfGeoAddressFieldInstance.validateField();
 	if (typeof BuddyFormsHooks !== 'undefined') {
 		BuddyFormsHooks.addAction('buddyforms:render:after', function () {
 			bfGeoAddressFieldInstance.init();
 		}, 10);
-	}
-});
-
-jQuery(document).ready(function() {
-	if (jQuery && jQuery.validator) {
-		bfGeoAddressFieldInstance.validateField();
 	}
 });
