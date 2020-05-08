@@ -3,8 +3,8 @@
 Contributors: themekraft, svenl77, gfirem
 Tags: WooCommerce, BuddyPress, Geo My WP, BuddyForms
 Requires at least: 4.0
-Tested up to: 5.3.2
-Stable tag: 1.1.16
+Tested up to: 5.4
+Stable tag: 1.1.17
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,6 +30,11 @@ Activate the plugin through the 'Plugins' menu in WordPress.
 
 
 == Changelog ==
+= 1.1.17 - 8 May 2020 =
+* Fixed the location function to save the metas to geo my wp.
+* Improved the location field metas to include the default meta for the email if exist a buddyforms form element email or user_email.
+* Added a hook to force to buddyforms to output all form element with no html.
+
 = 1.1.16 - 24 April 2020 =
 * Fixed the required validation.
 
