@@ -263,7 +263,8 @@ var fieldContainerExamples, bfGeoAddressFieldInstance = {
 		//Add to validation rules
         var targetField = jQuery(source).find('input#'+targetSlug);
 		var formSlug = jQuery(targetField).attr('data-form');
-		if (jQuery && jQuery.validator && formSlug) {
+		var isRequired = jQuery(targetField).attr('data-rule-address-required');
+		if (jQuery && jQuery.validator && formSlug && isRequired) {
 		    setTimeout(function() {
                 jQuery('#' + targetSlug).rules('add', {'address-required': 1});
             }, 0);

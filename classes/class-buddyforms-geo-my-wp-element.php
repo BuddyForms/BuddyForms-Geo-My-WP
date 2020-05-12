@@ -23,7 +23,7 @@ class BuddyFormsGeoMyWpElement {
 		add_action( 'admin_enqueue_scripts', array( $this, 'wp_enqueue_scripts' ), 99 );
 		add_action( 'buddyforms_update_post_meta', array( $this, 'buddyforms_geo_my_wp_update_post_meta' ), 11, 2 );
 		add_filter( 'gmw_get_location_meta_list_labels', array( $this, 'sanitize_geowp_contact_meta' ), 10, 3 );
-		add_filter('buddyforms_force_field_html', array($this, 'force_buddyforms_fields_html'));
+		add_filter( 'buddyforms_force_field_html', array( $this, 'force_buddyforms_fields_html' ) );
 	}
 
 	public function force_buddyforms_fields_html() {
@@ -548,7 +548,7 @@ class BuddyFormsGeoMyWpElement {
 			if ( $labels_layout != 'inline' ) {
 				$label_string .= sprintf( "<label for=\"_%s\"> %s", esc_attr( $slug ), $customfield['name'] );
 				if ( isset( $customfield['required'] ) ) {
-					$label_string .= sprintf("<span class='required'>%s</span>", $form->getRequiredSignal());
+					$label_string .= sprintf( "<span class='required'>%s</span>", $form->getRequiredSignal() );
 				}
 				$label_string .= '</label>';
 			} else {
@@ -580,7 +580,11 @@ class BuddyFormsGeoMyWpElement {
 				//Hidden field with the fields data
 				$field_data = wp_json_encode( $field_data );
 			}
-			$form->addElement( new Element_Hidden( 'bf_' . $slug . '_count', $field_data, array( 'field_name' => $slug, 'data-rule-address-required' => true ) ) );
+			$attr = array( 'field_name' => $slug );
+			if ( isset( $customfield['required'] ) ) {
+				$attr['data-rule-address-required'] = true;
+			}
+			$form->addElement( new Element_Hidden( 'bf_' . $slug . '_count', $field_data, $attr ) );
 		}
 
 		return $form;
@@ -651,7 +655,7 @@ class BuddyFormsGeoMyWpElement {
 			$element_attr['data-rule-address-required'] = "true";
 		}
 
-		$text_box = new Element_Textbox( $name, $slug, $element_attr, $custom_field );
+		$text_box    = new Element_Textbox( $name, $slug, $element_attr, $custom_field );
 		$hidden_data = new Element_Hidden( $slug . '_data', '' );
 
 		ob_start();
@@ -669,11 +673,11 @@ class BuddyFormsGeoMyWpElement {
 		global $wp_query;
 		if ( ! empty( $wp_query->query_vars['bf_form_slug'] ) ) {
 			$form_slug = buddyforms_sanitize_slug( $wp_query->query_vars['bf_form_slug'] );
-		} else if ( ! empty( $_GET['form_slug'] ) ) {
+		} elseif ( ! empty( $_GET['form_slug'] ) ) {
 			$form_slug = buddyforms_sanitize_slug( $_GET['form_slug'] );
-		} else if ( ! empty( $wp_query->query_vars['form_slug'] ) ) {
+		} elseif ( ! empty( $wp_query->query_vars['form_slug'] ) ) {
 			$form_slug = buddyforms_sanitize_slug( $wp_query->query_vars['form_slug'] );
-		} else if ( function_exists( 'bp_current_component' ) && function_exists( 'bp_current_action' ) && function_exists( 'buddyforms_members_get_form_by_member_type' ) ) {
+		} elseif ( function_exists( 'bp_current_component' ) && function_exists( 'bp_current_action' ) && function_exists( 'buddyforms_members_get_form_by_member_type' ) ) {
 			global $buddyforms_member_tabs;
 			$bp_action    = bp_current_action();
 			$bp_component = bp_current_component();
@@ -687,11 +691,11 @@ class BuddyFormsGeoMyWpElement {
 					}
 				}
 			}
-		} else if ( ! empty( $post ) ) {
+		} elseif ( ! empty( $post ) ) {
 			$post_content = ! empty( $content ) ? $content : $post->post_content;
 			if ( ! empty( $post->post_name ) && $post->post_type === 'buddyforms' ) {
 				$form_slug = $post->post_name;
-			} else if ( ! empty( $post_content ) ) {
+			} elseif ( ! empty( $post_content ) ) {
 				//Extract the shortcode inside the content
 				$form_slug = buddyforms_get_form_slug_from_content( $post_content );
 				if ( empty( $form_slug ) ) {
