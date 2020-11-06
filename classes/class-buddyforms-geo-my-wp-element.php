@@ -560,7 +560,7 @@ class BuddyFormsGeoMyWpElement {
 			}
 			$customfield['slug']      = $slug;
 			$customfield['form_slug'] = $form_slug;
-			wp_localize_script( 'buddyforms-geo-field', 'buddyforms_geo_field', $customfield );
+			//wp_localize_script( 'buddyforms-geo-field', 'buddyforms_geo_field', $customfield );
 
 			//Build the base field to hide in the front to generate the others fields.
 			$field_group_string = '<div class="bf_field_group">' . $label_string;
