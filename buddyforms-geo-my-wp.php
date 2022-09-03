@@ -54,7 +54,7 @@ if ( ! class_exists( 'buddyforms_geo_my_wp' ) ) {
 			require_once 'classes/class-buddyforms-geo-my-wp-requirements.php';
 			new BuddyFormsGeoMyWpRequirements();
 			$bf_freemius = BuddyFormsGeoMyWpFs::getFreemius();
-			if ( ! empty( $bf_freemius ) && $bf_freemius->is_paying_or_trial__premium_only() ) {
+			if ( ! empty( $bf_freemius ) && $bf_freemius->is_plan( 'professional' ) ) {
 				if ( BuddyFormsGeoMyWpRequirements::is_buddy_form_active() && BuddyFormsGeoMyWpRequirements::is_geo_my_wp_active() ) {
 					require_once 'classes/class-buddyforms-geo-my-wp-manager.php';
 					new BuddyFormsGeoMyWpManager();
@@ -66,9 +66,9 @@ if ( ! class_exists( 'buddyforms_geo_my_wp' ) ) {
 
 		function buddyforms_geo_my_wp_free_version_admin_notice() {
 			?>
-            <div class="notice notice-warning">
-                <p><?php _e( 'You need to activate the license of the extension <u>BuddyForms Geo My Wp.</u>', 'buddyforms_geo_my_wp_locale' ); ?></p>
-            </div>
+			<div class="notice notice-warning">
+				<p><?php esc_html_e( 'You need to activate the license of the extension <u>BuddyForms Geo My Wp.</u>', 'buddyforms_geo_my_wp_locale' ); ?></p>
+			</div>
 			<?php
 		}
 
@@ -87,7 +87,7 @@ if ( ! class_exists( 'buddyforms_geo_my_wp' ) ) {
 		public static function get_instance() {
 			// If the single instance hasn't been set, set it now.
 			if ( null === self::$instance ) {
-				self::$instance = new self;
+				self::$instance = new self();
 			}
 
 			return self::$instance;

@@ -17,23 +17,23 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @param        $user_id
  * @param        $field_slug
- * @param array  $components The address component to build the address @readmore https://developers.google.com/maps/documentation/geocoding/intro#Types
- * @param string $glue
+ * @param array      $components The address component to build the address @readmore https://developers.google.com/maps/documentation/geocoding/intro#Types
+ * @param string     $glue
  *
  * @return array(string)
  */
 function bf_geo_my_wp_get_user_address_by_component( $user_id, $field_slug, $components = array( 'formatted_address' ), $glue = ', ' ) {
 	$meta = bf_geo_my_wp_get_user_location_meta( $user_id, $field_slug );
-	
+
 	if ( ! empty( $meta ) && is_array( $meta ) ) {
 		$result = array();
 		foreach ( $meta as $item ) {
 			$result[] = BuddyFormsGeoMyWpLocateEntries::get_address_component_from_item( $item->data, $components, $glue );
 		}
-		
+
 		return $result;
 	}
-	
+
 	return array();
 }
 
@@ -42,23 +42,23 @@ function bf_geo_my_wp_get_user_address_by_component( $user_id, $field_slug, $com
  *
  * @param        $post_id
  * @param        $field_slug
- * @param array  $components The address component to build the address @readmore https://developers.google.com/maps/documentation/geocoding/intro#Types
- * @param string $glue
+ * @param array      $components The address component to build the address @readmore https://developers.google.com/maps/documentation/geocoding/intro#Types
+ * @param string     $glue
  *
  * @return array(string)
  */
 function bf_geo_my_wp_get_content_address_by_component( $post_id, $field_slug, $components = array( 'formatted_address' ), $glue = ', ' ) {
 	$meta = bf_geo_my_wp_get_content_location_meta( $post_id, $field_slug );
-	
+
 	if ( ! empty( $meta ) && is_array( $meta ) ) {
 		$result = array();
 		foreach ( $meta as $item ) {
 			$result[] = BuddyFormsGeoMyWpLocateEntries::get_address_component_from_item( $item->data, $components, $glue );
 		}
-		
+
 		return $result;
 	}
-	
+
 	return array();
 }
 
@@ -67,7 +67,7 @@ function bf_geo_my_wp_get_content_address_by_component( $post_id, $field_slug, $
  *
  * @param      $user_id
  * @param      $field_slug
- * @param bool $is_single
+ * @param bool       $is_single
  *
  * @return array
  */
@@ -75,9 +75,9 @@ function bf_geo_my_wp_get_user_location_meta( $user_id, $field_slug, $is_single 
 	if ( empty( $user_id ) || empty( $field_slug ) ) {
 		return array();
 	}
-	
+
 	$meta = get_user_meta( $user_id, 'bf_' . $field_slug . '_count', $is_single );
-	
+
 	return ( empty( $meta ) ) ? array() : $meta;
 }
 
@@ -86,17 +86,17 @@ function bf_geo_my_wp_get_user_location_meta( $user_id, $field_slug, $is_single 
  *
  * @param      $post_id
  * @param      $field_slug
- * @param bool $is_single
+ * @param bool       $is_single
  *
  * @return array
  */
-function bf_geo_my_wp_get_content_location_meta( $post_id, $field_slug, $is_single = true  ) {
+function bf_geo_my_wp_get_content_location_meta( $post_id, $field_slug, $is_single = true ) {
 	if ( empty( $post_id ) || empty( $field_slug ) ) {
 		return array();
 	}
-	
+
 	$meta = get_post_meta( $post_id, 'bf_' . $field_slug . '_count', $is_single );
-	
+
 	return ( empty( $meta ) ) ? array() : $meta;
 }
 

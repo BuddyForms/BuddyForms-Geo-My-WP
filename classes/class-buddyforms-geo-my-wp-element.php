@@ -61,9 +61,9 @@ class BuddyFormsGeoMyWpElement {
 
 			global $buddyforms;
 
-			$user_id = get_current_user_id();//Ensure the user modify the data belong to him;
+			$user_id = get_current_user_id();// Ensure the user modify the data belong to him;
 
-			$form_type = BuddyFormsGeoMyWpElement::get_buddyforms_form_type( $form_slug );
+			$form_type = self::get_buddyforms_form_type( $form_slug );
 			$type      = 'post';
 			$id        = $post_id;
 			if ( isset( $buddyforms[ $form_slug ] ) && 'registration' === $form_type ) {
@@ -99,29 +99,29 @@ class BuddyFormsGeoMyWpElement {
 									$lng_value = isset( $data_value['location']['lng'] ) ? $data_value['location']['lng'] : 0;
 
 									if ( ! empty( $data_value ) && ! empty( $lat_value ) && ! empty( $lng_value ) ) {
-										//include the update location file file
-										include_once( GMW_PLUGINS_PATH . '/posts-locator/includes/gmw-posts-locator-functions.php' );
-										//make sure the file included and the function exists
+										// include the update location file file
+										include_once GMW_PLUGINS_PATH . '/posts-locator/includes/gmw-posts-locator-functions.php';
+										// make sure the file included and the function exists
 										if ( ! function_exists( 'gmw_update_location' ) ) {
 											return;
 										}
 
 										$location = array(
 											'lat' => $lat_value,
-											'lng' => $lng_value
+											'lng' => $lng_value,
 										);
 
 										$address_components = array(
 											'street_number' => array( 'short_name', 'street_number' ),
-											'street_name'   => array( 'long_name', 'route' ),
-											'street'        => array( 'short_name', 'route' ),
-											'city'          => array( 'long_name', 'administrative_area_level_2' ),
-											'region_name'   => array( 'long_name', 'administrative_area_level_1' ),
-											'region_code'   => array( 'short_name', 'administrative_area_level_1' ),
-											'country_name'  => array( 'long_name', 'country' ),
-											'country_code'  => array( 'short_name', 'country' ),
-											'county'        => array( 'long_name', 'country' ),
-											'postcode'      => array( 'short_name', 'postal_code' ),
+											'street_name'  => array( 'long_name', 'route' ),
+											'street'       => array( 'short_name', 'route' ),
+											'city'         => array( 'long_name', 'administrative_area_level_2' ),
+											'region_name'  => array( 'long_name', 'administrative_area_level_1' ),
+											'region_code'  => array( 'short_name', 'administrative_area_level_1' ),
+											'country_name' => array( 'long_name', 'country' ),
+											'country_code' => array( 'short_name', 'country' ),
+											'county'       => array( 'long_name', 'country' ),
+											'postcode'     => array( 'short_name', 'postal_code' ),
 										);
 
 										$address = array();
@@ -138,25 +138,25 @@ class BuddyFormsGeoMyWpElement {
 
 										// collect location data into array
 										$location_data = array(
-											'object_type'       => $type,
-											'object_id'         => $id,
-											'user_id'           => $user_id,
-											'latitude'          => $lat_value,
-											'longitude'         => $lng_value,
-											'premise'           => '',
-											'featured'          => apply_filters( 'buddyforms-geo-my-wp-location-featured', 0, $form_slug, $form_type ),
-											'address'           => is_array( $location ) ? implode( ' ', $location ) : $location,
+											'object_type' => $type,
+											'object_id'   => $id,
+											'user_id'     => $user_id,
+											'latitude'    => $lat_value,
+											'longitude'   => $lng_value,
+											'premise'     => '',
+											'featured'    => apply_filters( 'buddyforms-geo-my-wp-location-featured', 0, $form_slug, $form_type ),
+											'address'     => is_array( $location ) ? implode( ' ', $location ) : $location,
 											'formatted_address' => $data_value['formatted_address'],
-											'place_id'          => $data_value['place_id']
+											'place_id'    => $data_value['place_id'],
 										);
 
 										$location_data = array_merge( $location_data, $address );
 
 										$location_exist = ( ! empty( $data_value['location_id'] ) ) ? GMW_Location::get_by_id( $data_value['location_id'] ) : 0;
 
-										//Check if the information need to be updated or created
+										// Check if the information need to be updated or created
 										if ( ! empty( $location_exist ) ) {
-											//Update the information
+											// Update the information
 											$location_data['ID'] = $data_value['location_id'];
 											$location_id         = $this->update_address( $location_data );
 										} else {
@@ -164,7 +164,7 @@ class BuddyFormsGeoMyWpElement {
 											$location_id = $this->add_new_address( $location_data );
 										}
 
-										//Update the wp geo meta
+										// Update the wp geo meta
 										if ( ! empty( $location_id ) ) {
 											$this->update_location_meta( $form_slug, $location_id, $post_id );
 										}
@@ -173,7 +173,7 @@ class BuddyFormsGeoMyWpElement {
 											// Add Location ID to location data array
 											$location_data['ID'] = $location_id;
 										}
-										//clean cache values
+										// clean cache values
 										wp_cache_delete( $location_data['object_type'] . '_' . $location_data['object_id'], 'gmw_locations' );
 										wp_cache_delete( $location_id, 'gmw_location' );
 
@@ -235,7 +235,7 @@ class BuddyFormsGeoMyWpElement {
 				if ( ! empty( $field_result_value ) ) {
 					$field_result_value = apply_filters( 'buddyforms-geo-my-wp-location-meta-value', $field_result_value, $field, $form_slug, $location_id );
 					if ( $field_type === 'email' || $field_type === 'user_email' ) {
-						//Mapping the email or user_email field to the location email meta
+						// Mapping the email or user_email field to the location email meta
 						GMW_Location_Meta::update_metas( $location_id, 'email', $field_result_value );
 					}
 					GMW_Location_Meta::update_metas( $location_id, $field['slug'], $field_result_value );
@@ -404,7 +404,7 @@ class BuddyFormsGeoMyWpElement {
 	 * Delete an item from the gmw location table.
 	 *
 	 * @param string $object_type
-	 * @param int $object_id
+	 * @param int    $object_id
 	 *
 	 * @return bool
 	 */
@@ -486,7 +486,7 @@ class BuddyFormsGeoMyWpElement {
 	/**
 	 * Build the fields inside the form
 	 *
-	 * @param Form $form
+	 * @param Form  $form
 	 * @param array $form_args
 	 *
 	 * @return mixed
@@ -546,7 +546,7 @@ class BuddyFormsGeoMyWpElement {
 
 			$label_string = '';
 			if ( $labels_layout != 'inline' ) {
-				$label_string .= sprintf( "<label for=\"_%s\"> %s", esc_attr( $slug ), $customfield['name'] );
+				$label_string .= sprintf( '<label for="_%s"> %s', esc_attr( $slug ), $customfield['name'] );
 				if ( isset( $customfield['required'] ) ) {
 					$label_string .= sprintf( "<span class='required'>%s</span>", $form->getRequiredSignal() );
 				}
@@ -560,10 +560,10 @@ class BuddyFormsGeoMyWpElement {
 			}
 			$customfield['slug']      = $slug;
 			$customfield['form_slug'] = $form_slug;
-			//wp_localize_script( 'buddyforms-geo-field', 'buddyforms_geo_field', $customfield );
+			// wp_localize_script( 'buddyforms-geo-field', 'buddyforms_geo_field', $customfield );
 
-			//Build the base field to hide in the front to generate the others fields.
-			$field_group_string = '<div class="bf_field_group">' . $label_string;
+			// Build the base field to hide in the front to generate the others fields.
+			$field_group_string  = '<div class="bf_field_group">' . $label_string;
 			$field_group_string .= $this->get_container_with_field( 0, $slug, 0, $customfield, $field_id, $description, $is_multiple );
 			$field_group_string .= '</div>';
 			$form->addElement( new Element_HTML( $field_group_string ) );
@@ -577,7 +577,7 @@ class BuddyFormsGeoMyWpElement {
 				}
 			}
 			if ( ! empty( $field_data ) ) {
-				//Hidden field with the fields data
+				// Hidden field with the fields data
 				$field_data = wp_json_encode( $field_data );
 			}
 			$attr = array( 'field_name' => $slug );
@@ -604,13 +604,15 @@ class BuddyFormsGeoMyWpElement {
 	 * @return string
 	 */
 	public function get_container_with_field( $i, $slug, $related_id, $custom_field, $field_id, $description, $is_multiple ) {
-		$field_group_string = '<div class="bf-geo-address-fields bf-geo-address-example">';
+		$field_group_string  = '<div class="bf-geo-address-fields bf-geo-address-example">';
 		$field_group_string .= '<div class="container-for-geo-address-field ' . ( empty( $is_multiple ) ? 'is-single' : '' ) . '">';
 		$field_group_string .= $this->get_address_elements( $slug, $related_id, $custom_field['default'], $field_id, $custom_field['name'], $description, $custom_field['custom_class'], $custom_field );
 		$field_group_string .= '</div>';
 		$field_group_string .= '<div class="container-for-geo-address-controls">';
-		$field_group_string .= sprintf( "<span><a title=\"%s\" class=\"bf-geo-address-clean-control\"><i class=\"dashicons dashicons-update-alt\" title=\"%s\"></i></a></span>", __( 'Clean your location', 'buddyforms_geo_my_wp_locale' ), __( 'Clean your location', 'buddyforms_geo_my_wp_locale' ) );;
-		$field_group_string .= sprintf( "<span><a title=\"%s\" class=\"bf-geo-address-user-location\"><i class=\"dashicons dashicons-location\" title=\"%s\"></i></a></span>", __( 'Get you current location', 'buddyforms_geo_my_wp_locale' ), __( 'Get you current location', 'buddyforms_geo_my_wp_locale' ) );;
+		$field_group_string .= sprintf( '<span><a title="%s" class="bf-geo-address-clean-control"><i class="dashicons dashicons-update-alt" title="%s"></i></a></span>', __( 'Clean your location', 'buddyforms_geo_my_wp_locale' ), __( 'Clean your location', 'buddyforms_geo_my_wp_locale' ) );
+
+		$field_group_string .= sprintf( '<span><a title="%s" class="bf-geo-address-user-location"><i class="dashicons dashicons-location" title="%s"></i></a></span>', __( 'Get you current location', 'buddyforms_geo_my_wp_locale' ), __( 'Get you current location', 'buddyforms_geo_my_wp_locale' ) );
+
 		$field_group_string .= '<p class="bfgmw-action gmw-lf-field group_actions message-field message gmw-lf-form-action error" id="gmw-lf-action-message"><i class="gmw-icon-spin"></i><i class="gmw-icon-cancel"></i><i class="gmw-icon-ok-light"></i></p>';
 		if ( ! empty( $is_multiple ) ) {
 			$field_group_string .= "<p class='bfgmw-action'><a class='geo-address-field-add' field_name='{$slug}' data-default-value='{$custom_field['default']}' data-description='{$description}'><span class='dashicons dashicons-plus'></span></a></p>";
@@ -626,8 +628,8 @@ class BuddyFormsGeoMyWpElement {
 	 * Get the Address field with the hidden field
 	 *
 	 * @param        $slug
-	 * @param int $related_id
-	 * @param string $default_value
+	 * @param int         $related_id
+	 * @param string      $default_value
 	 * @param        $field_id
 	 * @param        $name
 	 * @param        $description
@@ -639,7 +641,7 @@ class BuddyFormsGeoMyWpElement {
 		$name = apply_filters( 'buddyforms_form_field_geo_my_wp_address_name', stripcslashes( $name ), $slug, $related_id );
 
 		$element_attr = array(
-			'id'                 => str_replace( "-", "", $slug ),
+			'id'                 => str_replace( '-', '', $slug ),
 			'value'              => '',
 			'class'              => $classes . ' settings-input address-field address bf-address-autocomplete bf-address-autocomplete-example',
 			'shortDesc'          => $description,
@@ -652,7 +654,7 @@ class BuddyFormsGeoMyWpElement {
 		);
 
 		if ( isset( $custom_field['required'] ) ) {
-			$element_attr['data-rule-address-required'] = "true";
+			$element_attr['data-rule-address-required'] = 'true';
 		}
 
 		$text_box    = new Element_Textbox( $name, $slug, $element_attr, $custom_field );
@@ -696,7 +698,7 @@ class BuddyFormsGeoMyWpElement {
 			if ( ! empty( $post->post_name ) && $post->post_type === 'buddyforms' ) {
 				$form_slug = $post->post_name;
 			} elseif ( ! empty( $post_content ) ) {
-				//Extract the shortcode inside the content
+				// Extract the shortcode inside the content
 				$form_slug = buddyforms_get_form_slug_from_content( $post_content );
 				if ( empty( $form_slug ) ) {
 					$form_slug = buddyforms_get_form_slug_by_post_id( $post->ID );
@@ -714,31 +716,42 @@ class BuddyFormsGeoMyWpElement {
 			return;
 		}
 
-		//register google maps api if not already registered
+		// register google maps api if not already registered
 		if ( ! wp_script_is( 'google-maps', 'registered' ) ) {
-			//Build Google API url. elements can be modified via filters
+			// Build Google API url. elements can be modified via filters
 			$protocol    = is_ssl() ? 'https' : 'http';
 			$gmw_options = gmw_get_options_group();
-			$google_url  = apply_filters( 'gmw_google_maps_api_url', array(
-				'protocol' => $protocol,
-				'url_base' => '://maps.googleapis.com/maps/api/js?',
-				'url_data' => http_build_query( apply_filters( 'gmw_google_maps_api_args', array(
-					'libraries' => 'places',
-					'key'       => gmw_get_option( 'general_settings', 'google_api', '' ),
-					'region'    => gmw_get_option( 'general_settings', 'country_code', 'US' ),
-					'language'  => gmw_get_option( 'general_settings', 'language_code', 'EN' ),
-				) ), '', '&amp;' ),
-			), $gmw_options );
+			$google_url  = apply_filters(
+				'gmw_google_maps_api_url',
+				array(
+					'protocol' => $protocol,
+					'url_base' => '://maps.googleapis.com/maps/api/js?',
+					'url_data' => http_build_query(
+						apply_filters(
+							'gmw_google_maps_api_args',
+							array(
+								'libraries' => 'places',
+								'key'       => gmw_get_option( 'general_settings', 'google_api', '' ),
+								'region'    => gmw_get_option( 'general_settings', 'country_code', 'US' ),
+								'language'  => gmw_get_option( 'general_settings', 'language_code', 'EN' ),
+							)
+						),
+						'',
+						'&amp;'
+					),
+				),
+				$gmw_options
+			);
 
 			wp_register_script( 'google-maps', implode( '', $google_url ), array( 'jquery' ), false, true );
 		}
 
 		$js_asset  = BuddyFormsGeoMyWpManager::assets_path( 'buddyforms-geo-my-wp' );
 		$css_asset = BuddyFormsGeoMyWpManager::assets_path( 'buddyforms-geo-my-wp', 'css' );
-		wp_register_script( 'buddyforms-geo-field', $js_asset, array( "jquery" ), BuddyFormsGeoMyWpManager::get_version() );
+		wp_register_script( 'buddyforms-geo-field', $js_asset, array( 'jquery' ), BuddyFormsGeoMyWpManager::get_version() );
 		wp_register_style( 'buddyforms-geo-field', $css_asset, array(), BuddyFormsGeoMyWpManager::get_version() );
 
-		//enqueue google maps api if not already enqueued
+		// enqueue google maps api if not already enqueued
 		if ( ! wp_script_is( 'google-maps' ) ) {
 			wp_enqueue_script( 'google-maps' );
 		}
@@ -759,7 +772,7 @@ class BuddyFormsGeoMyWpElement {
 						'is_load_user_location_enabled' => ! empty( $field_data['is_load_user_location_enabled'][0] ) && $field_data['is_load_user_location_enabled'][0] === 'true',
 						'is_user_location_icon_enabled' => ! empty( $field_data['is_user_location_icon_enabled'][0] ) && $field_data['is_user_location_icon_enabled'][0] === 'true',
 						'is_clean_enabled'              => ! empty( $field_data['is_clean_enabled'][0] ) && $field_data['is_clean_enabled'][0] === 'true',
-						'validation_error_message'      => ! empty( $field_data['validation_error_message'] ) ? $field_data['validation_error_message'] : __( 'This Field is required', 'buddyforms_geo_my_wp_locale' )
+						'validation_error_message'      => ! empty( $field_data['validation_error_message'] ) ? $field_data['validation_error_message'] : __( 'This Field is required', 'buddyforms_geo_my_wp_locale' ),
 					);
 				}
 			}
