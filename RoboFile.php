@@ -12,7 +12,7 @@ class RoboFile extends RoboFileBase {
 	}
 
 	public function cleanPhpDirectories() {
-		return array( 'includes/resources/tgm' );
+		return array( 'classes/resources/tgm' );
 	}
 
 	public function pluginMainFile() {
@@ -20,7 +20,7 @@ class RoboFile extends RoboFileBase {
 	}
 
 	public function pluginFreemiusId() {
-		return 409;
+		return 3376;
 	}
 
 	public function minifyAssetsDirectories() {
