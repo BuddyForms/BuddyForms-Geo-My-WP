@@ -8,7 +8,7 @@ class RoboFile extends RoboFileBase {
 	}
 
 	public function fileStructure() {
-		return array( 'loader.php', 'composer.json', 'license.txt', 'readme.txt' );
+		return array( 'buddyforms-geo-my-wp.php', 'composer.json', 'license.txt', 'readme.txt' );
 	}
 
 	public function cleanPhpDirectories() {
@@ -16,7 +16,7 @@ class RoboFile extends RoboFileBase {
 	}
 
 	public function pluginMainFile() {
-		return 'loader';
+		return 'buddyforms-geo-my-wp';
 	}
 
 	public function pluginFreemiusId() {
