@@ -3,7 +3,7 @@
  * Plugin Name: BuddyForms Geo My WP
  * Plugin URI: http://buddyforms.com/
  * Description: This Plugin brings the power of Geo My Wp into BuddyForms
- * Version: 1.2.0
+ * Version: 1.2.1
  * Author: ThemeKraft Dev Team
  * Author URI: https://themkraft.com/#team
  * License: GPLv2 or later

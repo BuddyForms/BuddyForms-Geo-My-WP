@@ -127,6 +127,7 @@ class BuddyFormsGeoMyWpFs {
 							'first-path' => 'plugins.php',
 							'support'    => false,
 						),
+						'bundle_license_auto_activation' => true,
 					)
 				);
 			}

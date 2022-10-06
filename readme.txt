@@ -4,7 +4,7 @@ Contributors: themekraft, svenl77, gfirem
 Tags: WooCommerce, BuddyPress, Geo My WP, BuddyForms
 Requires at least: 4.0
 Tested up to: 6.0.2
-Stable tag: 1.2.0
+Stable tag: 1.2.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,6 +30,10 @@ Activate the plugin through the 'Plugins' menu in WordPress.
 
 
 == Changelog ==
+= 1.2.1 - 05 Oct 2022 =
+* Added auto activation feature when using bundle license.
+* Code refactoring.
+
 = 1.2.0 - 03 Sep 2022 =
 * Fixed issue with field display.
 * Fixed issue with plugin actiivation.
