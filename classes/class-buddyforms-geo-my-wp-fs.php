@@ -114,7 +114,7 @@ class BuddyFormsGeoMyWpFs {
 						'has_paid_plans'   => true,
 						'is_org_compliant' => false,
 						'trial'            => array(
-							'days'               => 14,
+							'days'               => 7,
 							'is_require_payment' => true,
 						),
 						'parent'           => array(
